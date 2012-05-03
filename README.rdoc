@@ -1,0 +1,26 @@
+evendoors
+    by Jérémy Zurcher
+    http://asynk.ch
+
+== DESCRIPTION:
+
+* a ruby port of evenja C++ application framework
+* see http://www.revena.com/evenja/telecharger-evenja
+
+== FEATURES/PROBLEMS:
+
+* experimental material, we'll see where it leads
+
+== SYNOPSIS:
+
+# hum hum, well ...
+
+== CREDITS:
+
+Special thanks to:
+
+* Fabian Padilla
+
+== LICENSE:
+
+See LICENSE file.

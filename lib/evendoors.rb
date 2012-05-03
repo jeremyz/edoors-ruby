@@ -1,0 +1,37 @@
+#! /usr/bin/env ruby
+# -*- coding: UTF-8 -*-
+#
+module EvenDoors
+    #
+    PATH_SEP = '/'.freeze
+    LINK_SEP = ','.freeze
+    ACT_SEP = '?'.freeze
+    ACT_GET = 'get'.freeze
+    ACT_ADD_LINK = 'add_link'.freeze
+    ACT_ERROR = 'error'.freeze
+    #
+    LNK_SRC     = 'edoors_lnk_src'.freeze
+    LNK_DSTS    = 'edoors_lnk_dsts'.freeze
+    LNK_FIELDS  = 'edoors_lnk_fields'.freeze
+    LNK_CONDF   = 'edoors_lnk_condf'.freeze
+    LNK_CONDV   = 'edoors_lnk_condv'.freeze
+    #
+    ERROR_FIELD = 'edoors_error'.freeze
+    ERROR_ROUTE_RRWD = 'routing error: right room, wrong door'.freeze
+    ERROR_ROUTE_TRWR = 'routing error: top room, wrong room'.freeze
+    ERROR_ROUTE_NDNL = 'routing error: no destination, no link'.freeze
+    ERROR_ROUTE_SND  = 'routing error: system no destination'.freeze
+    #
+    class Exception < ::Exception; end
+    #
+end
+#
+require 'evendoors/particle'
+require 'evendoors/spot'
+require 'evendoors/twirl'
+require 'evendoors/room'
+require 'evendoors/space'
+require 'evendoors/door'
+require 'evendoors/link'
+#
+# EOF
