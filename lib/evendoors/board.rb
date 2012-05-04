@@ -42,6 +42,11 @@ module EvenDoors
             end
         end
         #
+        def process_sys_p p
+            # nothing todo with it now
+            EvenDoors::Twirl.release_p p
+        end
+        #
         def send_p p
             p.src = self
             @saved=nil if @saved==p # particle is sent back the data, all is good
