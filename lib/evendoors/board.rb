@@ -26,10 +26,12 @@ module EvenDoors
         #
         def process_p p
             @viewer.receive_p p if @viewer
-            p2 = @spots[p.link_value] ||= p
-            return if p2==p
-            p,p2 = p2,p if p.action==EvenDoors::ACT_FOLLOW
-            p.merge! p2
+            if p.action!=EvenDoors::ACT_ERROR
+                p2 = @spots[p.link_value] ||= p
+                return if p2==p
+                p,p2 = p2,p if p.action==EvenDoors::ACT_FOLLOW
+                p.merge! p2
+            end
             @saved = p
             receive_p p
             if not @saved.nil?
