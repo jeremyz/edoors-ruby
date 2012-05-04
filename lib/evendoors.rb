@@ -6,9 +6,12 @@ module EvenDoors
     PATH_SEP = '/'.freeze
     LINK_SEP = ','.freeze
     ACT_SEP = '?'.freeze
+    #
     ACT_GET = 'get'.freeze
-    ACT_ADD_LINK = 'add_link'.freeze
+    ACT_FOLLOW = 'follow'.freeze
     ACT_ERROR = 'error'.freeze
+    #
+    SYS_ACT_ADD_LINK = 'sys_add_link'.freeze
     #
     LNK_SRC     = 'edoors_lnk_src'.freeze
     LNK_DSTS    = 'edoors_lnk_dsts'.freeze
