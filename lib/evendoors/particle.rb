@@ -25,7 +25,7 @@ module EvenDoors
         end
         #
         attr_accessor :src
-        attr_reader :ts, :room, :door, :action, :link_value
+        attr_reader :ts, :room, :door, :action, :link_value, :payload
         #
         # routing
         #
