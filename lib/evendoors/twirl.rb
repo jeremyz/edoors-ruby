@@ -17,6 +17,10 @@ module EvenDoors
             attr_accessor :debug
             #
             def release_p p
+                # hope there is no circular loop
+                while p2=p.merged_shift
+                    release_p p2
+                end
                 ( @pool[p.class] ||= [] ) << p
             end
             #

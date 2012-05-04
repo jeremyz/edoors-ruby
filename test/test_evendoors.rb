@@ -47,9 +47,13 @@ class ConcatBoard < EvenDoors::Board
         if p.action==EvenDoors::ACT_ERROR
             #
         else
-            p2 = p.merged_shift
-            p.set_data 'line', (p.data('line')+' '+p2.data('line'))
-            release_p p2
+            # MANUALLY
+            # p2 = p.merged_shift
+            # p.set_data 'line', (p.data('line')+' '+p2.data('line'))
+            # release_p p2
+            #
+            # Or let the system do it
+            p.set_data 'line', (p.data('line')+' '+p.merged(0).data('line'))
             send_p p
         end
     end
