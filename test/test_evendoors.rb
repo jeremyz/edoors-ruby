@@ -40,6 +40,22 @@ class InputDoor < EvenDoors::Door
     #
 end
 #
+class ConcatBoard < EvenDoors::Board
+    #
+    def receive_p p
+        puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug
+        if p.action==EvenDoors::ACT_ERROR
+            #
+        else
+            p2 = p.merged_shift
+            p.set_data 'line', (p.data('line')+' '+p2.data('line'))
+            release_p p2
+            send_p p
+        end
+    end
+    #
+end
+#
 class OutputDoor < EvenDoors::Door
     #
     # def start!
@@ -73,13 +89,14 @@ input1 = InputDoor.new 'input1'
 output1 = OutputDoor.new 'output1'
 room1.add_spot input1
 room1.add_spot output1
+room1.add_spot ConcatBoard.new 'concat1'
 #
 room0.add_link EvenDoors::Link.new('input0', 'output0', nil, nil, nil)
 #
 p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
 p0.set_data EvenDoors::LNK_SRC, 'input1'
-p0.set_data EvenDoors::LNK_DSTS, 'output1'
-p0.set_data EvenDoors::LNK_FIELDS, 'fx,fy,fz'
+p0.set_data EvenDoors::LNK_DSTS, 'concat1?follow,output1'
+p0.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
 p0.set_data EvenDoors::LNK_CONDF, 'f0,f1,f2'
 p0.set_data EvenDoors::LNK_CONDV, 'v0v1v2'
 p0.set_dst EvenDoors::SYS_ACT_ADD_LINK, room1.path
