@@ -38,6 +38,7 @@ module EvenDoors
         end
         #
         def try_links p
+            puts " * try_links ..." if EvenDoors::Twirl.debug
             pending_link = nil
             apply_link = false
             links = @links[p.src.name]
