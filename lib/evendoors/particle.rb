@@ -97,11 +97,6 @@ module EvenDoors
         #
         # link value and fields
         #
-        def clear_link_fields!
-            @link_fields.clear
-            compute_link_value!
-        end
-        #
         def set_link_fields *args
             @link_fields.clear if not @link_fields.empty?
             args.compact!
