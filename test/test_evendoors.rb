@@ -5,6 +5,7 @@ require 'evendoors'
 
 #
 class InputDoor < EvenDoors::Door
+    #
     def start!
         puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
         @lines = [ "#{name} says : hello", "world ( from #{path} )" ]
@@ -12,9 +13,11 @@ class InputDoor < EvenDoors::Door
         p.set_dst EvenDoors::ACT_GET, path
         send_p p
     end
+    #
     # def stop!
     #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
     # end
+    #
     def receive p
         puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug
         if p.action==EvenDoors::ACT_GET
@@ -34,15 +37,19 @@ class InputDoor < EvenDoors::Door
             release_p p
         end
     end
+    #
 end
 #
 class OutputDoor < EvenDoors::Door
+    #
     # def start!
     #     puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
     # end
+    #
     # def stop!
     #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
     # end
+    #
     def receive p
         if EvenDoors::Twirl.debug
             puts " * #{self.class.name} receive_p : #{@path} : DATA #{p.get_data('line')}"
@@ -51,15 +58,21 @@ class OutputDoor < EvenDoors::Door
         end
         # we do nothing EvenDoors::Twirl.process will detect it and release it
     end
+    #
 end
 #
 space = EvenDoors::Space.new 'space', :debug=>false
+#
 room0 = EvenDoors::Room.new 'room0', space
 room1 = space.add_spot EvenDoors::Room.new 'room1'
+#
 input0 = room0.add_spot InputDoor.new 'input0'
 output0 = room0.add_spot OutputDoor.new 'output0'
-input1 = room1.add_spot InputDoor.new 'input1'
-output1 = room1.add_spot OutputDoor.new 'output1'
+#
+input1 = InputDoor.new 'input1'
+output1 = OutputDoor.new 'output1'
+room1.add_spot input1
+room1.add_spot output1
 #
 room0.add_link EvenDoors::Link.new('input0', 'output0', nil, nil, nil)
 #
