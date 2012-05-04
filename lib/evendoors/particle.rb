@@ -7,10 +7,6 @@ module EvenDoors
     class Particle
         #
         def initialize
-            reset!
-        end
-        #
-        def reset!
             @ts = Time.now      # creation time
             @src = nil          # Spot.path where it's originated from
             @room = nil
@@ -22,6 +18,15 @@ module EvenDoors
                                 # used for pearing in Door and linking in routing process
             @payload = {}       # the actual data carried by this particle
             @merged = []        # list of merged particles
+        end
+        #
+        def reset!
+            @ts = Time.now
+            @src = @room = @door = @action = @link_value = nil
+            @dsts.clear
+            @link_fields.clear
+            @payload.clear
+            @merged.clear
         end
         #
         attr_accessor :src
