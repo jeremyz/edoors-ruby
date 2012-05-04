@@ -119,16 +119,16 @@ module EvenDoors
         #
         # merge particles management
         #
-        def merged_count
-            @merged.length
-        end
-        #
-        def merge p
+        def merge! p
             @merged << p
         end
         #
         def merged i
             @merged[i]
+        end
+        #
+        def merged_shift
+            @merged.shift
         end
         #
     end
