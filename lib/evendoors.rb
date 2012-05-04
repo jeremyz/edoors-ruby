@@ -35,6 +35,7 @@ require 'evendoors/twirl'
 require 'evendoors/room'
 require 'evendoors/space'
 require 'evendoors/door'
+require 'evendoors/board'
 require 'evendoors/link'
 #
 # EOF
