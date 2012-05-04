@@ -23,10 +23,10 @@ module EvenDoors
             EvenDoors::Twirl.release_p p
         end
         #
-        def process p
-            @viewer.receive p if @viewer
+        def process_p p
+            @viewer.receive_p p if @viewer
             @saved = p
-            receive p
+            receive_p p
             if not @saved.nil?
                 puts "application didn't give that particle back #{p}" if EvenDoors::Twirl.debug
                 puts "\t#{p.data EvenDoors::ERROR_FIELD}" if p.action==EvenDoors::ACT_ERROR

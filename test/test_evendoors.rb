@@ -18,7 +18,7 @@ class InputDoor < EvenDoors::Door
     #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
     # end
     #
-    def receive p
+    def receive_p p
         puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug
         if p.action==EvenDoors::ACT_GET
             p.reset!
@@ -50,7 +50,7 @@ class OutputDoor < EvenDoors::Door
     #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
     # end
     #
-    def receive p
+    def receive_p p
         if EvenDoors::Twirl.debug
             puts " * #{self.class.name} receive_p : #{@path} : DATA #{p.get_data('line')}"
         else
