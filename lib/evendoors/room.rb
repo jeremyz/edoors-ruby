@@ -88,11 +88,11 @@ module EvenDoors
             if d = p.dst
                 puts " * send #{d.to_str} ..." if EvenDoors::Twirl.debug
                 route_p p, p.split_dst!
-                puts "  -> #{p.door.path}:#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_p p
             elsif not try_links p
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
-                puts "  -> #{p.door.path}:#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_p p
             end
         end
@@ -101,11 +101,11 @@ module EvenDoors
             if d = p.dst
                 puts " * send_sys #{d.to_str} ..." if EvenDoors::Twirl.debug
                 route_p p, p.split_dst!
-                puts "  -> #{p.door.path}:#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_sys_p p
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
-                puts "  -> #{p.door.path}:#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_sys_p p
             end
         end
