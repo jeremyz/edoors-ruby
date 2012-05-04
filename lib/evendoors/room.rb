@@ -49,7 +49,7 @@ module EvenDoors
                 if apply_link or (p.link_value==link.cond_value)
                     # link matches !
                     if not pending_link.nil?
-                        p2 = require_p p.class
+                        p2 = EvenDoors::Twirl.require_p p.class
                         p2.clone_data p
                         p2.src = link.door
                         p2.clear_dsts!
