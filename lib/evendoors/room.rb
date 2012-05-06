@@ -37,6 +37,10 @@ module EvenDoors
             @spots.values.each do |spot| spot.stop! if spot.respond_to? :stop! end
         end
         #
+        def space
+            ( @parent.nil? ? self : @parent.space )
+        end
+        #
         def try_links p
             puts " * try_links ..." if EvenDoors::Twirl.debug
             pending_link = nil
