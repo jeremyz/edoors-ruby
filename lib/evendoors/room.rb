@@ -106,7 +106,16 @@ module EvenDoors
         def send_sys_p p
             if d = p.dst
                 puts " * send_sys #{d.to_str} ..." if EvenDoors::Twirl.debug
-                route_p p, p.split_dst!
+                door_name = p.split_dst!
+                if door_name.empty?
+                    if p.action.nil?
+                        p.error! EvenDoors::ERROR_ROUTE_SNDNA
+                    else
+                        p.dst_done! space
+                    end
+                else
+                    route_p p, door_name
+                end
                 puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_sys_p p
             else
