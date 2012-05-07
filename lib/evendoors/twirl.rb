@@ -11,10 +11,11 @@ module EvenDoors
         @sys_fifo = []      # system particles fifo list
         @app_fifo = []      # application particles fifo list
         #
+        @run = false
         #
         class << self
             #
-            attr_accessor :debug
+            attr_accessor :debug, :run
             #
             def release_p p
                 # hope there is no circular loop
@@ -42,14 +43,15 @@ module EvenDoors
             end
             #
             def twirl!
-                while @sys_fifo.length>0 or @app_fifo.length>0
-                    while @sys_fifo.length>0
+                while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
+                    while @run and @sys_fifo.length>0
                         p = @sys_fifo.shift
                         p.door.process_sys_p p
                     end
-                    while @app_fifo.length>0
+                    while @run and @app_fifo.length>0
                         p = @app_fifo.shift
                         p.door.process_p p
+                        break
                     end
                 end
             end

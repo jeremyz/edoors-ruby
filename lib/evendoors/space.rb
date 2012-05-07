@@ -13,6 +13,7 @@ module EvenDoors
         #
         def twirl!
             @spots.values.each do |spot| spot.start! end
+            EvenDoors::Twirl.run = true
             EvenDoors::Twirl.twirl!
             @spots.values.each do |spot| spot.stop! end
         end
