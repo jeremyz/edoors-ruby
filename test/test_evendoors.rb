@@ -81,7 +81,7 @@ class OutputDoor < EvenDoors::Door
     #
 end
 #
-space = EvenDoors::Space.new 'space', :debug=>false
+space = EvenDoors::Space.new 'space', :debug=>true
 #
 room0 = EvenDoors::Room.new 'room0', space
 room1 = space.add_spot EvenDoors::Room.new 'room1'
@@ -104,7 +104,7 @@ p0.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
 p0.set_data EvenDoors::LNK_CONDF, 'f0,f1,f2'
 p0.set_data EvenDoors::LNK_CONDV, 'v0v1v2'
 p0.set_dst EvenDoors::SYS_ACT_ADD_LINK, room1.path
-room0.send_sys_p p0 # send_sys_p -> room0 -> space -> room1 -> input1
+room1.send_sys_p p0 # send_sys_p -> room0 -> space -> room1 -> input1
 #
 space.twirl!
 #
