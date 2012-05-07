@@ -20,7 +20,7 @@ module EvenDoors
     LNK_CONDV   = 'edoors_lnk_condv'.freeze
     #
     ERROR_FIELD = 'edoors_error'.freeze
-    ERROR_ROUTE_ND      = 'routing error: no door name'.freeze
+    ERROR_ROUTE_NDN     = 'routing error: no door name'.freeze
     ERROR_ROUTE_NMD     = 'routing error: no more destination'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
     ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
