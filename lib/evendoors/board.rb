@@ -29,6 +29,7 @@ module EvenDoors
             if p.action!=EvenDoors::ACT_ERROR
                 p2 = @spots[p.link_value] ||= p
                 return if p2==p
+                @spots.delete p.link_value
                 p,p2 = p2,p if p.action==EvenDoors::ACT_FOLLOW
                 p.merge! p2
             end
