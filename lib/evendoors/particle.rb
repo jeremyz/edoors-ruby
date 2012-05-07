@@ -9,7 +9,7 @@ module EvenDoors
         def initialize
             @ts = Time.now      # creation time
             @src = nil          # Spot.path where it's originated from
-            @room = nil
+            @room = nil         # Room path part of the current destination
             @door = nil         # Door where it's currently heading to
             @action = nil       # action to perform on the Door
             @dsts = []          # fifo of Spot.path where to travel to
