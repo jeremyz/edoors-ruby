@@ -9,7 +9,7 @@ module EvenDoors
         def initialize n, p=nil
             super n, p
             @saved = nil
-            @spots = {}
+            @postponed = {}
             @parent.add_spot self if @parent
         end
         #
@@ -27,9 +27,9 @@ module EvenDoors
         def process_p p
             @viewer.receive_p p if @viewer
             if p.action!=EvenDoors::ACT_ERROR
-                p2 = @spots[p.link_value] ||= p
+                p2 = @postponed[p.link_value] ||= p
                 return if p2==p
-                @spots.delete p.link_value
+                @postponed.delete p.link_value
                 p,p2 = p2,p if p.action==EvenDoors::ACT_FOLLOW
                 p.merge! p2
             end
