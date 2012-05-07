@@ -75,7 +75,9 @@ module EvenDoors
         end
         #
         def route_p p, door_name
-            if p.room.nil? or p.room==path
+            if door_name.empty?
+                p.error! EvenDoors::ERROR_ROUTE_NDN
+            elsif p.room.nil? or p.room==path
                 if door = @spots[door_name]
                     p.dst_done! door
                 else

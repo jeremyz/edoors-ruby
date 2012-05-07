@@ -20,10 +20,13 @@ module EvenDoors
     LNK_CONDV   = 'edoors_lnk_condv'.freeze
     #
     ERROR_FIELD = 'edoors_error'.freeze
-    ERROR_ROUTE_RRWD = 'routing error: right room, wrong door'.freeze
-    ERROR_ROUTE_TRWR = 'routing error: top room, wrong room'.freeze
-    ERROR_ROUTE_NDNL = 'routing error: no destination, no link'.freeze
-    ERROR_ROUTE_SND  = 'routing error: system no destination'.freeze
+    ERROR_ROUTE_ND      = 'routing error: no door name'.freeze
+    ERROR_ROUTE_NMD     = 'routing error: no more destination'.freeze
+    ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
+    ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
+    ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
+    ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
+    ERROR_ROUTE_SNDNA   = 'routing error: system no door, no action'.freeze
     #
     class Exception < ::Exception; end
     #
