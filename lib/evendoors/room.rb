@@ -43,10 +43,10 @@ module EvenDoors
         #
         def try_links p
             puts " * try_links ..." if EvenDoors::Twirl.debug
-            pending_link = nil
-            apply_link = false
             links = @links[p.src.name]
             return false if links.nil?
+            pending_link = nil
+            apply_link = false
             links.each do |link|
                 apply_link = link.cond_fields.nil?  # unconditional link
                 p.set_link_fields link.cond_fields if not apply_link
