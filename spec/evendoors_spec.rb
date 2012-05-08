@@ -12,7 +12,11 @@ end
 require 'evendoors'
 #
 class Fake
-    attr_reader :p, :sp
+    attr_accessor :parent
+    attr_reader :p, :sp, :start, :stop
+    def name
+        "myname"
+    end
     def process_p p
         @p = p
     end
@@ -26,6 +30,12 @@ class Fake
         @sp = p
     end
     def add_spot p
+    end
+    def start!
+        @start=true
+    end
+    def stop!
+        @stop=true
     end
 end
 #
@@ -401,4 +411,43 @@ describe EvenDoors do
         #
     end
     #
+    describe EvenDoors::Board do
+        #
+        it "add_spot and add_link correctly" do
+            r0 = EvenDoors::Room.new 'room0', nil
+            d0 = EvenDoors::Door.new 'door0', r0
+            lambda { EvenDoors::Door.new('door0', r0) }.should raise_error(EvenDoors::Exception)
+            lambda { r0.add_spot EvenDoors::Door.new('door1', r0) }.should raise_error(EvenDoors::Exception)
+            r0.add_link EvenDoors::Link.new 'door0', 'somewhere'
+            lambda { r0.add_link(EvenDoors::Link.new('nowhere', 'somewhere')) }.should raise_error(EvenDoors::Exception)
+        end
+        #
+        it "start! and stop! should work" do
+            r0 = EvenDoors::Room.new 'room0', nil
+            d0 = Fake.new
+            r0.add_spot d0
+            d0.start.should be_nil
+            d0.stop.should be_nil
+            r0.start!
+            d0.start.should be_true
+            d0.stop.should be_nil
+            r0.stop!
+            d0.start.should be_true
+            d0.stop.should be_true
+        end
+        #
+        it "parent and space should be ok" do
+            s = EvenDoors::Space.new 'space'
+            r0 = EvenDoors::Room.new 'r0', s
+            r1 = EvenDoors::Room.new 'r0', r0
+            r2 = EvenDoors::Room.new 'r0', r1
+            r2.parent.should be r1
+            r1.parent.should be r0
+            r0.parent.should be s
+            r0.space.should be s
+            r1.space.should be s
+            r2.space.should be s
+        end
+        #
+    end
 end
