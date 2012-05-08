@@ -136,6 +136,10 @@ module EvenDoors
             @merged.shift
         end
         #
+        def clear_merged!
+            @merged.clear
+        end
+        #
     end
     #
 end
