@@ -243,4 +243,15 @@ describe EvenDoors do
         #
     end
     #
+    describe EvenDoors::Space do
+        #
+        it "does really little for now" do
+            EvenDoors::Twirl.debug.should be false
+            space = EvenDoors::Space.new 'dom0', :debug=>true
+            EvenDoors::Twirl.debug.should be true
+            space.twirl!
+        end
+        #
+    end
+    #
 end
