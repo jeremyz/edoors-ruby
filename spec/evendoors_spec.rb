@@ -11,6 +11,24 @@ end
 #
 require 'evendoors'
 #
+class Fake
+    attr_reader :p, :sp
+    def process_p p
+        @p = p
+    end
+    def process_sys_p p
+        @sp = p
+    end
+    def send_p p
+        @p = p
+    end
+    def send_sys_p p
+        @sp = p
+    end
+    def add_spot p
+    end
+end
+#
 describe EvenDoors do
     #
     it "EvenDoors module should exxists" do
@@ -56,15 +74,6 @@ describe EvenDoors do
         end
         #
         it "send_p send_sys_p twirl!" do
-            class Fake
-                attr_reader :p, :sp
-                def process_p p
-                    @p = p
-                end
-                def process_sys_p p
-                    @sp = p
-                end
-            end
             f = Fake.new
             p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
             p0.dst_routed!  f
@@ -250,6 +259,71 @@ describe EvenDoors do
             space = EvenDoors::Space.new 'dom0', :debug=>true
             EvenDoors::Twirl.debug.should be true
             space.twirl!
+            EvenDoors::Twirl.debug = false
+            EvenDoors::Twirl.debug.should be false
+        end
+        #
+    end
+    #
+    describe EvenDoors::Door do
+        #
+        it "require_p release_p should work" do
+            door = EvenDoors::Door.new 'hell'
+            p0 = door.require_p EvenDoors::Particle
+            p0.src.should be door
+            p1 = door.require_p EvenDoors::Particle
+            p1.src.should be door
+            (p0===p1).should be_false
+            door.release_p p0
+            p2 = door.require_p EvenDoors::Particle
+            p2.src.should be door
+            (p0===p2).should be_true
+        end
+        #
+        it "should work and release lost particles" do
+            class Door0 < EvenDoors::Door
+                def receive_p p
+                    case p.action
+                    when 'RELEASE'
+                        release_p p
+                    when 'SEND'
+                        send_p p
+                    when 'SEND_SYS'
+                        send_sys_p p
+                    else
+                        # lost!!
+                    end
+                end
+            end
+            f = Fake.new
+            d0 = Door0.new 'door0', f
+            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            #
+            p0.set_dst! 'SEND'
+            p0.split_dst!
+            d0.process_p p0
+            f.p.should eql p0
+            #
+            p0.set_dst! 'SEND_SYS'
+            p0.split_dst!
+            d0.process_p p0
+            f.sp.should eql p0
+            #
+            p0.set_dst! 'RELEASE'
+            p0.split_dst!
+            d0.process_p p0
+            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1.should be p0
+            #
+            p0.set_dst! 'LOST'
+            p0.split_dst!
+            d0.process_p p0
+            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1.should be p0
+            #
+            d0.process_sys_p p0
+            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1.should be p0
         end
         #
     end
