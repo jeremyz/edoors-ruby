@@ -18,7 +18,7 @@ module EvenDoors
         def path
             return @path if @path
             p = ( @parent ? @parent.path+'/' : '') + name
-            @path = p.sub(/^\/+/,'').gsub(/\/{2,}/,'/').sub(/\/+$/,'')
+            @path = p.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/')
         end
         #
     end
