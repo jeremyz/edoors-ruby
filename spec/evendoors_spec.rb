@@ -41,7 +41,7 @@ end
 #
 describe EvenDoors do
     #
-    it "EvenDoors module should exxists" do
+    it "EvenDoors module should exists" do
         expect{ EvenDoors }.not_to raise_error(NameError)
     end
     #
