@@ -136,6 +136,12 @@ describe EvenDoors do
             p.merged(1).should be_nil
             p.merged_shift.should be o
             p.merged(0).should be_nil
+            p.merge! q
+            p.merge! o
+            p.merged(0).should be q
+            p.merged(1).should be o
+            p.clear_merged!
+            p.merged(0).should be_nil
         end
         #
         it "routing: add_dsts, next_dst and dst_routed!" do

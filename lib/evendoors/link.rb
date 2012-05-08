@@ -6,7 +6,7 @@ module EvenDoors
     #
     class Link
         #
-        def initialize src, dsts, fields, cond_fields, cond_value
+        def initialize src, dsts, fields=nil, cond_fields=nil, cond_value=nil
             @src = src                      # link source name
             @dsts = dsts                    # , separated destinations to apply to the particle on linking success
             @fields = fields                # , separated fields to apply to the particle on linking success
