@@ -55,6 +55,29 @@ describe EvenDoors do
             (p3===p1).should be_true
         end
         #
+        it "send_p send_sys_p twirl!" do
+            class Fake
+                attr_reader :p, :sp
+                def process_p p
+                    @p = p
+                end
+                def process_sys_p p
+                    @sp = p
+                end
+            end
+            f = Fake.new
+            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p0.dst_routed!  f
+            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1.dst_routed!  f
+            EvenDoors::Twirl.send_p p0
+            EvenDoors::Twirl.send_sys_p p1
+            EvenDoors::Twirl.run = true
+            EvenDoors::Twirl.twirl!
+            f.p.should be p0
+            f.sp.should be p1
+        end
+        #
     end
     #
     describe EvenDoors::Particle do
