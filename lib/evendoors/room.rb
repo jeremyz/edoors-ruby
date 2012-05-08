@@ -97,6 +97,8 @@ module EvenDoors
                 route_p p
                 puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_p p
+            elsif p.src.nil?
+                p.error! EvenDoors::ERROR_ROUTE_NDNS
             elsif not try_links p
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
                 puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug

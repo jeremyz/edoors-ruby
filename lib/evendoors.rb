@@ -24,6 +24,7 @@ module EvenDoors
     ERROR_ROUTE_NMD     = 'routing error: no more destination'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
     ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
+    ERROR_ROUTE_NDNS    = 'routing error: no destination, no source'.freeze
     ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
     ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
     ERROR_ROUTE_SNDNA   = 'routing error: system no door, no action'.freeze
