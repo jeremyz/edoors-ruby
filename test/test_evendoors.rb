@@ -10,7 +10,7 @@ class InputDoor < EvenDoors::Door
         puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
         @lines = [ "#{name} says : hello", "world ( from #{path} )" ]
         p = require_p EvenDoors::Particle
-        p.set_dst EvenDoors::ACT_GET, path
+        p.set_dst! EvenDoors::ACT_GET, path
         send_p p
     end
     #
@@ -29,7 +29,7 @@ class InputDoor < EvenDoors::Door
             send_p p
             if @lines.length>0
                 p = require_p EvenDoors::Particle
-                p.set_dst EvenDoors::ACT_GET, name
+                p.set_dst! EvenDoors::ACT_GET, name
                 send_p p
             end
         else
@@ -103,7 +103,7 @@ p0.set_data EvenDoors::LNK_DSTS, 'concat1?follow,output1'
 p0.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
 p0.set_data EvenDoors::LNK_CONDF, 'f0,f1,f2'
 p0.set_data EvenDoors::LNK_CONDV, 'v0v1v2'
-p0.set_dst EvenDoors::SYS_ACT_ADD_LINK, room1.path
+p0.set_dst! EvenDoors::SYS_ACT_ADD_LINK, room1.path
 room1.send_sys_p p0 # send_sys_p -> room0 -> space -> room1 -> input1
 #
 space.twirl!
