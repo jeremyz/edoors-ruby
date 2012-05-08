@@ -46,11 +46,11 @@ module EvenDoors
                 while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
                     while @run and @sys_fifo.length>0
                         p = @sys_fifo.shift
-                        p.door.process_sys_p p
+                        p.dst.process_sys_p p
                     end
                     while @run and @app_fifo.length>0
                         p = @app_fifo.shift
-                        p.door.process_p p
+                        p.dst.process_p p
                         break
                     end
                 end

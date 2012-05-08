@@ -74,53 +74,54 @@ module EvenDoors
             (not pending_link.nil?)
         end
         #
-        def route_p p, door_name
-            if door_name.empty?
+        def route_p p
+            if p.door.empty?
                 p.error! EvenDoors::ERROR_ROUTE_NDN
             elsif p.room.nil? or p.room==path
-                if door = @spots[door_name]
-                    p.dst_done! door
+                if door = @spots[p.door]
+                    p.dst_routed! door
                 else
                     p.error! EvenDoors::ERROR_ROUTE_RRWD
                 end
             elsif @parent
-                @parent.route_p p, door_name
+                @parent.route_p p
             else
                 p.error! EvenDoors::ERROR_ROUTE_TRWR
             end
         end
         #
         def send_p p
-            if d = p.dst
-                puts " * send #{d.to_str} ..." if EvenDoors::Twirl.debug
-                route_p p, p.split_dst!
-                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+            if p.next_dst
+                puts " * send #{p.next_dst.to_str} ..." if EvenDoors::Twirl.debug
+                p.split_dst!
+                route_p p
+                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_p p
             elsif not try_links p
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
-                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_p p
             end
         end
         #
         def send_sys_p p
-            if d = p.dst
-                puts " * send_sys #{d.to_str} ..." if EvenDoors::Twirl.debug
-                door_name = p.split_dst!
-                if door_name.empty?
+            if p.next_dst
+                puts " * send_sys #{p.next_dst.to_str} ..." if EvenDoors::Twirl.debug
+                p.split_dst!
+                if p.door.empty?
                     if p.action.nil?
                         p.error! EvenDoors::ERROR_ROUTE_SNDNA
                     else
-                        p.dst_done! space
+                        p.dst_routed! space
                     end
                 else
-                    route_p p, door_name
+                    route_p p
                 end
-                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_sys_p p
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
-                puts "  -> #{p.door.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
                 EvenDoors::Twirl.send_sys_p p
             end
         end
