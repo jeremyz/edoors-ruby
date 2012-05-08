@@ -231,4 +231,16 @@ describe EvenDoors do
         #
     end
     #
+    describe EvenDoors::Link do
+        #
+        it "path construction should work" do
+            s0 = EvenDoors::Spot.new '//top', nil
+            s1 = EvenDoors::Spot.new '//room0/', s0
+            s2 = EvenDoors::Spot.new 'room1', s1
+            s3 = EvenDoors::Spot.new 'door///', s2
+            s3.path.should eql 'top/room0/room1/door'
+        end
+        #
+    end
+    #
 end
