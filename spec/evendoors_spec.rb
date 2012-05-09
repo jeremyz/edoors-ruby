@@ -17,6 +17,9 @@ class Fake
     def name
         "myname"
     end
+    def path
+        (@parent.nil? ? name : @parent.path+'/'+name )
+    end
     def process_p p
         @p = p
     end
