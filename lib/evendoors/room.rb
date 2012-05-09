@@ -126,7 +126,7 @@ module EvenDoors
         end
         #
         def process_sys_p p
-            if p.action==SYS_ACT_ADD_LINK
+            if p.action==EvenDoors::SYS_ACT_ADD_LINK
                 add_link EvenDoors::Link.from_particle_data p
             end
             EvenDoors::Twirl.release_p p
