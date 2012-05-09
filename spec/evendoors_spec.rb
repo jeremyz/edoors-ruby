@@ -700,5 +700,29 @@ describe EvenDoors do
             p.dst.should be door0
         end
         #
+        it "SYS_ACT_ADD_LINK should work" do
+            EvenDoors::Twirl.clear!
+            space = EvenDoors::Space.new 'space'    # needed to be able to route to door
+            room0 = EvenDoors::Room.new 'room0', space
+            door0 = EvenDoors::Door.new 'door0', room0
+            door1 = EvenDoors::Door.new 'door1', room0
+            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p0.set_data EvenDoors::LNK_SRC, 'door0'
+            p0.set_data EvenDoors::LNK_DSTS, 'door1'
+            p0.set_data EvenDoors::LNK_FIELDS, 'fields'
+            p0.set_data EvenDoors::LNK_CONDF, 'f0,f1'
+            p0.set_data EvenDoors::LNK_CONDV, 'v0v1'
+            p0.set_dst! EvenDoors::SYS_ACT_ADD_LINK, room0.path
+            room0.send_sys_p p0
+            space.twirl!
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p['f0']='v0'
+            p['f1']='v1'
+            door0.send_p p
+            p.action.should be_nil
+            p.src.should be door0
+            p.dst.should be door1
+        end
+        #
     end
 end
