@@ -43,18 +43,19 @@ module EvenDoors
             @dsts.clear
         end
         #
-        def add_dsts paths
-            paths.split(EvenDoors::LINK_SEP).each do |path|
-                d = path.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/').gsub(/\s+/,'')
-                next if d.empty? or d==EvenDoors::ACT_SEP
-                @dsts << d
+        def add_dsts dsts
+            dsts.split(EvenDoors::LINK_SEP).each do |dst|
+                if dst.empty? or dst[0]==EvenDoors::PATH_SEP or dst[0]==EvenDoors::PATH_SEP  or dst=~/\/\?/\
+                    or dst=~/\/{2,}/ or dst=~/\s+/ or dst==EvenDoors::ACT_SEP
+                    raise EvenDoors::Exception.new "destination #{dst} is not acceptable"
+                end
+                @dsts << dst
             end
         end
         #
         def set_dst! a, d=''
             @dst = @room = @door = @action = nil
             clear_dsts!
-            return if ( (a.nil? or a.empty?) and d.empty? )
             add_dsts d+EvenDoors::ACT_SEP+a
         end
         #
