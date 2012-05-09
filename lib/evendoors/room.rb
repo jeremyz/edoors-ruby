@@ -42,7 +42,7 @@ module EvenDoors
         end
         #
         def try_links p
-            puts " * try_links ..." if EvenDoors::Twirl.debug
+            puts "   -> try_links ..." if EvenDoors::Twirl.debug
             links = @links[p.src.name]
             return false if links.nil?
             pending_link = nil
@@ -91,24 +91,22 @@ module EvenDoors
         end
         #
         def send_p p
+            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
             if p.next_dst
-                puts " * send #{p.next_dst.to_str} ..." if EvenDoors::Twirl.debug
                 p.split_dst!
                 route_p p
-                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
-                EvenDoors::Twirl.send_p p
             elsif p.src.nil?
-                p.error! EvenDoors::ERROR_ROUTE_NDNS
+                p.error! EvenDoors::ERROR_ROUTE_NDNS, space
             elsif not try_links p
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
-                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
-                EvenDoors::Twirl.send_p p
             end
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+            EvenDoors::Twirl.send_p p
         end
         #
         def send_sys_p p
+            puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
             if p.next_dst
-                puts " * send_sys #{p.next_dst.to_str} ..." if EvenDoors::Twirl.debug
                 p.split_dst!
                 if p.door.empty?
                     if p.action.nil?
@@ -119,13 +117,11 @@ module EvenDoors
                 else
                     route_p p
                 end
-                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
-                EvenDoors::Twirl.send_sys_p p
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
-                puts "  -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
-                EvenDoors::Twirl.send_sys_p p
             end
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+            EvenDoors::Twirl.send_sys_p p
         end
         #
         def process_sys_p p
