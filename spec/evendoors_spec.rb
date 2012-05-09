@@ -682,15 +682,6 @@ describe EvenDoors do
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SND
         end
         #
-        it "system route error: system no door no action" do
-            room0 = EvenDoors::Room.new 'room0', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p.add_dsts ' '
-            room0.send_sys_p p
-            p.action.should eql EvenDoors::ACT_ERROR
-            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SNDNA
-        end
-        #
         it "system routing success: action only" do
             room0 = EvenDoors::Room.new 'room0', nil
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
