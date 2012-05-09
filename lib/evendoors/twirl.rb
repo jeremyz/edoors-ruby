@@ -56,6 +56,11 @@ module EvenDoors
                 end
             end
             #
+            def clear!
+                @sys_fifo.clear
+                @app_fifo.clear
+            end
+            #
         end
         #
     end
