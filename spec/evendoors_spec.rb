@@ -455,6 +455,7 @@ describe EvenDoors do
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NDNS
+            p.dst.should be room.space
         end
         #
         it "route error: no destination no links" do
@@ -464,35 +465,42 @@ describe EvenDoors do
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NDNL
+            p.dst.should be p.src
         end
         #
         it "route error: top room, wrong room" do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.src = Fake.new
             p.set_dst! 'get', 'noroom/door'
             room1.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_TRWR
+            p.dst.should be p.src
         end
         #
         it "route error: right room, wrong door" do
             room = EvenDoors::Room.new 'room', nil
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.src = Fake.new
             p.set_dst! 'get', 'room/nodoor'
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRWD
+            p.dst.should be p.src
         end
         #
         it "route error: right room, wrong door (bubble up)" do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.src = Fake.new
             p.set_dst! 'get', 'room0/nodoor'
             room1.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRWD
+            p.dst.should be p.src
         end
         #
         it "routeting success" do
@@ -500,6 +508,7 @@ describe EvenDoors do
             room1 = EvenDoors::Room.new 'room1', room0
             door0 = EvenDoors::Door.new 'door0', room0
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.src = Fake.new
             p.set_dst! 'get', 'room0/door0'
             room1.send_p p
             p.action.should eql 'get'
