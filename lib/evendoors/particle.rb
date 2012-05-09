@@ -57,8 +57,10 @@ module EvenDoors
         end
         #
         def split_dst!
-            @dst = nil
-            p, @action = next_dst.split EvenDoors::ACT_SEP
+            @dst = @room = @door = @action = nil
+            n = next_dst
+            return if n.nil? or n.empty?
+            p, @action = n.split EvenDoors::ACT_SEP
             i = p.rindex EvenDoors::PATH_SEP
             if i.nil?
                 @room = nil
