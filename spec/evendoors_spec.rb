@@ -589,6 +589,62 @@ describe EvenDoors do
             p.dst.should be door0
         end
         #
+        it "routing success: unconditional link" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            door0 = EvenDoors::Door.new 'door0', room0
+            door1 = EvenDoors::Door.new 'door1', room0
+            room0.add_link EvenDoors::Link.new('door0', 'door1')
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            door0.send_p p
+            p.action.should be_nil
+            p.dst.should be door1
+        end
+        #
+        it "routing success: conditional link" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            door0 = EvenDoors::Door.new 'door0', room0
+            door1 = EvenDoors::Door.new 'door1', room0
+            room0.add_link EvenDoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p['f0']='v0'
+            p['f1']='v1'
+            door0.send_p p
+            p.action.should be_nil
+            p.src.should be door0
+            p.dst.should be door1
+        end
+        #
+        it "routing success: more then one matching link" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            door0 = EvenDoors::Door.new 'door0', room0
+            class Out < EvenDoors::Door
+                attr_reader :ps
+                def receive_p p
+                    @ps||=[]
+                    @ps << p
+                end
+            end
+            door1 = Out.new 'door1', room0
+            room0.add_link EvenDoors::Link.new('door0', 'door1')
+            room0.add_link EvenDoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            EvenDoors::Twirl.clear!
+            p['f0']='v0'
+            p['f1']='v1'
+            door0.send_p p
+            EvenDoors::Twirl.run = true
+            EvenDoors::Twirl.twirl!
+            door1.ps.length.should eql 2
+            p0 = door1.ps[0]
+            p0.action.should be_nil
+            p0.src.should be door0
+            p0.dst.should be door1
+            p1 = door1.ps[1]
+            p1.action.should be_nil
+            p1.src.should be door0
+            p1.dst.should be door1
+            p1.should be p
+        end
         #
     end
 end
