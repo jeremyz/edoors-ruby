@@ -83,6 +83,9 @@ module EvenDoors
                 else
                     p.error! EvenDoors::ERROR_ROUTE_RRWD
                 end
+            elsif (p.room=~/^#{path}/)==0
+                # TODO allow drill down ?!?
+                p.error! EvenDoors::ERROR_ROUTE_RRNDD
             elsif @parent
                 @parent.route_p p
             else
