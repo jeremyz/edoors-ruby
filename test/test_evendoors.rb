@@ -7,7 +7,7 @@ require 'evendoors'
 class InputDoor < EvenDoors::Door
     #
     def start!
-        puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
+        puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug_routing
         @lines = [ "#{name} says : hello", "world ( from #{path} )" ]
         p = require_p EvenDoors::Particle
         p.set_dst! EvenDoors::ACT_GET, path
@@ -15,11 +15,11 @@ class InputDoor < EvenDoors::Door
     end
     #
     # def stop!
-    #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
+    #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug_routing
     # end
     #
     def receive_p p
-        puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug
+        puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug_routing
         if p.action==EvenDoors::ACT_GET
             p.reset!
             p.set_data 'line', @lines.shift
@@ -43,7 +43,7 @@ end
 class ConcatBoard < EvenDoors::Board
     #
     def receive_p p
-        puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug
+        puts " * #{self.class.name} receive_p : #{p.action}" if EvenDoors::Twirl.debug_routing
         if p.action==EvenDoors::ACT_ERROR
             #
         else
@@ -63,15 +63,15 @@ end
 class OutputDoor < EvenDoors::Door
     #
     # def start!
-    #     puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
+    #     puts " * start #{self.class.name} #{@path}" if EvenDoors::Twirl.debug_routing
     # end
     #
     # def stop!
-    #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug
+    #     puts " * stop #{self.class.name} #{@path}" if EvenDoors::Twirl.debug_routing
     # end
     #
     def receive_p p
-        if EvenDoors::Twirl.debug
+        if EvenDoors::Twirl.debug_routing
             puts " * #{self.class.name} receive_p : #{@path} : DATA #{p.get_data('line')}"
         else
             puts p.get_data 'line'
@@ -81,7 +81,7 @@ class OutputDoor < EvenDoors::Door
     #
 end
 #
-space = EvenDoors::Space.new 'space', :debug=>true
+space = EvenDoors::Space.new 'space', :debug_routing=>false, :debug_errors=>true
 #
 room0 = EvenDoors::Room.new 'room0', space
 room1 = space.add_spot EvenDoors::Room.new 'room1'

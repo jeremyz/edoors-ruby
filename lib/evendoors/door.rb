@@ -28,7 +28,7 @@ module EvenDoors
             @saved = p
             receive_p p
             if not @saved.nil?
-                puts "#{path} didn't give that particle back #{p}" if EvenDoors::Twirl.debug
+                puts "#{path} didn't give that particle back #{p}" if EvenDoors::Twirl.debug_errors
                 puts "\t#{p.data EvenDoors::ERROR_FIELD}" if p.action==EvenDoors::ACT_ERROR
                 release_p @saved
                 @saved = nil

@@ -8,7 +8,8 @@ module EvenDoors
         #
         def initialize n, args={}
             super n, nil
-            EvenDoors::Twirl.debug = args[:debug] || false
+            EvenDoors::Twirl.debug_errors = args[:debug_errors] || false
+            EvenDoors::Twirl.debug_routing = args[:debug_routing] || false
         end
         #
         def twirl!

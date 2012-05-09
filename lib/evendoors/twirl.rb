@@ -6,7 +6,8 @@ module EvenDoors
     #
     class Twirl
         #
-        @debug = false
+        @debug_routing = false
+        @debug_errors = false
         @pool = {}          # per particle class free list
         @sys_fifo = []      # system particles fifo list
         @app_fifo = []      # application particles fifo list
@@ -15,7 +16,7 @@ module EvenDoors
         #
         class << self
             #
-            attr_accessor :debug, :run
+            attr_accessor :run, :debug_routing, :debug_errors
             #
             def release_p p
                 # hope there is no circular loop

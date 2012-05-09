@@ -28,21 +28,22 @@ module EvenDoors
         end
         #
         def start!
-            puts " * start #{path}" if EvenDoors::Twirl.debug
+            puts " * start #{path}" if EvenDoors::Twirl.debug_routing
             @spots.values.each do |spot| spot.start! if spot.respond_to? :start! end
         end
         #
         def stop!
-            puts " * stop #{path}" if EvenDoors::Twirl.debug
+            puts " * stop #{path}" if EvenDoors::Twirl.debug_routing
             @spots.values.each do |spot| spot.stop! if spot.respond_to? :stop! end
         end
         #
         def space
-            ( @parent.nil? ? self : @parent.space )
+            return @space if @space
+            @space = ( @parent.nil? ? self : @parent.space )
         end
         #
         def try_links p
-            puts "   -> try_links ..." if EvenDoors::Twirl.debug
+            puts "   -> try_links ..." if EvenDoors::Twirl.debug_routing
             links = @links[p.src.name]
             return false if links.nil?
             pending_link = nil
@@ -86,7 +87,7 @@ module EvenDoors
         end
         #
         def send_p p
-            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
+            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug_routing
             if p.src.nil?
                 # do not route orphan particles !!
                 p.error! EvenDoors::ERROR_ROUTE_NS, space
@@ -103,12 +104,12 @@ module EvenDoors
             else
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug_routing
             EvenDoors::Twirl.send_p p
         end
         #
         def send_sys_p p
-            puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
+            puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug_routing
             if p.next_dst
                 p.split_dst!
                 if p.door
@@ -121,7 +122,7 @@ module EvenDoors
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug_routing
             EvenDoors::Twirl.send_sys_p p
         end
         #

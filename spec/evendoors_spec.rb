@@ -328,12 +328,19 @@ describe EvenDoors do
     describe EvenDoors::Space do
         #
         it "does really little for now" do
-            EvenDoors::Twirl.debug.should be false
-            space = EvenDoors::Space.new 'dom0', :debug=>true
-            EvenDoors::Twirl.debug.should be true
+            EvenDoors::Twirl.debug_routing.should be false
+            space = EvenDoors::Space.new 'dom0', :debug_routing=>true
+            EvenDoors::Twirl.debug_routing.should be true
             space.twirl!
-            EvenDoors::Twirl.debug = false
-            EvenDoors::Twirl.debug.should be false
+            EvenDoors::Twirl.debug_routing = false
+            EvenDoors::Twirl.debug_routing.should be false
+            #
+            EvenDoors::Twirl.debug_errors.should be false
+            space = EvenDoors::Space.new 'dom0', :debug_errors=>true
+            EvenDoors::Twirl.debug_errors.should be true
+            space.twirl!
+            EvenDoors::Twirl.debug_errors = false
+            EvenDoors::Twirl.debug_errors.should be false
         end
         #
     end
