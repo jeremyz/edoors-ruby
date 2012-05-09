@@ -75,9 +75,7 @@ module EvenDoors
         end
         #
         def route_p p
-            if p.door.empty?
-                p.error! EvenDoors::ERROR_ROUTE_NDN
-            elsif p.room.nil? or p.room==path
+            if p.room.nil? or p.room==path
                 if door = @spots[p.door]
                     p.dst_routed! door
                 else
@@ -97,7 +95,14 @@ module EvenDoors
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
             if p.next_dst
                 p.split_dst!
-                route_p p
+                if p.door
+                    p.src = space if p.src.nil? # send error to space if needed
+                    route_p p
+                elsif p.src
+                    p.dst_routed! p.src
+                else
+                    p.error! EvenDoors::ERROR_ROUTE_NDNS, space
+                end
             elsif p.src.nil?
                 p.error! EvenDoors::ERROR_ROUTE_NDNS, space
             elsif not try_links p
