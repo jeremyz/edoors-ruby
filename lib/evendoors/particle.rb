@@ -45,7 +45,7 @@ module EvenDoors
         #
         def add_dsts paths
             paths.split(EvenDoors::LINK_SEP).each do |path|
-                @dsts << path.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/')
+                @dsts << path.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/').gsub(/\s+/,'')
             end
         end
         #
@@ -53,13 +53,13 @@ module EvenDoors
             @dst = @room = @door = @action = nil
             clear_dsts!
             return if ( (a.nil? or a.empty?) and d.empty? )
-            @dsts << ( d.empty? ? '' : d.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/') )+EvenDoors::ACT_SEP+a.to_str
+            add_dsts d+EvenDoors::ACT_SEP+a
         end
         #
         def split_dst!
             @dst = @room = @door = @action = nil
             n = next_dst
-            return if n.nil? or n.empty?
+            return if n.nil? or n.empty? or n==EvenDoors::ACT_SEP
             p, @action = n.split EvenDoors::ACT_SEP
             i = p.rindex EvenDoors::PATH_SEP
             if i.nil?
