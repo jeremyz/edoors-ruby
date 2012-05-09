@@ -464,12 +464,13 @@ describe EvenDoors do
             r2.space.should be s
         end
         #
-        it "route error: no destination no source" do
+        it "route error: no source" do
             room = EvenDoors::Room.new 'room', nil
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.set_dst! 'get', 'room/door'
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
-            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NDNS
+            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NS
             p.dst.should be room.space
         end
         #
@@ -510,11 +511,12 @@ describe EvenDoors do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
             p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.src = Fake.new
             p.set_dst! 'get', 'room0/nodoor'
             room1.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRWD
-            p.dst.should be room1.space
+            p.dst.should be p.src
         end
         #
         it "routing success (direct)" do
@@ -564,17 +566,6 @@ describe EvenDoors do
             room0.send_p p
             p.action.should eql 'get'
             p.dst.should be door0
-        end
-        #
-        it "routing success: no door name -> src" do
-            room0 = EvenDoors::Room.new 'room0', nil
-            door0 = EvenDoors::Door.new 'door0', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p.set_dst! 'get'
-            room0.send_p p
-            p.action.should eql EvenDoors::ACT_ERROR
-            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NDNS
-            p.dst.should be room0.space
         end
         #
         #
