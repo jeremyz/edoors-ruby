@@ -163,7 +163,7 @@ describe EvenDoors do
             d1 = EvenDoors::Door.new 'door1'
             p.dst.should be_nil
             p.next_dst.should be_nil
-            p.add_dsts 'some?where,///room0///room1/door?action,room/door,door'
+            p.add_dsts 'some?where,room0/room1/door?action,room/door,door'
             p.next_dst.should eql 'some?where'
             p.dst_routed! d0
             p.dst.should be d0
@@ -176,6 +176,22 @@ describe EvenDoors do
             p.next_dst.should eql 'door'
         end
         #
+        it "wrong path should raise exeption" do
+            p = EvenDoors::Particle.new
+            lambda { p.set_dst! 'action', '/room' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! 'action', 'room/' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! '', 'room/' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! 'action', 'room//door' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! ' ' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! ' ', '' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! 'f f' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! '', ' d' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! '' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! '', '' }.should raise_error(EvenDoors::Exception)
+            lambda { p.set_dst! nil }.should raise_error(TypeError)
+            lambda { p.set_dst! 'action', nil }.should raise_error(NoMethodError)
+        end
+        #
         it "routing: set_dst! and split_dst!" do
             p = EvenDoors::Particle.new
             d0 = EvenDoors::Door.new 'door0'
@@ -183,12 +199,6 @@ describe EvenDoors do
             p.set_dst! 'action', 'room0/room1/door'
             p.split_dst!
             p.room.should eql 'room0/room1'
-            p.door.should eql 'door'
-            p.action.should eql 'action'
-            #
-            p.set_dst! 'action', '//room////door'
-            p.split_dst!
-            p.room.should eql 'room'
             p.door.should eql 'door'
             p.action.should eql 'action'
             #
@@ -224,27 +234,6 @@ describe EvenDoors do
             p.room.should eql nil
             p.door.should eql nil
             p.action.should eql 'action'
-            #
-            p.set_dst! ''
-            p.next_dst.should be_nil
-            p.split_dst!
-            p.room.should be_nil
-            p.door.should be_nil
-            p.action.should be_nil
-            #
-            p.set_dst! nil
-            p.next_dst.should be_nil
-            p.split_dst!
-            p.room.should be_nil
-            p.door.should be_nil
-            p.action.should be_nil
-            #
-            p.set_dst! ' ', ' '
-            p.next_dst.should be_nil
-            p.split_dst!
-            p.room.should be_nil
-            p.door.should be_nil
-            p.action.should be_nil
             #
         end
         #
