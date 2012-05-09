@@ -664,5 +664,41 @@ describe EvenDoors do
             p1.should be p
         end
         #
+        it "system route error: system no destination" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            room0.send_sys_p p
+            p.action.should eql EvenDoors::ACT_ERROR
+            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SND
+        end
+        #
+        it "system route error: system no door no action" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.add_dsts ' '
+            room0.send_sys_p p
+            p.action.should eql EvenDoors::ACT_ERROR
+            p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SNDNA
+        end
+        #
+        it "system routing success: action only" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.set_dst! EvenDoors::SYS_ACT_ADD_LINK
+            room0.send_sys_p p
+            p.action.should eql EvenDoors::SYS_ACT_ADD_LINK
+            p.dst.should be room0.space
+        end
+        #
+        it "system routing success" do
+            room0 = EvenDoors::Room.new 'room0', nil
+            door0 = EvenDoors::Door.new 'door0', room0
+            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p.set_dst! EvenDoors::SYS_ACT_ADD_LINK, 'room0/door0'
+            room0.send_sys_p p
+            p.action.should eql EvenDoors::SYS_ACT_ADD_LINK
+            p.dst.should be door0
+        end
+        #
     end
 end
