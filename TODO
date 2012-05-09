@@ -1,4 +1,5 @@
 
+  - do not fix destination strings but validate nad through exception on error ?!
   - cache routing
   - JSON data from and to file
   - Twirl.suspend
