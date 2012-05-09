@@ -93,18 +93,17 @@ module EvenDoors
         #
         def send_p p
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
-            if p.next_dst
+            if p.src.nil?
+                # do not route orphan particles !!
+                p.error! EvenDoors::ERROR_ROUTE_NS, space
+            elsif p.next_dst
                 p.split_dst!
                 if p.door
-                    p.src = space if p.src.nil? # send error to space if needed
                     route_p p
-                elsif p.src
-                    p.dst_routed! p.src
                 else
-                    p.error! EvenDoors::ERROR_ROUTE_NDNS, space
+                    # boomerang
+                    p.dst_routed! p.src
                 end
-            elsif p.src.nil?
-                p.error! EvenDoors::ERROR_ROUTE_NDNS, space
             elsif not try_links p
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
             end
