@@ -74,9 +74,9 @@ module EvenDoors
             @dsts.shift
         end
         #
-        def error! e
+        def error! e, dst=nil
             @action = EvenDoors::ACT_ERROR
-            @dst = @src
+            @dst = dst||@src
             @payload[EvenDoors::ERROR_FIELD]=e
         end
         #
