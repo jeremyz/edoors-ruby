@@ -80,6 +80,13 @@ module EvenDoors
             @payload[EvenDoors::ERROR_FIELD]=e
         end
         #
+        def apply_link! lnk
+            @src = lnk.door
+            clear_dsts!
+            add_dsts lnk.dsts
+            set_link_fields lnk.fields
+        end
+        #
         # data manipulation
         #
         def []=  k, v
