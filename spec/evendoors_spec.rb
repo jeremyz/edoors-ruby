@@ -226,18 +226,21 @@ describe EvenDoors do
             p.action.should eql 'action'
             #
             p.set_dst! ''
+            p.next_dst.should be_nil
             p.split_dst!
             p.room.should be_nil
             p.door.should be_nil
             p.action.should be_nil
             #
             p.set_dst! nil
+            p.next_dst.should be_nil
             p.split_dst!
             p.room.should be_nil
             p.door.should be_nil
             p.action.should be_nil
             #
             p.set_dst! ' ', ' '
+            p.next_dst.should be_nil
             p.split_dst!
             p.room.should be_nil
             p.door.should be_nil
