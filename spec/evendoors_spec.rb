@@ -237,6 +237,12 @@ describe EvenDoors do
             p.door.should be_nil
             p.action.should be_nil
             #
+            p.set_dst! ' ', ' '
+            p.split_dst!
+            p.room.should be_nil
+            p.door.should be_nil
+            p.action.should be_nil
+            #
         end
         #
         it "routing: error!" do
