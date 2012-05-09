@@ -26,7 +26,6 @@ module EvenDoors
     ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
     ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
     ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
-    ERROR_ROUTE_SNDNA   = 'routing error: system no door, no action'.freeze
     #
     class Exception < ::Exception; end
     #

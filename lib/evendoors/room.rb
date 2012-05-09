@@ -116,8 +116,6 @@ module EvenDoors
                     route_p p
                 elsif p.action
                     p.dst_routed! space
-                else
-                    p.error! EvenDoors::ERROR_ROUTE_SNDNA
                 end
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
