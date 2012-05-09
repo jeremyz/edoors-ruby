@@ -225,6 +225,18 @@ describe EvenDoors do
             p.door.should eql nil
             p.action.should eql 'action'
             #
+            p.set_dst! ''
+            p.split_dst!
+            p.room.should be_nil
+            p.door.should be_nil
+            p.action.should be_nil
+            #
+            p.set_dst! nil
+            p.split_dst!
+            p.room.should be_nil
+            p.door.should be_nil
+            p.action.should be_nil
+            #
         end
         #
         it "routing: error!" do
