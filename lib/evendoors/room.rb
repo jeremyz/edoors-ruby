@@ -52,23 +52,17 @@ module EvenDoors
                 p.set_link_fields link.cond_fields if not apply_link
                 if apply_link or (p.link_value==link.cond_value)
                     # link matches !
-                    if not pending_link.nil?
+                    if pending_link
                         p2 = EvenDoors::Twirl.require_p p.class
                         p2.clone_data p
-                        p2.src = link.door
-                        p2.clear_dsts!
-                        p2.add_dsts link.dsts
-                        p2.set_link_fields link.fields
+                        p2.apply_link! link
                         send_p p2
                     end
                     pending_link = link
                 end
             end
             if pending_link
-                p.src = pending_link.door
-                p.clear_dsts!
-                p.add_dsts pending_link.dsts
-                p.set_link_fields pending_link.fields
+                p.apply_link! pending_link
                 send_p p
             end
             (not pending_link.nil?)
@@ -104,7 +98,9 @@ module EvenDoors
                     # boomerang
                     p.dst_routed! p.src
                 end
-            elsif not try_links p
+            elsif try_links p
+                return
+            else
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
             end
             puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Twirl.debug
