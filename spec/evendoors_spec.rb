@@ -239,7 +239,7 @@ describe EvenDoors do
             p.dst.should be d
         end
         #
-        it "link fileds and link value" do
+        it "link fields and link value" do
             p = EvenDoors::Particle.new
             p['k0'] = 'v0'
             p['k1'] = 'v1'
@@ -248,6 +248,27 @@ describe EvenDoors do
             p.link_value.should eql 'v0v2'
             p.set_link_fields 'k1,k0'
             p.link_value.should eql 'v1v0'
+            p['k0']='vx'
+            p.link_value.should eql 'v1vx'
+        end
+        #
+        it "apply_link! should work" do
+            p = EvenDoors::Particle.new
+            p['k0'] = 'v0'
+            p['k1'] = 'v1'
+            p['k2'] = 'v2'
+            p.set_link_fields 'k0,k2'
+            p.add_dsts 'door?action,?action'
+            p.src.should be_nil
+            p.link_value.should eql 'v0v2'
+            p.next_dst.should eql 'door?action'
+            lnk = EvenDoors::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
+            f = Fake.new
+            lnk.door = f
+            p.apply_link! lnk
+            p.src.should be f
+            p.next_dst.should eql 'door1?get'
+            p.link_value.should eql 'v1'
         end
         #
     end
