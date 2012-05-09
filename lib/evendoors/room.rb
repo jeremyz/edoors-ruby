@@ -111,14 +111,12 @@ module EvenDoors
             puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Twirl.debug
             if p.next_dst
                 p.split_dst!
-                if p.door.empty?
-                    if p.action.nil?
-                        p.error! EvenDoors::ERROR_ROUTE_SNDNA
-                    else
-                        p.dst_routed! space
-                    end
-                else
+                if p.door
                     route_p p
+                elsif p.action
+                    p.dst_routed! space
+                else
+                    p.error! EvenDoors::ERROR_ROUTE_SNDNA
                 end
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
