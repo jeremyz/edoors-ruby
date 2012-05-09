@@ -49,10 +49,11 @@ module EvenDoors
             end
         end
         #
-        def set_dst! a, d=nil
+        def set_dst! a, d=''
             @dst = @room = @door = @action = nil
             clear_dsts!
-            @dsts << ( d ? d.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/') : '' )+EvenDoors::ACT_SEP+a.to_str
+            return if ( (a.nil? or a.empty?) and d.empty? )
+            @dsts << ( d.empty? ? '' : d.sub(/^\/+/,'').sub(/\/+$/,'').gsub(/\/{2,}/,'/') )+EvenDoors::ACT_SEP+a.to_str
         end
         #
         def split_dst!
