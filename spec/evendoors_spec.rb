@@ -195,6 +195,18 @@ describe EvenDoors do
             p.door.should eql 'door'
             p.action.should eql 'action'
             #
+            p.set_dst! 'action', ''
+            p.split_dst!
+            p.room.should eql nil
+            p.door.should eql nil
+            p.action.should eql 'action'
+            #
+            p.set_dst! 'action'
+            p.split_dst!
+            p.room.should eql nil
+            p.door.should eql nil
+            p.action.should eql 'action'
+            #
             p.clear_dsts!
             p.add_dsts 'door?action,?action'
             p.split_dst!
