@@ -6,6 +6,10 @@ require 'spec_helper'
 #
 describe EvenDoors::Spin do
     #
+    before(:each) do
+        EvenDoors::Spin.clear!
+    end
+    #
     class MyP < EvenDoors::Particle; end
     #
     it "Particles pool" do
@@ -56,25 +60,15 @@ describe EvenDoors::Spin do
         f.sp.should be p1
     end
     #
-    it "options" do
+    it "option debug" do
         EvenDoors::Spin.debug_routing.should be false
-        spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
+        EvenDoors::Spin.debug_errors.should be false
+        spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true, :debug_errors=>true
         EvenDoors::Spin.debug_routing.should be true
-        spin.spin!
-        EvenDoors::Spin.debug_routing = false
-        EvenDoors::Spin.debug_routing.should be false
-        #
-        EvenDoors::Spin.spin = nil
-        EvenDoors::Spin.debug_errors.should be false
-        spin = EvenDoors::Spin.new 'dom0', :debug_errors=>true
         EvenDoors::Spin.debug_errors.should be true
-        spin.spin!
-        EvenDoors::Spin.debug_errors = false
-        EvenDoors::Spin.debug_errors.should be false
     end
     #
     it "only 1 Spin instance" do
-        EvenDoors::Spin.spin = nil
         spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
         lambda { EvenDoors::Spin.new('dom1') }.should raise_error(EvenDoors::Exception)
     end

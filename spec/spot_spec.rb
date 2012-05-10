@@ -6,6 +6,10 @@ require 'spec_helper'
 #
 describe EvenDoors::Spot do
     #
+    before(:each) do
+        EvenDoors::Spin.clear!
+    end
+    #
     it "path construction" do
         s0 = EvenDoors::Spot.new 'top', nil
         s1 = EvenDoors::Spot.new 'room0', s0

@@ -6,6 +6,10 @@ require 'spec_helper'
 #
 describe EvenDoors::Board do
     #
+    before(:each) do
+        EvenDoors::Spin.clear!
+    end
+    #
     it "require_p release_p" do
         board = EvenDoors::Board.new 'hell'
         p0 = board.require_p EvenDoors::Particle

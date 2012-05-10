@@ -6,6 +6,10 @@ require 'spec_helper'
 #
 describe EvenDoors::Particle do
     #
+    before(:each) do
+        EvenDoors::Spin.clear!
+    end
+    #
     it "payload manipulation" do
         p = EvenDoors::Particle.new
         #
@@ -184,7 +188,6 @@ describe EvenDoors::Particle do
     end
     #
     it "json from to should work" do
-        EvenDoors::Spin.spin = nil
         s0 = EvenDoors::Spin.new 'top'
         s1 = EvenDoors::Room.new 'room0', s0
         s2 = EvenDoors::Room.new 'room1', s1

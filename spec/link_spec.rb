@@ -6,6 +6,10 @@ require 'spec_helper'
 #
 describe EvenDoors::Link do
     #
+    before(:each) do
+        EvenDoors::Spin.clear!
+    end
+    #
     it "from particle data" do
         p = EvenDoors::Spin.require_p EvenDoors::Particle
         p.set_data EvenDoors::LNK_SRC, 'input1'
