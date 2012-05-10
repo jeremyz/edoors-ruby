@@ -4,15 +4,15 @@
 #
 module EvenDoors
     #
-    class Twirl
+    class Spin < Room
         #
-        @debug_routing = false
-        @debug_errors = false
         @pool = {}          # per particle class free list
         @sys_fifo = []      # system particles fifo list
         @app_fifo = []      # application particles fifo list
         #
         @run = false
+        @debug_routing = false
+        @debug_errors = false
         #
         class << self
             #
@@ -43,7 +43,7 @@ module EvenDoors
                 @sys_fifo << p
             end
             #
-            def twirl!
+            def spin!
                 while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
                     while @run and @sys_fifo.length>0
                         p = @sys_fifo.shift
@@ -62,6 +62,19 @@ module EvenDoors
                 @app_fifo.clear
             end
             #
+        end
+        #
+        def initialize n, args={}
+            super n, nil
+            self.class.debug_errors = args[:debug_errors] || false
+            self.class.debug_routing = args[:debug_routing] || false
+        end
+        #
+        def spin!
+            @spots.values.each do |spot| spot.start! end
+            self.class.run = true
+            self.class.spin!
+            @spots.values.each do |spot| spot.stop! end
         end
         #
     end

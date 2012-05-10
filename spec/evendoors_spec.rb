@@ -48,60 +48,6 @@ describe EvenDoors do
         expect{ EvenDoors }.not_to raise_error(NameError)
     end
     #
-    describe EvenDoors::Twirl do
-        #
-        class MyP < EvenDoors::Particle; end
-        #
-        it "should correctly manage Particles pool" do
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p0===p1).should be_false
-            EvenDoors::Twirl.release_p p0
-            p2 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p0===p2).should be_true
-        end
-        #
-        it "should correctly manage different Particles classes" do
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p0===p1).should be_false
-            EvenDoors::Twirl.release_p p0
-            p2 = EvenDoors::Twirl.require_p MyP
-            p3 = EvenDoors::Twirl.require_p MyP
-            (p2===p3).should be_false
-            EvenDoors::Twirl.release_p p2
-            p4 = EvenDoors::Twirl.require_p MyP
-            (p2===p4).should be_true
-        end
-        #
-        it "should correctly release merged data" do
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p0===p1).should be_false
-            p0.merge! p1
-            EvenDoors::Twirl.release_p p0
-            p2 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p2===p0).should be_true
-            p3 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            (p3===p1).should be_true
-        end
-        #
-        it "send_p send_sys_p twirl!" do
-            f = Fake.new
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p0.dst_routed!  f
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
-            p1.dst_routed!  f
-            EvenDoors::Twirl.send_p p0
-            EvenDoors::Twirl.send_sys_p p1
-            EvenDoors::Twirl.run = true
-            EvenDoors::Twirl.twirl!
-            f.p.should be p0
-            f.sp.should be p1
-        end
-        #
-    end
-    #
     describe EvenDoors::Particle do
         #
         it "payload manipulation" do
@@ -286,7 +232,7 @@ describe EvenDoors do
     describe EvenDoors::Link do
         #
         it "from particle data" do
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.set_data EvenDoors::LNK_SRC, 'input1'
             p.set_data EvenDoors::LNK_DSTS, 'concat1?follow,output1'
             p.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
@@ -317,22 +263,72 @@ describe EvenDoors do
         #
     end
     #
-    describe EvenDoors::Space do
+    describe EvenDoors::Spin do
+        #
+        class MyP < EvenDoors::Particle; end
+        #
+        it "should correctly manage Particles pool" do
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p0===p1).should be_false
+            EvenDoors::Spin.release_p p0
+            p2 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p0===p2).should be_true
+        end
+        #
+        it "should correctly manage different Particles classes" do
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p0===p1).should be_false
+            EvenDoors::Spin.release_p p0
+            p2 = EvenDoors::Spin.require_p MyP
+            p3 = EvenDoors::Spin.require_p MyP
+            (p2===p3).should be_false
+            EvenDoors::Spin.release_p p2
+            p4 = EvenDoors::Spin.require_p MyP
+            (p2===p4).should be_true
+        end
+        #
+        it "should correctly release merged data" do
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p0===p1).should be_false
+            p0.merge! p1
+            EvenDoors::Spin.release_p p0
+            p2 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p2===p0).should be_true
+            p3 = EvenDoors::Spin.require_p EvenDoors::Particle
+            (p3===p1).should be_true
+        end
+        #
+        it "send_p send_sys_p spin!" do
+            f = Fake.new
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
+            p0.dst_routed!  f
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
+            p1.dst_routed!  f
+            EvenDoors::Spin.send_p p0
+            EvenDoors::Spin.send_sys_p p1
+            EvenDoors::Spin.run = true
+            EvenDoors::Spin.spin!
+            f.p.should be p0
+            f.sp.should be p1
+        end
         #
         it "does really little for now" do
-            EvenDoors::Twirl.debug_routing.should be false
-            space = EvenDoors::Space.new 'dom0', :debug_routing=>true
-            EvenDoors::Twirl.debug_routing.should be true
-            space.twirl!
-            EvenDoors::Twirl.debug_routing = false
-            EvenDoors::Twirl.debug_routing.should be false
+            EvenDoors::Spin.debug_routing.should be false
+            spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
+            EvenDoors::Spin.debug_routing.should be true
+            spin.spin!
+            EvenDoors::Spin.debug_routing = false
+            EvenDoors::Spin.debug_routing.should be false
             #
-            EvenDoors::Twirl.debug_errors.should be false
-            space = EvenDoors::Space.new 'dom0', :debug_errors=>true
-            EvenDoors::Twirl.debug_errors.should be true
-            space.twirl!
-            EvenDoors::Twirl.debug_errors = false
-            EvenDoors::Twirl.debug_errors.should be false
+            EvenDoors::Spin.debug_errors.should be false
+            spin = EvenDoors::Spin.new 'dom0', :debug_errors=>true
+            EvenDoors::Spin.debug_errors.should be true
+            spin.spin!
+            EvenDoors::Spin.debug_errors = false
+            EvenDoors::Spin.debug_errors.should be false
         end
         #
     end
@@ -369,7 +365,7 @@ describe EvenDoors do
             end
             f = Fake.new
             d0 = Door0.new 'door0', f
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
             #
             p0.set_dst! 'SEND'
             p0.split_dst!
@@ -384,17 +380,17 @@ describe EvenDoors do
             p0.set_dst! 'RELEASE'
             p0.split_dst!
             d0.process_p p0
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
             p1.should be p0
             #
             p0.set_dst! 'LOST'
             p0.split_dst!
             d0.process_p p0
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
             p1.should be p0
             #
             d0.process_sys_p p0
-            p1 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p1 = EvenDoors::Spin.require_p EvenDoors::Particle
             p1.should be p0
         end
         #
@@ -492,32 +488,32 @@ describe EvenDoors do
             d0.stop.should be_true
         end
         #
-        it "parent and space should be ok" do
-            s = EvenDoors::Space.new 'space'
+        it "parent and spin should be ok" do
+            s = EvenDoors::Spin.new 'dom0'
             r0 = EvenDoors::Room.new 'r0', s
             r1 = EvenDoors::Room.new 'r0', r0
             r2 = EvenDoors::Room.new 'r0', r1
             r2.parent.should be r1
             r1.parent.should be r0
             r0.parent.should be s
-            r0.space.should be s
-            r1.space.should be s
-            r2.space.should be s
+            r0.spin.should be s
+            r1.spin.should be s
+            r2.spin.should be s
         end
         #
         it "route error: no source" do
             room = EvenDoors::Room.new 'room', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.set_dst! 'get', 'room/door'
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NS
-            p.dst.should be room.space
+            p.dst.should be room.spin
         end
         #
         it "route error: no destination no links" do
             room = EvenDoors::Room.new 'room', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             room.send_p p
             p.action.should eql EvenDoors::ACT_ERROR
@@ -528,7 +524,7 @@ describe EvenDoors do
         it "route error: top room, wrong room" do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'noroom/door'
             room1.send_p p
@@ -539,7 +535,7 @@ describe EvenDoors do
         #
         it "route error: right room, wrong door" do
             room = EvenDoors::Room.new 'room', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'room/nodoor'
             room.send_p p
@@ -551,7 +547,7 @@ describe EvenDoors do
         it "route error: right room, wrong door (bubble up)" do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'room0/nodoor'
             room1.send_p p
@@ -563,7 +559,7 @@ describe EvenDoors do
         it "routing success (direct)" do
             room0 = EvenDoors::Room.new 'room0', nil
             door0 = EvenDoors::Door.new 'door0', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'door0'
             room0.send_p p
@@ -575,7 +571,7 @@ describe EvenDoors do
             room0 = EvenDoors::Room.new 'room0', nil
             room1 = EvenDoors::Room.new 'room1', room0
             door0 = EvenDoors::Door.new 'door0', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'room0/door0'
             room1.send_p p
@@ -589,7 +585,7 @@ describe EvenDoors do
             room2 = EvenDoors::Room.new 'room2', room0
             room3 = EvenDoors::Room.new 'room3', room2
             door0 = EvenDoors::Door.new 'door01', room1
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = Fake.new
             p.set_dst! 'get', 'room0/room1/door01'
             room3.send_p p
@@ -601,7 +597,7 @@ describe EvenDoors do
         it "routing success: no door name -> src" do
             room0 = EvenDoors::Room.new 'room0', nil
             door0 = EvenDoors::Door.new 'door0', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.src = door0
             p.set_dst! 'get'
             room0.send_p p
@@ -614,7 +610,7 @@ describe EvenDoors do
             door0 = EvenDoors::Door.new 'door0', room0
             door1 = EvenDoors::Door.new 'door1', room0
             room0.add_link EvenDoors::Link.new('door0', 'door1')
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             door0.send_p p
             p.action.should be_nil
             p.dst.should be door1
@@ -625,7 +621,7 @@ describe EvenDoors do
             door0 = EvenDoors::Door.new 'door0', room0
             door1 = EvenDoors::Door.new 'door1', room0
             room0.add_link EvenDoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p['f0']='v0'
             p['f1']='v1'
             door0.send_p p
@@ -647,13 +643,13 @@ describe EvenDoors do
             door1 = Out.new 'door1', room0
             room0.add_link EvenDoors::Link.new('door0', 'door1')
             room0.add_link EvenDoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
-            EvenDoors::Twirl.clear!
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
+            EvenDoors::Spin.clear!
             p['f0']='v0'
             p['f1']='v1'
             door0.send_p p
-            EvenDoors::Twirl.run = true
-            EvenDoors::Twirl.twirl!
+            EvenDoors::Spin.run = true
+            EvenDoors::Spin.spin!
             door1.ps.length.should eql 2
             p0 = door1.ps[0]
             p0.action.should be_nil
@@ -668,7 +664,7 @@ describe EvenDoors do
         #
         it "system route error: system no destination" do
             room0 = EvenDoors::Room.new 'room0', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             room0.send_sys_p p
             p.action.should eql EvenDoors::ACT_ERROR
             p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SND
@@ -676,17 +672,17 @@ describe EvenDoors do
         #
         it "system routing success: action only" do
             room0 = EvenDoors::Room.new 'room0', nil
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.set_dst! EvenDoors::SYS_ACT_ADD_LINK
             room0.send_sys_p p
             p.action.should eql EvenDoors::SYS_ACT_ADD_LINK
-            p.dst.should be room0.space
+            p.dst.should be room0.spin
         end
         #
         it "system routing success" do
             room0 = EvenDoors::Room.new 'room0', nil
             door0 = EvenDoors::Door.new 'door0', room0
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p.set_dst! EvenDoors::SYS_ACT_ADD_LINK, 'room0/door0'
             room0.send_sys_p p
             p.action.should eql EvenDoors::SYS_ACT_ADD_LINK
@@ -694,12 +690,12 @@ describe EvenDoors do
         end
         #
         it "SYS_ACT_ADD_LINK should work" do
-            EvenDoors::Twirl.clear!
-            space = EvenDoors::Space.new 'space'    # needed to be able to route to door
-            room0 = EvenDoors::Room.new 'room0', space
+            EvenDoors::Spin.clear!
+            spin = EvenDoors::Spin.new 'dom0'    # needed to be able to route to door
+            room0 = EvenDoors::Room.new 'room0', spin
             door0 = EvenDoors::Door.new 'door0', room0
             door1 = EvenDoors::Door.new 'door1', room0
-            p0 = EvenDoors::Twirl.require_p EvenDoors::Particle
+            p0 = EvenDoors::Spin.require_p EvenDoors::Particle
             p0.set_data EvenDoors::LNK_SRC, 'door0'
             p0.set_data EvenDoors::LNK_DSTS, 'door1'
             p0.set_data EvenDoors::LNK_FIELDS, 'fields'
@@ -707,8 +703,8 @@ describe EvenDoors do
             p0.set_data EvenDoors::LNK_CONDV, 'v0v1'
             p0.set_dst! EvenDoors::SYS_ACT_ADD_LINK, room0.path
             room0.send_sys_p p0
-            space.twirl!
-            p = EvenDoors::Twirl.require_p EvenDoors::Particle
+            spin.spin!
+            p = EvenDoors::Spin.require_p EvenDoors::Particle
             p['f0']='v0'
             p['f1']='v1'
             door0.send_p p

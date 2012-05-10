@@ -13,14 +13,14 @@ module EvenDoors
         end
         #
         def require_p p_kls
-            p = EvenDoors::Twirl.require_p p_kls
+            p = EvenDoors::Spin.require_p p_kls
             p.src = self
             p
         end
         #
         def release_p p
             @saved=nil if @saved==p     # particle is released, all is good
-            EvenDoors::Twirl.release_p p
+            EvenDoors::Spin.release_p p
         end
         #
         def process_p p
@@ -28,7 +28,7 @@ module EvenDoors
             @saved = p
             receive_p p
             if not @saved.nil?
-                puts "#{path} didn't give that particle back #{p}" if EvenDoors::Twirl.debug_errors
+                puts "#{path} didn't give that particle back #{p}" if EvenDoors::Spin.debug_errors
                 puts "\t#{p.data EvenDoors::ERROR_FIELD}" if p.action==EvenDoors::ACT_ERROR
                 release_p @saved
                 @saved = nil
@@ -37,7 +37,7 @@ module EvenDoors
         #
         def process_sys_p p
             # nothing todo with it now
-            EvenDoors::Twirl.release_p p
+            EvenDoors::Spin.release_p p
         end
         #
         def send_p p

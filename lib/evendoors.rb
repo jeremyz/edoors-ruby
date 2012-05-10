@@ -33,9 +33,8 @@ end
 #
 require 'evendoors/particle'
 require 'evendoors/spot'
-require 'evendoors/twirl'
 require 'evendoors/room'
-require 'evendoors/space'
+require 'evendoors/spin'
 require 'evendoors/door'
 require 'evendoors/board'
 require 'evendoors/link'
