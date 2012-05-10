@@ -75,6 +75,14 @@ describe EvenDoors::Spin do
     #
     it "spin->json->spin" do
         spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
+        r0 = EvenDoors::Room.new 'r0', spin
+        r1 = EvenDoors::Room.new 'r1', r0
+        r2 = EvenDoors::Room.new 'r2', r1
+        r3 = EvenDoors::Room.new 'r3', r1
+        r4 = EvenDoors::Room.new 'r4', r3
+        d0 = EvenDoors::Door.new 'd0', r1
+        d1 = EvenDoors::Door.new 'd1', r1
+        d2 = EvenDoors::Door.new 'd2', r2
         p0 = EvenDoors::Spin.require_p EvenDoors::Particle
         p1 = EvenDoors::Spin.require_p EvenDoors::Particle
         p2 = EvenDoors::Spin.require_p EvenDoors::Particle
