@@ -30,7 +30,7 @@ describe EvenDoors::Room do
         d0.stop.should be_true
     end
     #
-    it "parent, spin and resolve should be ok" do
+    it "parent, spin and search_down should be ok" do
         EvenDoors::Spin.spin = nil
         s = EvenDoors::Spin.new 'dom0'
         r0 = EvenDoors::Room.new 'r0', s
@@ -45,9 +45,13 @@ describe EvenDoors::Room do
         r1.spin.should be s
         r2.spin.should be s
         r3.spin.should be s
-        r2.resolve('dom0/r0/r1/r2').should be r2
-        r3.resolve('dom0/r0/r1/r2').should be r2
-        r1.resolve('dom0/r0/r1/r2').should be r2
+        s.search_down('dom0/r0/r1/r2').should be r2
+        r0.search_down('dom0/r0/r1/r2').should be r2
+        r1.search_down('dom0/r0/r1/r2').should be r2
+        r2.search_down('dom0/r0/r1/r2').should be r2
+        r1.search_down('dom0/r0/r1/r9').should be nil
+        r3.search_down('dom0/r0/r1/r2').should be nil
+        r4.search_down('dom0/r0/r1/r2').should be nil
     end
     #
     it "route error: no source" do
