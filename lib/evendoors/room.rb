@@ -42,6 +42,19 @@ module EvenDoors
             @spin = ( @parent.nil? ? self : @parent.spin )
         end
         #
+        def resolve search
+            return self if search==path
+            if (search=~/^#{path}\/(\w+)\/?/)==0
+                if spot = @spots[$1]
+                    return spot if spot.path==search    # needed as Door doesn't implement #resolve
+                    return spot.resolve search
+                else
+                    nil
+                end
+            end
+            (@parent ? @parent.resolve(search) : nil )
+        end
+        #
         def try_links p
             puts "   -> try_links ..." if EvenDoors::Spin.debug_routing
             links = @links[p.src.name]
