@@ -64,12 +64,19 @@ describe EvenDoors::Spin do
         EvenDoors::Spin.debug_routing = false
         EvenDoors::Spin.debug_routing.should be false
         #
+        EvenDoors::Spin.spin = nil
         EvenDoors::Spin.debug_errors.should be false
         spin = EvenDoors::Spin.new 'dom0', :debug_errors=>true
         EvenDoors::Spin.debug_errors.should be true
         spin.spin!
         EvenDoors::Spin.debug_errors = false
         EvenDoors::Spin.debug_errors.should be false
+    end
+    #
+    it "only 1 Spin instance" do
+        EvenDoors::Spin.spin = nil
+        spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
+        lambda { EvenDoors::Spin.new('dom1') }.should raise_error(EvenDoors::Exception)
     end
     #
 end

@@ -30,6 +30,7 @@ describe EvenDoors::Room do
     end
     #
     it "parent, spin and resolve should be ok" do
+        EvenDoors::Spin.spin = nil
         s = EvenDoors::Spin.new 'dom0'
         r0 = EvenDoors::Room.new 'r0', s
         r1 = EvenDoors::Room.new 'r1', r0
@@ -238,6 +239,7 @@ describe EvenDoors::Room do
     #
     it "SYS_ACT_ADD_LINK" do
         EvenDoors::Spin.clear!
+        EvenDoors::Spin.spin = nil
         spin = EvenDoors::Spin.new 'dom0'    # needed to be able to route to door
         room0 = EvenDoors::Room.new 'room0', spin
         door0 = EvenDoors::Door.new 'door0', room0

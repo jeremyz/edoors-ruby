@@ -10,13 +10,14 @@ module EvenDoors
         @sys_fifo = []      # system particles fifo list
         @app_fifo = []      # application particles fifo list
         #
+        @spin = nil
         @run = false
         @debug_routing = false
         @debug_errors = false
         #
         class << self
             #
-            attr_accessor :run, :debug_routing, :debug_errors
+            attr_accessor :spin, :run, :debug_routing, :debug_errors
             #
             def release_p p
                 # hope there is no circular loop
@@ -66,6 +67,8 @@ module EvenDoors
         #
         def initialize n, args={}
             super n, nil
+            raise EvenDoors::Exception.new "do not try to initialize more than one spin" if not self.class.spin.nil?
+            self.class.spin = self
             self.class.debug_errors = args[:debug_errors] || false
             self.class.debug_routing = args[:debug_routing] || false
         end
