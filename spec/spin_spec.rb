@@ -73,6 +73,20 @@ describe EvenDoors::Spin do
         lambda { EvenDoors::Spin.new('dom1') }.should raise_error(EvenDoors::Exception)
     end
     #
+    it "spin->json->spin" do
+        spin = EvenDoors::Spin.new 'dom0', :debug_routing=>true
+        p0 = EvenDoors::Spin.require_p EvenDoors::Particle
+        p1 = EvenDoors::Spin.require_p EvenDoors::Particle
+        p2 = EvenDoors::Spin.require_p EvenDoors::Particle
+        EvenDoors::Spin.send_p p0
+        EvenDoors::Spin.send_p p1
+        EvenDoors::Spin.send_sys_p p2
+        json = JSON.generate spin
+        EvenDoors::Spin.clear!
+        dom0 = EvenDoors::Spin.json_create( JSON.load( json ) )
+        json.should eql JSON.generate(dom0)
+    end
+    #
 end
 #
 #EOF
