@@ -10,7 +10,6 @@ module EvenDoors
             super n, p
             @spots = {}
             @links = {}
-            @cache = {}
             @parent.add_spot self if @parent
         end
         #
