@@ -31,6 +31,7 @@ module EvenDoors
     #
 end
 #
+require 'json'
 require 'evendoors/particle'
 require 'evendoors/spot'
 require 'evendoors/room'

@@ -6,7 +6,7 @@ module EvenDoors
     #
     class Particle
         #
-        def initialize
+        def initialize o={}
             @ts = Time.now      # creation time
             @src = nil          # Spot where it's originated from
             @dst = nil          # Spot where it's heading to
@@ -19,6 +19,40 @@ module EvenDoors
             @link_fields = []   # the fields used to generate the link value
             @payload = {}       # the actual data carried by this particle
             @merged = []        # list of merged particles
+            #
+            if not o.empty?
+                @ts = Time.parse(o['ts']) if o['ts']
+                @room = o['room']
+                @door = o['door']
+                @action = o['action']
+                @payload = o['payload']||{}
+                @src = EvenDoors::Spin.spin.resolve o['src'] if o['src']
+                @dst = EvenDoors::Spin.spin.resolve o['dst'] if o['dst']
+                o['dsts'].each do |dst| add_dsts dst end if o['dsts']
+                set_link_fields *o['link_fields'] if o['link_fields']
+                o['merged'].each do |merged| merge! Particle.json_create(merged) end if o['merged']
+            end
+        end
+        #
+        def to_json *a
+            {
+                'kls'           => self.class.name,
+                'ts'            => @ts,
+                'src'           => (@src ? @src.path : nil ),
+                'dst'           => (@dst ? @dst.path : nil ),
+                'room'          => @room,
+                'door'          => @door,
+                'action'        => @action,
+                'dsts'          => @dsts,
+                'link_fields'   => @link_fields,
+                'payload'       => @payload,
+                'merged'        => @merged
+            }.to_json *a
+        end
+        #
+        def self.json_create o
+            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            self.new o
         end
         #
         def reset!

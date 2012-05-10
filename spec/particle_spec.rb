@@ -183,6 +183,56 @@ describe EvenDoors::Particle do
         p.link_value.should eql 'v1'
     end
     #
+    it "json from to should work" do
+        EvenDoors::Spin.spin = nil
+        s0 = EvenDoors::Spin.new 'top'
+        s1 = EvenDoors::Room.new 'room0', s0
+        s2 = EvenDoors::Room.new 'room1', s1
+        s3 = EvenDoors::Door.new 'doora', s2
+        s4 = EvenDoors::Door.new 'doorb', s1
+        p0 = EvenDoors::Particle.new
+        p0['k0'] = 'v0'
+        p0['k1'] = 'v1'
+        p0['k2'] = 'v2'
+        p0.src = s3
+        p0.set_link_fields 'k0,k2'
+        p0.add_dsts 'room0/room1/room2/doorX?myaction,door?action,?action'
+        p0.split_dst!
+        p1 = EvenDoors::Particle.new
+        p1['k3'] = 'v6'
+        p1['k4'] = 'v7'
+        p1['k5'] = 'v8'
+        p1.src = s3
+        p1.dst_routed! s4
+        p1.set_link_fields 'k5,k4,k3'
+        p1.add_dsts 'room0/room1/door?action,output?action'
+        p0.merge! p1
+        px = EvenDoors::Particle.json_create( JSON.load( JSON.generate(p0) ) )
+        ((px.ts-p0.ts)<0.5).should be_true
+        px.src.should be s3
+        px.dst.should be_nil
+        px.room.should eql 'room0/room1/room2'
+        px.door.should eql 'doorX'
+        px.action.should eql 'myaction'
+        px.next_dst.should eql 'room0/room1/room2/doorX?myaction'
+        px.link_value.should eql 'v0v2'
+        px['k0'].should eql 'v0'
+        px['k1'].should eql 'v1'
+        px['k2'].should eql 'v2'
+        py = px.merged(0)
+        ((py.ts-p1.ts)<0.5).should be_true
+        py.src.should be s3
+        py.dst.should be s4
+        py.room.should be_nil
+        py.door.should be_nil
+        py.action.should be_nil
+        py.next_dst.should eql 'room0/room1/door?action'
+        py.link_value.should eql 'v8v7v6'
+        py['k3'].should eql 'v6'
+        py['k4'].should eql 'v7'
+        py['k5'].should eql 'v8'
+    end
+    #
 end
 #
 # EOF

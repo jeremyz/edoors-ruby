@@ -7,6 +7,7 @@ require 'spec_helper'
 describe EvenDoors::Room do
     #
     it "add_spot and add_link correctly" do
+        EvenDoors::Spin.debug_routing = false
         r0 = EvenDoors::Room.new 'room0', nil
         d0 = EvenDoors::Door.new 'door0', r0
         lambda { EvenDoors::Door.new('door0', r0) }.should raise_error(EvenDoors::Exception)
