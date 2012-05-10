@@ -268,6 +268,23 @@ describe EvenDoors::Room do
         p.dst.should be door1
     end
     #
+    it "room->json->room" do
+        r0 = EvenDoors::Room.new 'r0'
+        r1 = EvenDoors::Room.new 'r1', r0
+        r2 = EvenDoors::Room.new 'r2', r1
+        r3 = EvenDoors::Room.new 'r3', r1
+        r4 = EvenDoors::Room.new 'r4', r3
+        d0 = EvenDoors::Door.new 'd0', r1
+        d1 = EvenDoors::Door.new 'd1', r1
+        d2 = EvenDoors::Door.new 'd2', r2
+        r1.add_link EvenDoors::Link.new('d0', 'd1', 'fields', 'f0,f1', 'v0v1')
+        r1.add_link EvenDoors::Link.new('d0', 'd2')
+        r1.add_link EvenDoors::Link.new('d1', 'd0')
+        r2.add_link EvenDoors::Link.new('d2', 'd1', 'fies', 'f5,f1', 'v9v1')
+        rx = EvenDoors::Room.json_create( JSON.load( JSON.generate(r0) ) )
+        JSON.generate(r0).should eql JSON.generate(rx)
+    end#
+    #
 end
 #
 # EOF
