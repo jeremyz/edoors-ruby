@@ -23,16 +23,18 @@ module EvenDoors
             EvenDoors::Spin.release_p p
         end
         #
+        def garbage
+            puts " * #{path} didn't give back #{p}" if EvenDoors::Spin.debug_errors
+            puts "\t#{@saved.data EvenDoors::ERROR_FIELD}" if @saved.action==EvenDoors::ACT_ERROR
+            release_p @saved
+            @saved = nil
+        end
+        #
         def process_p p
             @viewer.receive_p p if @viewer
             @saved = p
             receive_p p
-            if not @saved.nil?
-                puts "#{path} didn't give that particle back #{p}" if EvenDoors::Spin.debug_errors
-                puts "\t#{p.data EvenDoors::ERROR_FIELD}" if p.action==EvenDoors::ACT_ERROR
-                release_p @saved
-                @saved = nil
-            end
+            garbage if not @saved.nil?
         end
         #
         def process_sys_p p
