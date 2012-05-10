@@ -73,6 +73,19 @@ describe EvenDoors::Board do
         b0.follow.should be_true
     end
     #
+    it "link->json->link" do
+        board = EvenDoors::Board.new 'hell'
+        p0 = EvenDoors::Particle.new
+        p1 = EvenDoors::Particle.new
+        p1['v0']=0
+        p1.set_link_fields 'v0'
+        board.process_p p0
+        board.process_p p1
+        hell = EvenDoors::Board.json_create( JSON.load( JSON.generate(board) ) )
+        board.name.should eql hell.name
+        JSON.generate(board).should eql JSON.generate(hell)
+    end
+    #
 end
 #
 # EOF
