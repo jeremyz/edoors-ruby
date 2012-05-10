@@ -59,6 +59,8 @@ module EvenDoors
             end
             #
             def clear!
+                @spin= nil
+                @pool.clear
                 @sys_fifo.clear
                 @app_fifo.clear
             end
