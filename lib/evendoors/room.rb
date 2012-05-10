@@ -13,6 +13,29 @@ module EvenDoors
             @parent.add_spot self if @parent
         end
         #
+        def to_json *a
+            {
+                'kls'   => self.class.name,
+                'name'  => @name,
+                'spots' => @spots,
+                'links' => @links
+            }.to_json *a
+        end
+        #
+        def self.json_create o
+            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            room = self.new o['name']
+            o['spots'].each do |name,spot|
+                room.add_spot eval( spot['kls'] ).json_create(spot)
+            end
+            o['links'].each do |src,links|
+                links.each do |link|
+                    room.add_link EvenDoors::Link.json_create(link)
+                end
+            end
+            room
+        end
+        #
         def add_spot s
             raise EvenDoors::Exception.new "Spot #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
             raise EvenDoors::Exception.new "Spot #{s.name} already exists in #{path}" if @spots.has_key? s.name
