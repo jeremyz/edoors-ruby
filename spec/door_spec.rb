@@ -69,10 +69,11 @@ describe EvenDoors::Door do
         p1.should be p0
     end
     #
-    it "link->json->link" do
+    it "door->json->door" do
         door = EvenDoors::Door.new 'hell'
         hell = EvenDoors::Door.json_create( JSON.load( JSON.generate(door) ) )
         door.name.should eql hell.name
+        JSON.generate(door).should eql JSON.generate(hell)
     end
     #
 end

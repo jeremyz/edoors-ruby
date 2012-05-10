@@ -33,6 +33,7 @@ describe EvenDoors::Link do
         link.fields.should eql lnk.fields
         link.cond_fields.should eql lnk.cond_fields
         link.cond_value.should eql lnk.cond_value
+        JSON.generate(link).should eql JSON.generate(lnk)
     end
     #
 end

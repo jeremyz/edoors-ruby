@@ -73,7 +73,7 @@ describe EvenDoors::Board do
         b0.follow.should be_true
     end
     #
-    it "link->json->link" do
+    it "board->json->board" do
         board = EvenDoors::Board.new 'hell'
         p0 = EvenDoors::Particle.new
         p1 = EvenDoors::Particle.new

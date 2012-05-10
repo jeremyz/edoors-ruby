@@ -234,6 +234,7 @@ describe EvenDoors::Particle do
         py['k3'].should eql 'v6'
         py['k4'].should eql 'v7'
         py['k5'].should eql 'v8'
+        JSON.generate(p0).should eql JSON.generate(px)
     end
     #
 end
