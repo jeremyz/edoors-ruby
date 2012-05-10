@@ -187,7 +187,7 @@ describe EvenDoors::Particle do
         p.link_value.should eql 'v1'
     end
     #
-    it "json from to should work" do
+    it "particle->json->particle" do
         s0 = EvenDoors::Spin.new 'top'
         s1 = EvenDoors::Room.new 'room0', s0
         s2 = EvenDoors::Room.new 'room1', s1
