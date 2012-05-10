@@ -12,6 +12,18 @@ module EvenDoors
             @parent.add_spot self if @parent
         end
         #
+        def to_json *a
+            {
+                'kls'   => self.class.name,
+                'name'  => @name
+            }.to_json *a
+        end
+        #
+        def self.json_create o
+            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            self.new o['name']
+        end
+        #
         def require_p p_kls
             p = EvenDoors::Spin.require_p p_kls
             p.src = self
