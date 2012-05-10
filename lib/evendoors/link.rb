@@ -15,6 +15,22 @@ module EvenDoors
             @door = nil                     # pointer to the source
         end
         #
+        def to_json *a
+            {
+                'kls'           => self.class.name,
+                'src'           => @src,
+                'dsts'          => @dsts,
+                'fields'        => @fields,
+                'cond_fields'   => @cond_fields,
+                'cond_value'    => @cond_value
+            }.to_json *a
+        end
+        #
+        def self.json_create o
+            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            self.new o['src'], o['dsts'], o['fields'], o['cond_fields'], o['cond_value']
+        end
+        #
         def self.from_particle_data p
             EvenDoors::Link.new(p.get_data(EvenDoors::LNK_SRC), p.get_data(EvenDoors::LNK_DSTS),
                                 p.get_data(EvenDoors::LNK_FIELDS), p.get_data(EvenDoors::LNK_CONDF),
