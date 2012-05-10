@@ -29,17 +29,23 @@ describe EvenDoors::Room do
         d0.stop.should be_true
     end
     #
-    it "parent and spin should be ok" do
+    it "parent, spin and resolve should be ok" do
         s = EvenDoors::Spin.new 'dom0'
         r0 = EvenDoors::Room.new 'r0', s
-        r1 = EvenDoors::Room.new 'r0', r0
-        r2 = EvenDoors::Room.new 'r0', r1
+        r1 = EvenDoors::Room.new 'r1', r0
+        r2 = EvenDoors::Room.new 'r2', r1
+        r3 = EvenDoors::Room.new 'r3', s
+        r4 = EvenDoors::Room.new 'r4', r3
         r2.parent.should be r1
         r1.parent.should be r0
         r0.parent.should be s
         r0.spin.should be s
         r1.spin.should be s
         r2.spin.should be s
+        r3.spin.should be s
+        r2.resolve('dom0/r0/r1/r2').should be r2
+        r3.resolve('dom0/r0/r1/r2').should be r2
+        r1.resolve('dom0/r0/r1/r2').should be r2
     end
     #
     it "route error: no source" do
