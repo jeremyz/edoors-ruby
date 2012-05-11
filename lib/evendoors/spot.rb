@@ -38,6 +38,11 @@ module EvenDoors
             @path = ( @parent ? @parent.path+EvenDoors::PATH_SEP : '') + name
         end
         #
+        def spin
+            return @spin if @spin
+            @spin = ( @parent.nil? ? self : @parent.spin )
+        end
+        #
     end
     #
 end

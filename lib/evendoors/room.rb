@@ -76,11 +76,6 @@ module EvenDoors
             @spots.values.each do |spot| spot.stop! if spot.respond_to? :stop! end
         end
         #
-        def spin
-            return @spin if @spin
-            @spin = ( @parent.nil? ? self : @parent.spin )
-        end
-        #
         def search_down spath
             return self if spath==path
             return nil if (spath=~/^#{path}\/(\w+)\/?/)!=0
