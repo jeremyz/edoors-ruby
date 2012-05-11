@@ -6,12 +6,16 @@ require 'spec_helper'
 #
 describe EvenDoors::Board do
     #
+    before (:all) do
+        @spin = EvenDoors::Spin.new 'dom0'
+    end
+    #
     before(:each) do
-        EvenDoors::Spin.clear!
+        @spin.clear!
     end
     #
     it "require_p release_p" do
-        board = EvenDoors::Board.new 'hell'
+        board = EvenDoors::Board.new 'hell', @spin
         p0 = board.require_p EvenDoors::Particle
         p0.src.should be board
         p1 = board.require_p EvenDoors::Particle
@@ -52,7 +56,7 @@ describe EvenDoors::Board do
                 end
             end
         end
-        b0 = Board0.new 'door0'
+        b0 = Board0.new 'door0', @spin
         b0.process_p p0
         p0.merged(0).should be_nil
         b0.process_p p1
@@ -74,7 +78,7 @@ describe EvenDoors::Board do
     end
     #
     it "board->json->board" do
-        board = EvenDoors::Board.new 'hell'
+        board = EvenDoors::Board.new 'hell', @spin
         p0 = EvenDoors::Particle.new
         p1 = EvenDoors::Particle.new
         p1['v0']=0
