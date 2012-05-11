@@ -36,12 +36,15 @@ module EvenDoors
             #
             if not o.empty?
                 o['spots'].each do |name,spot|
-                    add_spot EvenDoors::Room.json_create spot
+                    spot['parent']=self
+                    EvenDoors::Room.json_create(spot)
                 end if o['spots']
                 o['app_fifo'].each do |particle|
+                    particle['parent']=self
                     @app_fifo << EvenDoors::Particle.json_create(particle)
                 end if o['app_fifo']
                 o['sys_fifo'].each do |particle|
+                    particle['parent']=self
                     @sys_fifo <<  EvenDoors::Particle.json_create(particle)
                 end if o['sys_fifo']
             end
@@ -67,6 +70,7 @@ module EvenDoors
         end
         #
         def clear!
+            @spots.clear
             @pool.clear
             @sys_fifo.clear
             @app_fifo.clear
