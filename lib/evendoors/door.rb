@@ -41,18 +41,18 @@ module EvenDoors
         end
         #
         def require_p p_kls
-            p = spin.require_p p_kls
+            p = @spin.require_p p_kls
             p.src = self
             p
         end
         #
         def release_p p
             @saved=nil if @saved==p     # particle is released, all is good
-            spin.release_p p
+            @spin.release_p p
         end
         #
         def garbage
-            puts " * #{path} didn't give back #{p}" if spin.debug_errors
+            puts " * #{path} didn't give back #{p}" if @spin.debug_errors
             puts "\t#{@saved.data EvenDoors::ERROR_FIELD}" if @saved.action==EvenDoors::ACT_ERROR
             release_p @saved
             @saved = nil
@@ -67,7 +67,7 @@ module EvenDoors
         #
         def process_sys_p p
             # nothing todo with it now
-            spin.release_p p
+            @spin.release_p p
         end
         #
         def send_p p
