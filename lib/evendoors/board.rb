@@ -23,7 +23,7 @@ module EvenDoors
     #
     class Board < Door
         #
-        def initialize n, p=nil
+        def initialize n, p
             super n, p
             @postponed = {}
         end
@@ -38,9 +38,9 @@ module EvenDoors
         #
         def self.json_create o
             raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
-            board = self.new o['name']
-            o['postponed'].each do |lv,p|
-                board.process_p EvenDoors::Particle.json_create p
+            board = self.new o['name'], o['parent']
+            o['postponed'].each do |link_value,particle|
+                board.process_p EvenDoors::Particle.json_create(particle.merge!('parent'=>board))
             end
             board
         end
