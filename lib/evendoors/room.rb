@@ -23,11 +23,10 @@ module EvenDoors
     #
     class Room < Spot
         #
-        def initialize n, p=nil
+        def initialize n, p
             super n, p
             @spots = {}
             @links = {}
-            @parent.add_spot self if @parent
         end
         #
         def to_json *a
@@ -41,9 +40,9 @@ module EvenDoors
         #
         def self.json_create o
             raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
-            room = self.new o['name']
+            room = self.new o['name'], o['parent']
             o['spots'].each do |name,spot|
-                room.add_spot eval( spot['kls'] ).json_create(spot)
+                eval( spot['kls'] ).json_create(spot.merge!('parent'=>room))
             end
             o['links'].each do |src,links|
                 links.each do |link|
@@ -67,12 +66,12 @@ module EvenDoors
         end
         #
         def start!
-            puts " * start #{path}" if EvenDoors::Spin.debug_routing
+            puts " * start #{path}" if spin.debug_routing
             @spots.values.each do |spot| spot.start! if spot.respond_to? :start! end
         end
         #
         def stop!
-            puts " * stop #{path}" if EvenDoors::Spin.debug_routing
+            puts " * stop #{path}" if spin.debug_routing
             @spots.values.each do |spot| spot.stop! if spot.respond_to? :stop! end
         end
         #
@@ -87,7 +86,7 @@ module EvenDoors
         end
         #
         def try_links p
-            puts "   -> try_links ..." if EvenDoors::Spin.debug_routing
+            puts "   -> try_links ..." if spin.debug_routing
             links = @links[p.src.name]
             return false if links.nil?
             pending_link = nil
@@ -98,7 +97,7 @@ module EvenDoors
                 if apply_link or (p.link_value==link.cond_value)
                     # link matches !
                     if pending_link
-                        p2 = EvenDoors::Spin.require_p p.class
+                        p2 = spin.require_p p.class
                         p2.clone_data p
                         p2.apply_link! link
                         send_p p2
@@ -131,7 +130,7 @@ module EvenDoors
         end
         #
         def send_p p
-            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Spin.debug_routing
+            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if spin.debug_routing
             if p.src.nil?
                 # do not route orphan particles !!
                 p.error! EvenDoors::ERROR_ROUTE_NS, spin
@@ -148,12 +147,12 @@ module EvenDoors
             else
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Spin.debug_routing
-            EvenDoors::Spin.send_p p
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if spin.debug_routing
+            spin.send_p p
         end
         #
         def send_sys_p p
-            puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if EvenDoors::Spin.debug_routing
+            puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if spin.debug_routing
             if p.next_dst
                 p.split_dst!
                 if p.door
@@ -164,15 +163,15 @@ module EvenDoors
             else
                 p.error! EvenDoors::ERROR_ROUTE_SND
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if EvenDoors::Spin.debug_routing
-            EvenDoors::Spin.send_sys_p p
+            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if spin.debug_routing
+            spin.send_sys_p p
         end
         #
         def process_sys_p p
             if p.action==EvenDoors::SYS_ACT_ADD_LINK
                 add_link EvenDoors::Link.from_particle_data p
             end
-            EvenDoors::Spin.release_p p
+            spin.release_p p
         end
         #
     end
