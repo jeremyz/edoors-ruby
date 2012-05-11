@@ -6,12 +6,9 @@ require 'spec_helper'
 #
 describe EvenDoors::Link do
     #
-    before(:each) do
-        EvenDoors::Spin.clear!
-    end
-    #
     it "from particle data" do
-        p = EvenDoors::Spin.require_p EvenDoors::Particle
+        @spin = EvenDoors::Spin.new 'dom0'
+        p = @spin.require_p EvenDoors::Particle
         p.set_data EvenDoors::LNK_SRC, 'input1'
         p.set_data EvenDoors::LNK_DSTS, 'concat1?follow,output1'
         p.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
