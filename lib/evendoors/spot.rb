@@ -27,21 +27,14 @@ module EvenDoors
             @name   = n     # unique in it's room
             @parent = p     # single direct parent
             @viewer = nil   # particle going through that position will be sent there readonly
+            @path = ( @parent ? @parent.path+EvenDoors::PATH_SEP : '') + @name
+            @spin = ( @parent ? @parent.spin : self )
+            @parent.add_spot self if @parent
             raise EvenDoors::Exception.new "Spot name #{name} is not valid" if @name.include? EvenDoors::PATH_SEP
         end
         #
-        attr_reader :name
+        attr_reader :name, :path, :spin
         attr_accessor :viewer, :parent
-        #
-        def path
-            return @path if @path
-            @path = ( @parent ? @parent.path+EvenDoors::PATH_SEP : '') + name
-        end
-        #
-        def spin
-            return @spin if @spin
-            @spin = ( @parent.nil? ? self : @parent.spin )
-        end
         #
     end
     #
