@@ -6,10 +6,6 @@ require 'spec_helper'
 #
 describe EvenDoors::Particle do
     #
-    before(:each) do
-        EvenDoors::Spin.clear!
-    end
-    #
     it "payload manipulation" do
         p = EvenDoors::Particle.new
         #
@@ -65,8 +61,8 @@ describe EvenDoors::Particle do
     #
     it "routing: add_dsts, next_dst and dst_routed!" do
         p = EvenDoors::Particle.new
-        d0 = EvenDoors::Door.new 'door0'
-        d1 = EvenDoors::Door.new 'door1'
+        d0 = EvenDoors::Door.new 'door0', nil
+        d1 = EvenDoors::Door.new 'door1', nil
         p.dst.should be_nil
         p.next_dst.should be_nil
         p.add_dsts 'some?where,room0/room1/door?action,room/door,door'
@@ -100,7 +96,7 @@ describe EvenDoors::Particle do
     #
     it "routing: set_dst! and split_dst!" do
         p = EvenDoors::Particle.new
-        d0 = EvenDoors::Door.new 'door0'
+        d0 = EvenDoors::Door.new 'door0', nil 
         #
         p.set_dst! 'action', 'room0/room1/door'
         p.split_dst!
@@ -145,7 +141,7 @@ describe EvenDoors::Particle do
     #
     it "routing: error!" do
         p = EvenDoors::Particle.new
-        d = EvenDoors::Door.new 'door'
+        d = EvenDoors::Door.new 'door', nil
         p.src = d
         p.add_dsts 'door?action,?action'
         p.next_dst.should eql 'door?action'
@@ -179,7 +175,7 @@ describe EvenDoors::Particle do
         p.link_value.should eql 'v0v2'
         p.next_dst.should eql 'door?action'
         lnk = EvenDoors::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
-        f = Fake.new
+        f = Fake.new 'fake', nil
         lnk.door = f
         p.apply_link! lnk
         p.src.should be f
@@ -210,7 +206,9 @@ describe EvenDoors::Particle do
         p1.set_link_fields 'k5,k4,k3'
         p1.add_dsts 'room0/room1/door?action,output?action'
         p0.merge! p1
-        px = EvenDoors::Particle.json_create( JSON.load( JSON.generate(p0) ) )
+        o = JSON.load( JSON.generate(p0) )
+        o['parent'] = s0
+        px = EvenDoors::Particle.json_create( o )
         ((px.ts-p0.ts)<0.5).should be_true
         px.src.should be s3
         px.dst.should be_nil
