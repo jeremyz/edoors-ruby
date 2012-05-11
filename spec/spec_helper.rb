@@ -11,15 +11,8 @@ end
 #
 require 'evendoors'
 #
-class Fake
-    attr_accessor :parent
+class Fake < EvenDoors::Spot
     attr_reader :p, :sp, :start, :stop
-    def name
-        "myname"
-    end
-    def path
-        (@parent.nil? ? name : @parent.path+'/'+name )
-    end
     def process_p p
         @p = p
     end

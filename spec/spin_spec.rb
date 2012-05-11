@@ -59,7 +59,7 @@ describe EvenDoors::Spin do
     #
     it "send_p send_sys_p spin!" do
         spin = EvenDoors::Spin.new 'dom0'
-        f = Fake.new
+        f = Fake.new 'fake', spin
         p0 = spin.require_p EvenDoors::Particle
         p0.dst_routed!  f
         p1 = spin.require_p EvenDoors::Particle
