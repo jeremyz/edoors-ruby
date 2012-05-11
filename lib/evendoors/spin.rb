@@ -35,15 +35,14 @@ module EvenDoors
             @debug_routing = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
-                p ={'parent'=>self}
                 o['spots'].each do |name,spot|
-                    EvenDoors::Room.json_create(spot.merge!(p))
+                    EvenDoors::Room.json_create(spot.merge!('parent'=>self))
                 end if o['spots']
                 o['app_fifo'].each do |particle|
-                    @app_fifo << EvenDoors::Particle.json_create(particle.merge!(p))
+                    @app_fifo << EvenDoors::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['app_fifo']
                 o['sys_fifo'].each do |particle|
-                    @sys_fifo <<  EvenDoors::Particle.json_create(particle.merge!(p))
+                    @sys_fifo <<  EvenDoors::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['sys_fifo']
             end
         end

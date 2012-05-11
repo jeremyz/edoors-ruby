@@ -40,7 +40,7 @@ module EvenDoors
             raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             board = self.new o['name'], o['parent']
             o['postponed'].each do |link_value,particle|
-                board.process_p EvenDoors::Particle.json_create(particle.merge!('parent'=>board))
+                board.process_p EvenDoors::Particle.json_create(particle.merge!('spin'=>board.spin))
             end
             board
         end

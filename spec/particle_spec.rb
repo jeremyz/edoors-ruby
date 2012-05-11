@@ -207,7 +207,7 @@ describe EvenDoors::Particle do
         p1.add_dsts 'room0/room1/door?action,output?action'
         p0.merge! p1
         o = JSON.load( JSON.generate(p0) )
-        o['parent'] = s0
+        o['spin'] = s0
         px = EvenDoors::Particle.json_create( o )
         ((px.ts-p0.ts)<0.5).should be_true
         px.src.should be s3

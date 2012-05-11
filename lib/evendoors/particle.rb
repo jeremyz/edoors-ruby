@@ -43,12 +43,12 @@ module EvenDoors
                 @door = o['door']
                 @action = o['action']
                 @payload = o['payload']||{}
-                @src = o['parent'].spin.search_down o['src'] if o['src']
-                @dst = o['parent'].spin.search_down o['dst'] if o['dst']
+                @src = o['spin'].search_down o['src'] if o['src']
+                @dst = o['spin'].search_down o['dst'] if o['dst']
                 o['dsts'].each do |dst| add_dsts dst end if o['dsts']
                 set_link_fields *o['link_fields'] if o['link_fields']
                 o['merged'].each do |particle|
-                    merge! Particle.json_create(particle.merge!('parent'=>o['parent']))
+                    merge! Particle.json_create(particle.merge!('spin'=>o['spin']))
                 end if o['merged']
             end
         end
