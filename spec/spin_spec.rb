@@ -103,6 +103,16 @@ describe EvenDoors::Spin do
         json.should eql JSON.generate(dom0)
     end
     #
+    it "hibernate! resume!" do
+        spin = EvenDoors::Spin.new 'dom0'
+        p0 = spin.require_p EvenDoors::Particle
+        p0.set_dst! EvenDoors::SYS_ACT_HIBERNATE
+        spin.send_sys_p p0
+        spin.spin!
+        dom0 = EvenDoors::Spin.resume! spin.hibernate_path
+        dom0.name.should eql spin.name
+    end
+    #
 end
 #
 #EOF
