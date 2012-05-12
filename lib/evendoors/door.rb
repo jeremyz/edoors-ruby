@@ -53,7 +53,7 @@ module EvenDoors
         #
         def garbage
             puts " * #{path} didn't give back #{p}" if @spin.debug_errors
-            puts "\t#{@saved.data EvenDoors::ERROR_FIELD}" if @saved.action==EvenDoors::ACT_ERROR
+            puts "\t#{@saved.data EvenDoors::FIELD_ERROR_MSG}" if @saved.action==EvenDoors::ACT_ERROR
             release_p @saved
             @saved = nil
         end

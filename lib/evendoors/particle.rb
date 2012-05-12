@@ -135,7 +135,7 @@ module EvenDoors
         def error! e, dst=nil
             @action = EvenDoors::ACT_ERROR
             @dst = dst||@src
-            @payload[EvenDoors::ERROR_FIELD]=e
+            @payload[EvenDoors::FIELD_ERROR_MSG]=e
         end
         #
         def apply_link! lnk

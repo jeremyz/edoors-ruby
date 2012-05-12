@@ -37,7 +37,8 @@ module EvenDoors
     LNK_CONDF   = 'edoors_lnk_condf'.freeze
     LNK_CONDV   = 'edoors_lnk_condv'.freeze
     #
-    ERROR_FIELD = 'edoors_error'.freeze
+    FIELD_ERROR_MSG     = 'edoors_error'.freeze
+    #
     ERROR_ROUTE_NS      = 'routing error: no source'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
     ERROR_ROUTE_RRNDD   = 'routing error: right room, no drill down'.freeze
