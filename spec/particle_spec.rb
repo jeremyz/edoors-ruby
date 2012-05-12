@@ -146,7 +146,7 @@ describe EvenDoors::Particle do
         p.add_dsts 'door?action,?action'
         p.next_dst.should eql 'door?action'
         p.error! 'err_msg'
-        p[EvenDoors::ERROR_FIELD].should eql 'err_msg'
+        p[EvenDoors::FIELD_ERROR_MSG].should eql 'err_msg'
         p.action.should eq EvenDoors::ACT_ERROR
         p.dst.should be d
     end
