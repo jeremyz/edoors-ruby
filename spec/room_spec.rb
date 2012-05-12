@@ -64,7 +64,7 @@ describe EvenDoors::Room do
         p.set_dst! 'get', 'room/door'
         room.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NS
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_NS
         p.dst.should be room.spin
     end
     #
@@ -74,7 +74,7 @@ describe EvenDoors::Room do
         p.src = Fake.new 'fake', @spin
         room.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_NDNL
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_NDNL
         p.dst.should be p.src
     end
     #
@@ -86,7 +86,7 @@ describe EvenDoors::Room do
         p.set_dst! 'get', 'noroom/door'
         room1.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_TRWR
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_TRWR
         p.dst.should be p.src
     end
     #
@@ -97,7 +97,7 @@ describe EvenDoors::Room do
         p.set_dst! 'get', 'dom0/room/nodoor'
         room.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRWD
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_RRWD
         p.dst.should be p.src
     end
     #
@@ -109,7 +109,7 @@ describe EvenDoors::Room do
         p.set_dst! 'get', 'dom0/room0/nodoor'
         room1.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRWD
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_RRWD
         p.dst.should be p.src
     end
     #
@@ -147,7 +147,7 @@ describe EvenDoors::Room do
         p.set_dst! 'get', 'dom0/room0/room1/door01'
         room3.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_RRNDD
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_RRNDD
         p.dst.should be p.src
     end
     #
@@ -222,7 +222,7 @@ describe EvenDoors::Room do
         p = @spin.require_p EvenDoors::Particle
         room0.send_sys_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::ERROR_FIELD].should eql EvenDoors::ERROR_ROUTE_SND
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_SND
     end
     #
     it "system routing success: action only" do
