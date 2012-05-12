@@ -135,6 +135,10 @@ module EvenDoors
             File.open(path||@hibernate_path,'w') do |f| f << JSON.pretty_generate(self) end
         end
         #
+        def self.resume! path=nil
+            self.json_create JSON.load File.open(path||@hibernate_path,'r') { |f| f.read }
+        end
+        #
     end
     #
 end
