@@ -48,7 +48,7 @@ module EvenDoors
             end
         end
         #
-        attr_accessor :run, :debug_errors, :debug_routing
+        attr_accessor :run, :hibernate_path, :debug_errors, :debug_routing
         #
         def to_json *a
             {
@@ -103,6 +103,7 @@ module EvenDoors
         #
         def process_sys_p p
             if p.action==EvenDoors::SYS_ACT_HIBERNATE
+                stop!
                 hibernate! p[FIELD_HIBERNATE_PATH]
             else
                 super p
@@ -131,12 +132,11 @@ module EvenDoors
         end
         #
         def hibernate! path=nil
-            stop!
             File.open(path||@hibernate_path,'w') do |f| f << JSON.pretty_generate(self) end
         end
         #
-        def self.resume! path=nil
-            self.json_create JSON.load File.open(path||@hibernate_path,'r') { |f| f.read }
+        def self.resume! path
+            self.json_create JSON.load File.open(path,'r') { |f| f.read }
         end
         #
     end
