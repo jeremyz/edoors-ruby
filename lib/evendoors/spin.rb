@@ -31,6 +31,7 @@ module EvenDoors
             @app_fifo = []      # application particles fifo list
             #
             @run = false
+            @hibernate_path = 'evendoors-hibernate-'+n+'.json'
             @debug_errors = o[:debug_errors]||o['debug_errors']||false
             @debug_routing = o[:debug_routing]||o['debug_routing']||false
             #
@@ -52,6 +53,7 @@ module EvenDoors
         def to_json *a
             {
                 'kls'           => self.class.name,
+                'timestamp'     => Time.now,
                 'name'          => @name,
                 'spots'         => @spots,
                 'sys_fifo'      => @sys_fifo,
@@ -99,6 +101,14 @@ module EvenDoors
             @sys_fifo << p
         end
         #
+        def process_sys_p p
+            if p.action==EvenDoors::SYS_ACT_HIBERNATE
+                hibernate! p[FIELD_HIBERNATE_PATH]
+            else
+                super p
+            end
+        end
+        #
         def spin!
             @spots.values.each do |spot| spot.start! end
             @run = true
@@ -118,6 +128,11 @@ module EvenDoors
         #
         def stop!
             @run=false
+        end
+        #
+        def hibernate! path=nil
+            stop!
+            File.open(path||@hibernate_path,'w') do |f| f << JSON.pretty_generate(self) end
         end
         #
     end

@@ -29,6 +29,7 @@ module EvenDoors
     ACT_FOLLOW = 'follow'.freeze
     ACT_ERROR = 'error'.freeze
     #
+    SYS_ACT_HIBERNATE = 'hibernate'.freeze
     SYS_ACT_ADD_LINK = 'sys_add_link'.freeze
     #
     LNK_SRC     = 'edoors_lnk_src'.freeze
@@ -38,6 +39,7 @@ module EvenDoors
     LNK_CONDV   = 'edoors_lnk_condv'.freeze
     #
     FIELD_ERROR_MSG     = 'edoors_error'.freeze
+    FIELD_HIBERNATE_PATH= 'hibernate_path'.freeze
     #
     ERROR_ROUTE_NS      = 'routing error: no source'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
