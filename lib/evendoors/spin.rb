@@ -93,11 +93,11 @@ module EvenDoors
             p
         end
         #
-        def send_p p
+        def post_p p
             @app_fifo << p
         end
         #
-        def send_sys_p p
+        def post_sys_p p
             @sys_fifo << p
         end
         #

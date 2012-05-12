@@ -148,7 +148,7 @@ module EvenDoors
                 p.error! EvenDoors::ERROR_ROUTE_NDNL
             end
             puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if @spin.debug_routing
-            @spin.send_p p
+            @spin.post_p p
         end
         #
         def send_sys_p p
@@ -164,7 +164,7 @@ module EvenDoors
                 p.error! EvenDoors::ERROR_ROUTE_SND
             end
             puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if @spin.debug_routing
-            @spin.send_sys_p p
+            @spin.post_sys_p p
         end
         #
         def process_sys_p p

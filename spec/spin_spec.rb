@@ -57,15 +57,15 @@ describe EvenDoors::Spin do
         (p2==p1).should be_false
     end
     #
-    it "send_p send_sys_p spin!" do
+    it "post_p post_sys_p spin!" do
         spin = EvenDoors::Spin.new 'dom0'
         f = Fake.new 'fake', spin
         p0 = spin.require_p EvenDoors::Particle
         p0.dst_routed!  f
         p1 = spin.require_p EvenDoors::Particle
         p1.dst_routed!  f
-        spin.send_p p0
-        spin.send_sys_p p1
+        spin.post_p p0
+        spin.post_sys_p p1
         spin.run = true
         spin.spin!
         f.p.should be p0
@@ -95,9 +95,9 @@ describe EvenDoors::Spin do
         p0 = spin.require_p EvenDoors::Particle
         p1 = spin.require_p EvenDoors::Particle
         p2 = spin.require_p EvenDoors::Particle
-        spin.send_p p0
-        spin.send_p p1
-        spin.send_sys_p p2
+        spin.post_p p0
+        spin.post_p p1
+        spin.post_sys_p p2
         json = JSON.generate spin
         dom0 = EvenDoors::Spin.json_create( JSON.load( json ) )
         json.should eql JSON.generate(dom0)
