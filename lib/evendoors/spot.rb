@@ -53,6 +53,10 @@ module EvenDoors
             # override this to restore your object state on resume
         end
         #
+        def receive_p p
+            raise NoMethodError.new "receive_p(p) must be overridden"
+        end
+        #
     end
     #
 end
