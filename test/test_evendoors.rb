@@ -3,31 +3,58 @@
 
 require 'evendoors'
 
+HBN_PATH='hibernate.json'
 #
 class InputDoor < EvenDoors::Door
     #
-    def start!
-        puts " * start #{self.class.name} #{@path}" if @spin.debug_routing
+    @count = 0
+    #
+    class << self
+        attr_accessor :count
+    end
+    #
+    def initialize n, p
+        super n, p
         @lines = [ "#{name} says : hello", "world ( from #{path} )" ]
+        @idx = 0
+    end
+    #
+    def start!
+        puts " -> start #{self.class.name} (#{@path})"
+        # stimulate myself
         p = require_p EvenDoors::Particle
         p.set_dst! EvenDoors::ACT_GET, path
         send_p p
     end
     #
-    # def stop!
-    #     puts " * stop #{self.class.name} #{@path}" if @spin.debug_routing
-    # end
+    def stop!
+        puts " >- stop  #{self.class.name} (#{@path})"
+    end
+    #
+    def hibernate!
+        puts " !! hibernate  #{self.class.name} (#{@path})"
+        # we want to remember where we are in the data flow
+        {'idx'=>@idx}
+    end
+    #
+    def resume! o
+        puts " !! resume  #{self.class.name} (#{@path})"
+        # restore idx
+        @idx = o['idx']
+    end
     #
     def receive_p p
-        puts " * #{self.class.name} receive_p : #{p.action}" if @spin.debug_routing
+        puts " @ #{self.class.name} (#{@path}) receive_p : #{p.action}"
         if p.action==EvenDoors::ACT_GET
             p.reset!
-            p.set_data 'line', @lines.shift
+            p.set_data 'line', @lines[@idx]
             p.set_data 'f0', 'v0'
             p.set_data 'f1', 'v1'
             p.set_data 'f2', 'v2'
             send_p p
-            if @lines.length>0
+            @idx+=1
+            if @idx<@lines.length
+                # there is more to read, restimulate myself
                 p = require_p EvenDoors::Particle
                 p.set_dst! EvenDoors::ACT_GET, name
                 send_p p
@@ -36,24 +63,47 @@ class InputDoor < EvenDoors::Door
             # we can release it or let the Door do it
             release_p p
         end
+        # I want to hibernate now!
+        self.class.count+=1
+        if self.class.count==3
+            p = require_p EvenDoors::Particle
+            p[EvenDoors::FIELD_HIBERNATE_PATH] = HBN_PATH
+            p.set_dst! EvenDoors::SYS_ACT_HIBERNATE
+            send_sys_p p
+        end
     end
     #
 end
 #
 class ConcatBoard < EvenDoors::Board
     #
+    def initialize n, p, m=false
+        super n, p
+        @manual = m
+    end
+    #
+    def start!
+        puts " -> start #{self.class.name} (#{@path})"
+    end
+    #
+    def stop!
+        puts " >- stop  #{self.class.name} (#{@path})"
+    end
+    #
     def receive_p p
-        puts " * #{self.class.name} receive_p : #{p.action}" if @spin.debug_routing
+        puts " @ #{self.class.name} receive_p : #{p.action}"
         if p.action==EvenDoors::ACT_ERROR
             #
         else
-            # MANUALLY
-            # p2 = p.merged_shift
-            # p.set_data 'line', (p.data('line')+' '+p2.data('line'))
-            # release_p p2
-            #
-            # Or let the system do it
-            p.set_data 'line', (p.data('line')+' '+p.merged(0).data('line'))
+            if @manual
+                # cleanup unnecessary p2 Particle
+                p2 = p.merged_shift
+                p.set_data 'line', (p.data('line')+' '+p2.data('line'))
+                release_p p2
+            else
+                # Or let the system do it
+                p.set_data 'line', (p.data('line')+' '+p.merged(0).data('line'))
+            end
             send_p p
         end
     end
@@ -62,21 +112,26 @@ end
 #
 class OutputDoor < EvenDoors::Door
     #
-    # def start!
-    #     puts " * start #{self.class.name} #{@path}" if @spin.debug_routing
-    # end
+    def initialize n, p, c=false
+        super n, p
+        @clean = c
+    end
     #
-    # def stop!
-    #     puts " * stop #{self.class.name} #{@path}" if @spin.debug_routing
-    # end
+    def start!
+        puts " -> start #{self.class.name} (#{@path})"
+    end
+    #
+    def stop!
+        puts " >- stop  #{self.class.name} (#{@path})"
+    end
     #
     def receive_p p
-        if @spin.debug_routing
-            puts " * #{self.class.name} receive_p : #{@path} : DATA #{p.get_data('line')}"
+        puts " #==> #{self.class.name} (#{@path}) receive_p : #{p.get_data('line')}"
+        if @clean
+            release_p p
         else
-            puts p.get_data 'line'
+            # we do nothing EvenDoors::Door#process_p will detect it and release it
         end
-        # we do nothing EvenDoors::Door#process_p will detect it and release it
     end
     #
 end
@@ -90,7 +145,7 @@ input0 = InputDoor.new 'input0', room0
 output0 = OutputDoor.new 'output0', room0
 #
 input1 = InputDoor.new 'input1', room1
-output1 = OutputDoor.new 'output1', room1
+output1 = OutputDoor.new 'output1', room1, true
 concat1 = ConcatBoard.new 'concat1', room1
 #
 room0.add_link EvenDoors::Link.new('input0', 'output0', nil, nil, nil)
@@ -106,5 +161,8 @@ room1.send_sys_p p0 # send_sys_p -> room0 -> spin -> room1 -> input1
 #
 spin.spin!
 #
+dom0 = EvenDoors::Spin.resume! HBN_PATH
+dom0.spin!
+File.unlink HBN_PATH if File.exists? HBN_PATH
 #
 # EOF
