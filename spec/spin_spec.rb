@@ -111,6 +111,7 @@ describe EvenDoors::Spin do
         spin.spin!
         dom0 = EvenDoors::Spin.resume! spin.hibernate_path
         dom0.name.should eql spin.name
+        File.unlink dom0.hibernate_path
     end
     #
 end
