@@ -36,6 +36,23 @@ module EvenDoors
         attr_reader :name, :path, :spin
         attr_accessor :viewer, :parent
         #
+        def start!
+            # override this to initialize yout object on stystem start
+        end
+        #
+        def stop!
+            # override this to initialize yout object on stystem stop
+        end
+        #
+        def hibernate!
+            # override this to save your object state on hibernate
+            {}
+        end
+        #
+        def resume! o
+            # override this to restore your object state on resume
+        end
+        #
     end
     #
 end
