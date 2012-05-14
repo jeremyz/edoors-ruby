@@ -26,14 +26,15 @@ module EvenDoors
         def initialize n, o={}
             super n, nil
             #
-            @pool = {}          # per particle class free list
-            @sys_fifo = []      # system particles fifo list
-            @app_fifo = []      # application particles fifo list
+            @pool       = {}    # per particle class free list
+            @sys_fifo   = []    # system particles fifo list
+            @app_fifo   = []    # application particles fifo list
             #
             @run = false
+            @hibernation    = o['hibernation']||false
             @hibernate_path = 'evendoors-hibernate-'+n+'.json'
-            @debug_errors = o[:debug_errors]||o['debug_errors']||false
-            @debug_routing = o[:debug_routing]||o['debug_routing']||false
+            @debug_errors   = o[:debug_errors]||o['debug_errors']||false
+            @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
                 o['spots'].each do |name,spot|
@@ -55,6 +56,7 @@ module EvenDoors
                 'kls'           => self.class.name,
                 'timestamp'     => Time.now,
                 'name'          => @name,
+                'hibernation'   => @hibernation,
                 'spots'         => @spots,
                 'sys_fifo'      => @sys_fifo,
                 'app_fifo'      => @app_fifo,
@@ -111,8 +113,9 @@ module EvenDoors
         end
         #
         def spin!
-            @spots.values.each do |spot| spot.start! end
+            @spots.values.each do |spot| spot.start! end unless @hibernation
             @run = true
+            @hibernation = false
             while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
                 while @run and @sys_fifo.length>0
                     p = @sys_fifo.shift
@@ -124,7 +127,7 @@ module EvenDoors
                     break
                 end
             end
-            @spots.values.each do |spot| spot.stop! end
+            @spots.values.each do |spot| spot.stop! end unless @hibernation
         end
         #
         def stop!
@@ -132,6 +135,7 @@ module EvenDoors
         end
         #
         def hibernate! path=nil
+            @hibernation = true
             File.open(path||@hibernate_path,'w') do |f| f << JSON.pretty_generate(self) end
         end
         #
