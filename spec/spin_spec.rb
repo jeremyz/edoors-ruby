@@ -73,6 +73,16 @@ describe EvenDoors::Spin do
         spin.stop!
     end
     #
+    it "process_sys" do
+        spin = EvenDoors::Spin.new 'dom0'
+        p0 = spin.require_p EvenDoors::Particle
+        p0.set_dst! 'unknown'
+        spin.send_sys_p p0
+        spin.spin!
+        p1 = spin.require_p EvenDoors::Particle
+        p0.should be p0
+    end
+    #
     it "option debug" do
         spin = EvenDoors::Spin.new 'dom0'
         spin.debug_routing.should be false
