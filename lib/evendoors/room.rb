@@ -67,12 +67,12 @@ module EvenDoors
         #
         def start!
             puts " * start #{path}" if @spin.debug_routing
-            @spots.values.each do |spot| spot.start! if spot.respond_to? :start! end
+            @spots.values.each do |spot| spot.start! end
         end
         #
         def stop!
             puts " * stop #{path}" if @spin.debug_routing
-            @spots.values.each do |spot| spot.stop! if spot.respond_to? :stop! end
+            @spots.values.each do |spot| spot.stop! end
         end
         #
         def search_down spath
