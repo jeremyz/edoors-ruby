@@ -33,7 +33,7 @@ module EvenDoors
                 'kls'       => self.class.name,
                 'name'      => @name,
                 'postponed' => @postponed
-            }.to_json *a
+            }.merge(hibernate!).to_json *a
         end
         #
         def self.json_create o
@@ -42,6 +42,7 @@ module EvenDoors
             o['postponed'].each do |link_value,particle|
                 board.process_p EvenDoors::Particle.json_create(particle.merge!('spin'=>board.spin))
             end
+            board.resume! o
             board
         end
         #
