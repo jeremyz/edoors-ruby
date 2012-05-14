@@ -32,12 +32,14 @@ module EvenDoors
             {
                 'kls'   => self.class.name,
                 'name'  => @name
-            }.to_json *a
+            }.merge(hibernate!).to_json *a
         end
         #
         def self.json_create o
             raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
-            self.new o['name'], o['parent']
+            door = self.new o['name'], o['parent']
+            door.resume! o
+            door
         end
         #
         def require_p p_kls
