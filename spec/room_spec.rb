@@ -136,18 +136,34 @@ describe EvenDoors::Room do
         p.dst.should be door0
     end
     #
-    it "route error: right room, no drill down (2xbubble up)" do
-        room0 = EvenDoors::Room.new 'room0', @spin
-        room1 = EvenDoors::Room.new 'room1', room0
-        room2 = EvenDoors::Room.new 'room2', room0
-        room3 = EvenDoors::Room.new 'room3', room2
-        door0 = EvenDoors::Door.new 'door01', room1
+    it "route success: bubble up x2, drill down x3" do
+        room00 = EvenDoors::Room.new 'room00', @spin
+        room01 = EvenDoors::Room.new 'room01', room00
+        room02 = EvenDoors::Room.new 'room02', room01
+        door000 = EvenDoors::Door.new 'door000', room02
+        room10 = EvenDoors::Room.new 'room10', @spin
+        room11 = EvenDoors::Room.new 'room11', room10
         p = @spin.require_p EvenDoors::Particle
         p.src = Fake.new 'fake', @spin
-        p.set_dst! 'get', 'dom0/room0/room1/door01'
-        room3.send_p p
+        p.set_dst! 'get', 'dom0/room00/room01/room02/door000'
+        room11.send_p p
+        p.action.should eql 'get'
+        p.dst.should be door000
+    end
+    #
+    it "route error: bubble up x2 drill down x2" do
+        room00 = EvenDoors::Room.new 'room00', @spin
+        room01 = EvenDoors::Room.new 'room01', room00
+        room02 = EvenDoors::Room.new 'room02', room01
+        door000 = EvenDoors::Door.new 'door000', room02
+        room10 = EvenDoors::Room.new 'room10', @spin
+        room11 = EvenDoors::Room.new 'room11', room10
+        p = @spin.require_p EvenDoors::Particle
+        p.src = Fake.new 'fake', @spin
+        p.set_dst! 'get', 'dom0/room00/room01/wrong/door000'
+        room11.send_p p
         p.action.should eql EvenDoors::ACT_ERROR
-        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_RRNDD
+        p[EvenDoors::FIELD_ERROR_MSG].should eql EvenDoors::ERROR_ROUTE_DDWR
         p.dst.should be p.src
     end
     #
