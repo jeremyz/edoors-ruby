@@ -121,8 +121,8 @@ module EvenDoors
                 end
             elsif (p.room=~/^#{path}\/(.*)/)==0
                 room, *more = $1.split EvenDoors::PATH_SEP
-                if r=@spots[room]
-                    r.route_p p
+                if child=@spots[room]
+                    child.route_p p
                 else
                     p.error! EvenDoors::ERROR_ROUTE_DDWR
                 end
