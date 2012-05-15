@@ -43,7 +43,7 @@ module EvenDoors
     #
     ERROR_ROUTE_NS      = 'routing error: no source'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
-    ERROR_ROUTE_RRNDD   = 'routing error: right room, no drill down'.freeze
+    ERROR_ROUTE_DDWR    = 'routing error: drill down, wrong room'.freeze
     ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
     ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
     ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
