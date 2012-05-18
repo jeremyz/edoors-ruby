@@ -18,34 +18,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with iotas.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'version'
 #
 module Iotas
     #
-    PATH_SEP = '/'.freeze
-    LINK_SEP = ','.freeze
-    ACT_SEP = '?'.freeze
-    #
-    ACT_GET = 'get'.freeze
-    ACT_ERROR = 'error'.freeze
-    #
-    SYS_ACT_HIBERNATE = 'hibernate'.freeze
-    SYS_ACT_ADD_LINK = 'sys_add_link'.freeze
-    #
-    FIELD_ERROR_MSG     = 'edoors_error'.freeze
-    FIELD_HIBERNATE_PATH= 'hibernate_path'.freeze
-    #
-    class Exception < ::Exception; end
+    VERSION = "0.0.1"
     #
 end
-#
-require 'json'
-require 'iotas/particle'
-require 'iotas/iota'
-require 'iotas/room'
-require 'iotas/spin'
-require 'iotas/door'
-require 'iotas/board'
-require 'iotas/link'
 #
 # EOF
