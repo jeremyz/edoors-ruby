@@ -21,6 +21,8 @@
 #
 module Iotas
     #
+    ACT_FOLLOW = 'follow'.freeze
+    #
     class Board < Door
         #
         def initialize n, p

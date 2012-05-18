@@ -26,29 +26,17 @@ module Iotas
     ACT_SEP = '?'.freeze
     #
     ACT_GET = 'get'.freeze
-    ACT_FOLLOW = 'follow'.freeze
     ACT_ERROR = 'error'.freeze
     #
     SYS_ACT_HIBERNATE = 'hibernate'.freeze
     SYS_ACT_ADD_LINK = 'sys_add_link'.freeze
     #
-    LNK_SRC     = 'edoors_lnk_src'.freeze
-    LNK_DSTS    = 'edoors_lnk_dsts'.freeze
-    LNK_FIELDS  = 'edoors_lnk_fields'.freeze
-    LNK_CONDF   = 'edoors_lnk_condf'.freeze
-    LNK_CONDV   = 'edoors_lnk_condv'.freeze
-    #
     FIELD_ERROR_MSG     = 'edoors_error'.freeze
     FIELD_HIBERNATE_PATH= 'hibernate_path'.freeze
     #
-    ERROR_ROUTE_NS      = 'routing error: no source'.freeze
-    ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
-    ERROR_ROUTE_DDWR    = 'routing error: drill down, wrong room'.freeze
-    ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
-    ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
-    ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
-    #
     class Exception < ::Exception; end
+    #
+    VERSION = "0.0.1"
     #
 end
 #

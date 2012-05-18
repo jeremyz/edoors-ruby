@@ -21,6 +21,12 @@
 #
 module Iotas
     #
+    LNK_SRC     = 'edoors_lnk_src'.freeze
+    LNK_DSTS    = 'edoors_lnk_dsts'.freeze
+    LNK_FIELDS  = 'edoors_lnk_fields'.freeze
+    LNK_CONDF   = 'edoors_lnk_condf'.freeze
+    LNK_CONDV   = 'edoors_lnk_condv'.freeze
+    #
     class Link
         #
         def initialize src, dsts, fields=nil, cond_fields=nil, cond_value=nil
