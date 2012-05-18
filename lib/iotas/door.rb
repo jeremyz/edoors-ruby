@@ -21,7 +21,7 @@
 #
 module Iotas
     #
-    class Door < Spot
+    class Door < Iota
         #
         def initialize n, p
             super n, p

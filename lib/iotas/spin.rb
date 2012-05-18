@@ -37,9 +37,9 @@ module Iotas
             @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
-                o['spots'].each do |name,spot|
-                    Iotas::Room.json_create(spot.merge!('parent'=>self))
-                end if o['spots']
+                o['iotas'].each do |name,iota|
+                    Iotas::Room.json_create(iota.merge!('parent'=>self))
+                end if o['iotas']
                 o['app_fifo'].each do |particle|
                     @app_fifo << Iotas::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['app_fifo']
@@ -57,7 +57,7 @@ module Iotas
                 'timestamp'     => Time.now,
                 'name'          => @name,
                 'hibernation'   => @hibernation,
-                'spots'         => @spots,
+                'iotas'         => @iotas,
                 'sys_fifo'      => @sys_fifo,
                 'app_fifo'      => @app_fifo,
                 'debug_errors'  => @debug_errors,
@@ -71,7 +71,7 @@ module Iotas
         end
         #
         def clear!
-            @spots.clear
+            @iotas.clear
             @pool.clear
             @sys_fifo.clear
             @app_fifo.clear
@@ -113,7 +113,7 @@ module Iotas
         end
         #
         def spin!
-            @spots.values.each do |spot| spot.start! end unless @hibernation
+            @iotas.values.each do |iota| iota.start! end unless @hibernation
             @run = true
             @hibernation = false
             while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
@@ -127,7 +127,7 @@ module Iotas
                     break
                 end
             end
-            @spots.values.each do |spot| spot.stop! end unless @hibernation
+            @iotas.values.each do |iota| iota.stop! end unless @hibernation
         end
         #
         def stop!

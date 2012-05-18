@@ -11,7 +11,7 @@ end
 #
 require 'iotas'
 #
-class Fake < Iotas::Spot
+class Fake < Iotas::Iota
     attr_reader :p, :sp, :start, :stop
     def process_p p
         @p = p
@@ -25,7 +25,7 @@ class Fake < Iotas::Spot
     def send_sys_p p
         @sp = p
     end
-    def add_spot p
+    def add_iota p
     end
     def start!
         @start=true

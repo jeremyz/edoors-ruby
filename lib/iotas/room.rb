@@ -21,11 +21,11 @@
 #
 module Iotas
     #
-    class Room < Spot
+    class Room < Iota
         #
         def initialize n, p
             super n, p
-            @spots = {}
+            @iotas = {}
             @links = {}
         end
         #
@@ -33,7 +33,7 @@ module Iotas
             {
                 'kls'   => self.class.name,
                 'name'  => @name,
-                'spots' => @spots,
+                'iotas' => @iotas,
                 'links' => @links
             }.to_json *a
         end
@@ -41,8 +41,8 @@ module Iotas
         def self.json_create o
             raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             room = self.new o['name'], o['parent']
-            o['spots'].each do |name,spot|
-                eval( spot['kls'] ).json_create(spot.merge!('parent'=>room))
+            o['iotas'].each do |name,iota|
+                eval( iota['kls'] ).json_create(iota.merge!('parent'=>room))
             end
             o['links'].each do |src,links|
                 links.each do |link|
@@ -52,35 +52,35 @@ module Iotas
             room
         end
         #
-        def add_spot s
-            raise Iotas::Exception.new "Spot #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
-            raise Iotas::Exception.new "Spot #{s.name} already exists in #{path}" if @spots.has_key? s.name
+        def add_iota s
+            raise Iotas::Exception.new "Iota #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
+            raise Iotas::Exception.new "Iota #{s.name} already exists in #{path}" if @iotas.has_key? s.name
             s.parent = self if s.parent.nil?
-            @spots[s.name]=s
+            @iotas[s.name]=s
         end
         #
         def add_link l
-            l.door = @spots[l.src]
+            l.door = @iotas[l.src]
             raise Iotas::Exception.new "Link source #{l.src} does not exist in #{path}" if l.door.nil?
             (@links[l.src] ||= [])<< l
         end
         #
         def start!
             puts " * start #{path}" if @spin.debug_routing
-            @spots.values.each do |spot| spot.start! end
+            @iotas.values.each do |iota| iota.start! end
         end
         #
         def stop!
             puts " * stop #{path}" if @spin.debug_routing
-            @spots.values.each do |spot| spot.stop! end
+            @iotas.values.each do |iota| iota.stop! end
         end
         #
         def search_down spath
             return self if spath==path
             return nil if (spath=~/^#{path}\/(\w+)\/?/)!=0
-            if spot = @spots[$1]
-                return spot if spot.path==spath    # needed as Door doesn't implement #search_down
-                return spot.search_down spath
+            if iota = @iotas[$1]
+                return iota if iota.path==spath    # needed as Door doesn't implement #search_down
+                return iota.search_down spath
             end
             nil
         end
@@ -114,14 +114,14 @@ module Iotas
         #
         def route_p p
             if p.room.nil? or p.room==path
-                if door = @spots[p.door]
+                if door = @iotas[p.door]
                     p.dst_routed! door
                 else
                     p.error! Iotas::ERROR_ROUTE_RRWD
                 end
             elsif (p.room=~/^#{path}\/(.*)/)==0
                 room, *more = $1.split Iotas::PATH_SEP
-                if child=@spots[room]
+                if child=@iotas[room]
                     child.route_p p
                 else
                     p.error! Iotas::ERROR_ROUTE_DDWR

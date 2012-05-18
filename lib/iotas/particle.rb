@@ -26,8 +26,8 @@ module Iotas
         #
         def initialize o={}
             @ts = Time.now      # creation time
-            @src = nil          # Spot where it's originated from
-            @dst = nil          # Spot where it's heading to
+            @src = nil          # Iota where it's originated from
+            @dst = nil          # Iota where it's heading to
             @room = nil         # Room path part of the current destination
             @door = nil         # Door path part of the current destination
             @action = nil       # action part of the current destination

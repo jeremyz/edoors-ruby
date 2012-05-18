@@ -14,11 +14,11 @@ describe Iotas::Room do
         @spin.clear!
     end
     #
-    it "add_spot and add_link correctly" do
+    it "add_iota and add_link correctly" do
         r0 = Iotas::Room.new 'room0', @spin
         d0 = Iotas::Door.new 'door0', r0
         lambda { Iotas::Door.new('door0', r0) }.should raise_error(Iotas::Exception)
-        lambda { r0.add_spot Iotas::Door.new('door1', r0) }.should raise_error(Iotas::Exception)
+        lambda { r0.add_iota Iotas::Door.new('door1', r0) }.should raise_error(Iotas::Exception)
         r0.add_link Iotas::Link.new 'door0', 'somewhere'
         lambda { r0.add_link(Iotas::Link.new('nowhere', 'somewhere')) }.should raise_error(Iotas::Exception)
     end

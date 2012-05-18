@@ -54,7 +54,7 @@ end
 #
 require 'json'
 require 'iotas/particle'
-require 'iotas/spot'
+require 'iotas/iota'
 require 'iotas/room'
 require 'iotas/spin'
 require 'iotas/door'
