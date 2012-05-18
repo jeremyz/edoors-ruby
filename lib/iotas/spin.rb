@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of evendoors-ruby.
+# This file is part of iotas.
 #
-# evendoors-ruby is free software: you can redistribute it and/or modify
+# iotas is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# evendoors-ruby is distributed in the hope that it will be useful,
+# iotas is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with evendoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
+# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module EvenDoors
+module Iotas
     #
     class Spin < Room
         #
@@ -32,19 +32,19 @@ module EvenDoors
             #
             @run = false
             @hibernation    = o['hibernation']||false
-            @hibernate_path = 'evendoors-hibernate-'+n+'.json'
+            @hibernate_path = 'iotas-hibernate-'+n+'.json'
             @debug_errors   = o[:debug_errors]||o['debug_errors']||false
             @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
                 o['spots'].each do |name,spot|
-                    EvenDoors::Room.json_create(spot.merge!('parent'=>self))
+                    Iotas::Room.json_create(spot.merge!('parent'=>self))
                 end if o['spots']
                 o['app_fifo'].each do |particle|
-                    @app_fifo << EvenDoors::Particle.json_create(particle.merge!('spin'=>self))
+                    @app_fifo << Iotas::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['app_fifo']
                 o['sys_fifo'].each do |particle|
-                    @sys_fifo <<  EvenDoors::Particle.json_create(particle.merge!('spin'=>self))
+                    @sys_fifo <<  Iotas::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['sys_fifo']
             end
         end
@@ -66,7 +66,7 @@ module EvenDoors
         end
         #
         def self.json_create o
-            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o['name'], o
         end
         #
@@ -104,7 +104,7 @@ module EvenDoors
         end
         #
         def process_sys_p p
-            if p.action==EvenDoors::SYS_ACT_HIBERNATE
+            if p.action==Iotas::SYS_ACT_HIBERNATE
                 stop!
                 hibernate! p[FIELD_HIBERNATE_PATH]
             else

@@ -3,10 +3,10 @@
 load './tasks/setup.rb'
 #
 # Project general information
-PROJ.name = 'evendoors-ruby'
+PROJ.name = 'iotas'
 PROJ.authors = 'Jérémy Zurcher'
 PROJ.email = 'jeremy@asynk.ch'
-PROJ.url = 'https://github.com/jeremyz/evendoors-ruby'
+PROJ.url = 'https://github.com/jeremyz/iotas'
 PROJ.version = '0.0.1'
 PROJ.rubyforge.name = 'FIXME'
 PROJ.readme_file = 'README.rdoc'

@@ -1,26 +1,16 @@
-evendoors
+iotas
     by Jérémy Zurcher
     http://asynk.ch
 
 == DESCRIPTION:
 
-* a ruby port of evenja C++ application framework
-* see http://www.revena.com/evenja/telecharger-evenja
-
-== FEATURES/PROBLEMS:
-
-* experimental material, we'll see where it leads
+* a ruby rewrite of evenja C++ application framework concept
+* see http://www.revena.com/evenja
 
 == SYNOPSIS:
 
-# hum hum, well ...
-
-== CREDITS:
-
-Special thanks to:
-
-* Fabian Padilla
+* experimental material, we'll see where it leads
 
 == LICENSE:
 
-See LICENSE file.
+AGPL http://www.gnu.org/licenses/agpl-3.0.html

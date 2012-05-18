@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of evendoors-ruby.
+# This file is part of iotas.
 #
-# evendoors-ruby is free software: you can redistribute it and/or modify
+# iotas is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# evendoors-ruby is distributed in the hope that it will be useful,
+# iotas is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with evendoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
+# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module EvenDoors
+module Iotas
     #
     class Room < Spot
         #
@@ -39,29 +39,29 @@ module EvenDoors
         end
         #
         def self.json_create o
-            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             room = self.new o['name'], o['parent']
             o['spots'].each do |name,spot|
                 eval( spot['kls'] ).json_create(spot.merge!('parent'=>room))
             end
             o['links'].each do |src,links|
                 links.each do |link|
-                    room.add_link EvenDoors::Link.json_create(link)
+                    room.add_link Iotas::Link.json_create(link)
                 end
             end
             room
         end
         #
         def add_spot s
-            raise EvenDoors::Exception.new "Spot #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
-            raise EvenDoors::Exception.new "Spot #{s.name} already exists in #{path}" if @spots.has_key? s.name
+            raise Iotas::Exception.new "Spot #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
+            raise Iotas::Exception.new "Spot #{s.name} already exists in #{path}" if @spots.has_key? s.name
             s.parent = self if s.parent.nil?
             @spots[s.name]=s
         end
         #
         def add_link l
             l.door = @spots[l.src]
-            raise EvenDoors::Exception.new "Link source #{l.src} does not exist in #{path}" if l.door.nil?
+            raise Iotas::Exception.new "Link source #{l.src} does not exist in #{path}" if l.door.nil?
             (@links[l.src] ||= [])<< l
         end
         #
@@ -117,19 +117,19 @@ module EvenDoors
                 if door = @spots[p.door]
                     p.dst_routed! door
                 else
-                    p.error! EvenDoors::ERROR_ROUTE_RRWD
+                    p.error! Iotas::ERROR_ROUTE_RRWD
                 end
             elsif (p.room=~/^#{path}\/(.*)/)==0
-                room, *more = $1.split EvenDoors::PATH_SEP
+                room, *more = $1.split Iotas::PATH_SEP
                 if child=@spots[room]
                     child.route_p p
                 else
-                    p.error! EvenDoors::ERROR_ROUTE_DDWR
+                    p.error! Iotas::ERROR_ROUTE_DDWR
                 end
             elsif @parent
                 @parent.route_p p
             else
-                p.error! EvenDoors::ERROR_ROUTE_TRWR
+                p.error! Iotas::ERROR_ROUTE_TRWR
             end
         end
         #
@@ -137,7 +137,7 @@ module EvenDoors
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
             if p.src.nil?
                 # do not route orphan particles !!
-                p.error! EvenDoors::ERROR_ROUTE_NS, @spin
+                p.error! Iotas::ERROR_ROUTE_NS, @spin
             elsif p.next_dst
                 p.split_dst!
                 if p.door
@@ -149,9 +149,9 @@ module EvenDoors
             elsif try_links p
                 return
             else
-                p.error! EvenDoors::ERROR_ROUTE_NDNL
+                p.error! Iotas::ERROR_ROUTE_NDNL
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if @spin.debug_routing
+            puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_p p
         end
         #
@@ -165,15 +165,15 @@ module EvenDoors
                     p.dst_routed! @spin
                 end
             else
-                p.error! EvenDoors::ERROR_ROUTE_SND
+                p.error! Iotas::ERROR_ROUTE_SND
             end
-            puts "   -> #{p.dst.path}#{EvenDoors::ACT_SEP}#{p.action}" if @spin.debug_routing
+            puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_sys_p p
         end
         #
         def process_sys_p p
-            if p.action==EvenDoors::SYS_ACT_ADD_LINK
-                add_link EvenDoors::Link.from_particle_data p
+            if p.action==Iotas::SYS_ACT_ADD_LINK
+                add_link Iotas::Link.from_particle_data p
             end
             @spin.release_p p
         end

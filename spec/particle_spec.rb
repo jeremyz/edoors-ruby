@@ -4,10 +4,10 @@
 
 require 'spec_helper'
 #
-describe EvenDoors::Particle do
+describe Iotas::Particle do
     #
     it "payload manipulation" do
-        p = EvenDoors::Particle.new
+        p = Iotas::Particle.new
         #
         p['key']=666
         p['key'].should eql 666
@@ -21,10 +21,10 @@ describe EvenDoors::Particle do
     end
     #
     it "payload clone" do
-        p = EvenDoors::Particle.new
+        p = Iotas::Particle.new
         p['k00'] = { 'k0'=>0,'k1'=>1}
         p['k11'] = [1,2,3]
-        o = EvenDoors::Particle.new
+        o = Iotas::Particle.new
         o.clone_data p
         p['k00']=nil
         p['k00'].should be_nil
@@ -38,9 +38,9 @@ describe EvenDoors::Particle do
     end
     #
     it "particle merge" do
-        p = EvenDoors::Particle.new
-        q = EvenDoors::Particle.new
-        o = EvenDoors::Particle.new
+        p = Iotas::Particle.new
+        q = Iotas::Particle.new
+        o = Iotas::Particle.new
         p.merge! q
         p.merge! o
         p.merged(0).should be q
@@ -60,9 +60,9 @@ describe EvenDoors::Particle do
     end
     #
     it "routing: add_dsts, next_dst and dst_routed!" do
-        p = EvenDoors::Particle.new
-        d0 = EvenDoors::Door.new 'door0', nil
-        d1 = EvenDoors::Door.new 'door1', nil
+        p = Iotas::Particle.new
+        d0 = Iotas::Door.new 'door0', nil
+        d1 = Iotas::Door.new 'door1', nil
         p.dst.should be_nil
         p.next_dst.should be_nil
         p.add_dsts 'some?where,room0/room1/door?action,room/door,door'
@@ -79,24 +79,24 @@ describe EvenDoors::Particle do
     end
     #
     it "wrong path should raise exeption" do
-        p = EvenDoors::Particle.new
-        lambda { p.set_dst! 'action', '/room' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! 'action', 'room/' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! '', 'room/' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! 'action', 'room//door' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! ' ' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! ' ', '' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! 'f f' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! '', ' d' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! '' }.should raise_error(EvenDoors::Exception)
-        lambda { p.set_dst! '', '' }.should raise_error(EvenDoors::Exception)
+        p = Iotas::Particle.new
+        lambda { p.set_dst! 'action', '/room' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! 'action', 'room/' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! '', 'room/' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! 'action', 'room//door' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! ' ' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! ' ', '' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! 'f f' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! '', ' d' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! '' }.should raise_error(Iotas::Exception)
+        lambda { p.set_dst! '', '' }.should raise_error(Iotas::Exception)
         lambda { p.set_dst! nil }.should raise_error(TypeError)
         lambda { p.set_dst! 'action', nil }.should raise_error(NoMethodError)
     end
     #
     it "routing: set_dst! and split_dst!" do
-        p = EvenDoors::Particle.new
-        d0 = EvenDoors::Door.new 'door0', nil 
+        p = Iotas::Particle.new
+        d0 = Iotas::Door.new 'door0', nil 
         #
         p.set_dst! 'action', 'room0/room1/door'
         p.split_dst!
@@ -140,19 +140,19 @@ describe EvenDoors::Particle do
     end
     #
     it "routing: error!" do
-        p = EvenDoors::Particle.new
-        d = EvenDoors::Door.new 'door', nil
+        p = Iotas::Particle.new
+        d = Iotas::Door.new 'door', nil
         p.src = d
         p.add_dsts 'door?action,?action'
         p.next_dst.should eql 'door?action'
         p.error! 'err_msg'
-        p[EvenDoors::FIELD_ERROR_MSG].should eql 'err_msg'
-        p.action.should eq EvenDoors::ACT_ERROR
+        p[Iotas::FIELD_ERROR_MSG].should eql 'err_msg'
+        p.action.should eq Iotas::ACT_ERROR
         p.dst.should be d
     end
     #
     it "link fields and link value" do
-        p = EvenDoors::Particle.new
+        p = Iotas::Particle.new
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
@@ -165,7 +165,7 @@ describe EvenDoors::Particle do
     end
     #
     it "apply_link!" do
-        p = EvenDoors::Particle.new
+        p = Iotas::Particle.new
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
@@ -174,7 +174,7 @@ describe EvenDoors::Particle do
         p.src.should be_nil
         p.link_value.should eql 'v0v2'
         p.next_dst.should eql 'door?action'
-        lnk = EvenDoors::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
+        lnk = Iotas::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
         f = Fake.new 'fake', nil
         lnk.door = f
         p.apply_link! lnk
@@ -184,12 +184,12 @@ describe EvenDoors::Particle do
     end
     #
     it "particle->json->particle" do
-        s0 = EvenDoors::Spin.new 'top'
-        s1 = EvenDoors::Room.new 'room0', s0
-        s2 = EvenDoors::Room.new 'room1', s1
-        s3 = EvenDoors::Door.new 'doora', s2
-        s4 = EvenDoors::Door.new 'doorb', s1
-        p0 = EvenDoors::Particle.new
+        s0 = Iotas::Spin.new 'top'
+        s1 = Iotas::Room.new 'room0', s0
+        s2 = Iotas::Room.new 'room1', s1
+        s3 = Iotas::Door.new 'doora', s2
+        s4 = Iotas::Door.new 'doorb', s1
+        p0 = Iotas::Particle.new
         p0['k0'] = 'v0'
         p0['k1'] = 'v1'
         p0['k2'] = 'v2'
@@ -197,7 +197,7 @@ describe EvenDoors::Particle do
         p0.set_link_fields 'k0,k2'
         p0.add_dsts 'room0/room1/room2/doorX?myaction,door?action,?action'
         p0.split_dst!
-        p1 = EvenDoors::Particle.new
+        p1 = Iotas::Particle.new
         p1['k3'] = 'v6'
         p1['k4'] = 'v7'
         p1['k5'] = 'v8'
@@ -208,7 +208,7 @@ describe EvenDoors::Particle do
         p0.merge! p1
         o = JSON.load( JSON.generate(p0) )
         o['spin'] = s0
-        px = EvenDoors::Particle.json_create( o )
+        px = Iotas::Particle.json_create( o )
         ((px.ts-p0.ts)<0.5).should be_true
         px.src.should be s3
         px.dst.should be_nil

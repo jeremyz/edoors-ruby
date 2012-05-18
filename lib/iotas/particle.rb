@@ -3,24 +3,24 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of evendoors-ruby.
+# This file is part of iotas.
 #
-# evendoors-ruby is free software: you can redistribute it and/or modify
+# iotas is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# evendoors-ruby is distributed in the hope that it will be useful,
+# iotas is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with evendoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
+# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'time'
 #
-module EvenDoors
+module Iotas
     #
     class Particle
         #
@@ -71,7 +71,7 @@ module EvenDoors
         end
         #
         def self.json_create o
-            raise EvenDoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o
         end
         #
@@ -98,10 +98,10 @@ module EvenDoors
         end
         #
         def add_dsts dsts
-            dsts.split(EvenDoors::LINK_SEP).each do |dst|
-                if dst.empty? or dst[0]==EvenDoors::PATH_SEP or dst[0]==EvenDoors::PATH_SEP  or dst=~/\/\?/\
-                    or dst=~/\/{2,}/ or dst=~/\s+/ or dst==EvenDoors::ACT_SEP
-                    raise EvenDoors::Exception.new "destination #{dst} is not acceptable"
+            dsts.split(Iotas::LINK_SEP).each do |dst|
+                if dst.empty? or dst[0]==Iotas::PATH_SEP or dst[0]==Iotas::PATH_SEP  or dst=~/\/\?/\
+                    or dst=~/\/{2,}/ or dst=~/\s+/ or dst==Iotas::ACT_SEP
+                    raise Iotas::Exception.new "destination #{dst} is not acceptable"
                 end
                 @dsts << dst
             end
@@ -110,14 +110,14 @@ module EvenDoors
         def set_dst! a, d=''
             @dst = @room = @door = @action = nil
             clear_dsts!
-            add_dsts d+EvenDoors::ACT_SEP+a
+            add_dsts d+Iotas::ACT_SEP+a
         end
         #
         def split_dst!
             @dst = @room = @door = @action = nil
             return if (n = next_dst).nil?
-            p, @action = n.split EvenDoors::ACT_SEP
-            i = p.rindex EvenDoors::PATH_SEP
+            p, @action = n.split Iotas::ACT_SEP
+            i = p.rindex Iotas::PATH_SEP
             if i.nil?
                 @room = nil
                 @door = p
@@ -134,9 +134,9 @@ module EvenDoors
         end
         #
         def error! e, dst=nil
-            @action = EvenDoors::ACT_ERROR
+            @action = Iotas::ACT_ERROR
             @dst = dst||@src
-            @payload[EvenDoors::FIELD_ERROR_MSG]=e
+            @payload[Iotas::FIELD_ERROR_MSG]=e
         end
         #
         def apply_link! lnk

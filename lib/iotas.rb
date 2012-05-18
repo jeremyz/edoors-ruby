@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of evendoors-ruby.
+# This file is part of iotas.
 #
-# evendoors-ruby is free software: you can redistribute it and/or modify
+# iotas is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# evendoors-ruby is distributed in the hope that it will be useful,
+# iotas is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with evendoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
+# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module EvenDoors
+module Iotas
     #
     PATH_SEP = '/'.freeze
     LINK_SEP = ','.freeze
@@ -53,12 +53,12 @@ module EvenDoors
 end
 #
 require 'json'
-require 'evendoors/particle'
-require 'evendoors/spot'
-require 'evendoors/room'
-require 'evendoors/spin'
-require 'evendoors/door'
-require 'evendoors/board'
-require 'evendoors/link'
+require 'iotas/particle'
+require 'iotas/spot'
+require 'iotas/room'
+require 'iotas/spin'
+require 'iotas/door'
+require 'iotas/board'
+require 'iotas/link'
 #
 # EOF

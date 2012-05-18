@@ -4,17 +4,17 @@
 
 require 'spec_helper'
 #
-describe EvenDoors::Link do
+describe Iotas::Link do
     #
     it "from particle data" do
-        @spin = EvenDoors::Spin.new 'dom0'
-        p = @spin.require_p EvenDoors::Particle
-        p.set_data EvenDoors::LNK_SRC, 'input1'
-        p.set_data EvenDoors::LNK_DSTS, 'concat1?follow,output1'
-        p.set_data EvenDoors::LNK_FIELDS, 'f0,f2'
-        p.set_data EvenDoors::LNK_CONDF, 'f0,f1,f2'
-        p.set_data EvenDoors::LNK_CONDV, 'v0v1v2'
-        lnk = EvenDoors::Link.from_particle_data p
+        @spin = Iotas::Spin.new 'dom0'
+        p = @spin.require_p Iotas::Particle
+        p.set_data Iotas::LNK_SRC, 'input1'
+        p.set_data Iotas::LNK_DSTS, 'concat1?follow,output1'
+        p.set_data Iotas::LNK_FIELDS, 'f0,f2'
+        p.set_data Iotas::LNK_CONDF, 'f0,f1,f2'
+        p.set_data Iotas::LNK_CONDV, 'v0v1v2'
+        lnk = Iotas::Link.from_particle_data p
         lnk.src.should eql 'input1'
         lnk.dsts.should eql 'concat1?follow,output1'
         lnk.fields.should eql 'f0,f2'
@@ -23,8 +23,8 @@ describe EvenDoors::Link do
     end
     #
     it "link->json->link" do
-        link = EvenDoors::Link.new  'input1', 'concat1?follow,output1', 'f0,f2', 'f0,f1,f2', 'v0v1v2'
-        lnk = EvenDoors::Link.json_create( JSON.load( JSON.generate(link) ) )
+        link = Iotas::Link.new  'input1', 'concat1?follow,output1', 'f0,f2', 'f0,f1,f2', 'v0v1v2'
+        lnk = Iotas::Link.json_create( JSON.load( JSON.generate(link) ) )
         link.src.should eql lnk.src
         link.dsts.should eql lnk.dsts
         link.fields.should eql lnk.fields

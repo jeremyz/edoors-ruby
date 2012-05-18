@@ -9,9 +9,9 @@ begin
 rescue LoadError
 end
 #
-require 'evendoors'
+require 'iotas'
 #
-class Fake < EvenDoors::Spot
+class Fake < Iotas::Spot
     attr_reader :p, :sp, :start, :stop
     def process_p p
         @p = p

@@ -4,10 +4,10 @@
 
 require 'spec_helper'
 #
-describe EvenDoors::Spot do
+describe Iotas::Spot do
     #
     it "path construction" do
-        class S<EvenDoors::Spot
+        class S<Iotas::Spot
             def add_spot s
             end
         end
@@ -16,9 +16,9 @@ describe EvenDoors::Spot do
         s2 = S.new 'room1', s1
         s3 = S.new 'door', s2
         s3.path.should eql 'top/room0/room1/door'
-        lambda { EvenDoors::Spot.new('do/or0', nil) }.should raise_error(EvenDoors::Exception)
-        lambda { EvenDoors::Spot.new('/door0', nil) }.should raise_error(EvenDoors::Exception)
-        lambda { EvenDoors::Spot.new('door0/', nil) }.should raise_error(EvenDoors::Exception)
+        lambda { Iotas::Spot.new('do/or0', nil) }.should raise_error(Iotas::Exception)
+        lambda { Iotas::Spot.new('/door0', nil) }.should raise_error(Iotas::Exception)
+        lambda { Iotas::Spot.new('door0/', nil) }.should raise_error(Iotas::Exception)
     end
     #
 end
