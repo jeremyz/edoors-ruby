@@ -24,13 +24,13 @@ module Iotas
     class Iota
         #
         def initialize n, p
+            raise Iotas::Exception.new "Iota name #{n} is not valid" if n.include? Iotas::PATH_SEP
             @name   = n     # unique in it's room
             @parent = p     # single direct parent
             @viewer = nil   # particle going through that position will be sent there readonly
             @path = ( @parent ? @parent.path+Iotas::PATH_SEP : '') + @name
             @spin = ( @parent ? @parent.spin : self )
             @parent.add_iota self if @parent
-            raise Iotas::Exception.new "Iota name #{name} is not valid" if @name.include? Iotas::PATH_SEP
         end
         #
         attr_reader :name, :path, :spin
