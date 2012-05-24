@@ -147,6 +147,17 @@ describe Iotas::Room do
         p.dst.should be p.src
     end
     #
+    it "routing ~failure: no door name -> src" do
+        room0 = Iotas::Room.new 'room0', @spin
+        door0 = Iotas::Door.new 'door0', room0
+        p = @spin.require_p Iotas::Particle
+        p.src = door0
+        p.set_dst! 'get'
+        room0.send_p p
+        p.action.should eql 'get'
+        p.dst.should be door0
+    end
+    #
     it "routing success: unconditional link" do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
