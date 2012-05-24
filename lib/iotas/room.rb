@@ -23,8 +23,7 @@ module Iotas
     #
     ERROR_ROUTE_NS      = 'routing error: no source'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
-    ERROR_ROUTE_DDWR    = 'routing error: drill down, wrong room'.freeze
-    ERROR_ROUTE_TRWR    = 'routing error: top room, wrong room'.freeze
+    ERROR_ROUTE_DNE     = 'routing error: does not exists'.freeze
     ERROR_ROUTE_NDNL    = 'routing error: no destination, no link'.freeze
     ERROR_ROUTE_SND     = 'routing error: system no destination'.freeze
     #
@@ -126,17 +125,10 @@ module Iotas
                 else
                     p.error! Iotas::ERROR_ROUTE_RRWD
                 end
-            elsif (p.room=~/^#{path}\/(.*)/)==0
-                room, *more = $1.split Iotas::PATH_SEP
-                if child=@iotas[room]
-                    child.route_p p
-                else
-                    p.error! Iotas::ERROR_ROUTE_DDWR
-                end
-            elsif @parent
-                @parent.route_p p
+            elsif door = @spin.search_world(p.room+Iotas::PATH_SEP+p.door)
+                p.dst_routed! door
             else
-                p.error! Iotas::ERROR_ROUTE_TRWR
+                p.error! Iotas::ERROR_ROUTE_DNE
             end
         end
         #
