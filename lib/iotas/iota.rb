@@ -30,7 +30,10 @@ module Iotas
             @viewer = nil   # particle going through that position will be sent there readonly
             @path = ( @parent ? @parent.path+Iotas::PATH_SEP : '') + @name
             @spin = ( @parent ? @parent.spin : self )
-            @parent.add_iota self if @parent
+            if @parent
+                @parent.add_iota self
+                @spin.add_to_world self if @spin.is_a? Iotas::Spin
+            end
         end
         #
         attr_reader :name, :path, :spin
