@@ -27,6 +27,7 @@ module Iotas
             super n, nil
             #
             @pool       = {}    # per particle class free list
+            @world      = {}    # global iotas index
             @sys_fifo   = []    # system particles fifo list
             @app_fifo   = []    # application particles fifo list
             #
@@ -68,6 +69,14 @@ module Iotas
         def self.json_create o
             raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o['name'], o
+        end
+        #
+        def add_to_world iota
+            @world[iota.path] = iota
+        end
+        #
+        def search_world path
+            @world[path]
         end
         #
         def clear!
