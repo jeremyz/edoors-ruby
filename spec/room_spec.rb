@@ -62,7 +62,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new( 'fake', @spin)
         p.set_dst! 'get', 'door0'
         room0.send_p p
         p.action.should eql 'get'
@@ -74,7 +74,7 @@ describe Iotas::Room do
         room1 = Iotas::Room.new 'room1', room0
         door0 = Iotas::Door.new 'door0', room1
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new('fake', @spin)
         p.set_dst! 'get', 'dom0/room0/room1/door0'
         room0.send_p p
         p.action.should eql 'get'
@@ -94,7 +94,7 @@ describe Iotas::Room do
     it "route error: no destination no links" do
         room = Iotas::Room.new 'room', @spin
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new('fake', @spin)
         room.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_NDNL
@@ -104,7 +104,7 @@ describe Iotas::Room do
     it "route error: no rooom, wrong door -> right room wrong door" do
         room0 = Iotas::Room.new 'room0', @spin
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new('fake', @spin)
         p.set_dst! 'get', 'nodoor'
         room0.send_p p
         p.action.should eql Iotas::ACT_ERROR
@@ -115,7 +115,7 @@ describe Iotas::Room do
     it "route error: right rooom, wrong door -> right room wrong door" do
         room0 = Iotas::Room.new 'room0', @spin
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new('fake', @spin)
         p.set_dst! 'get', 'dom0/room0/nodoor'
         room0.send_p p
         p.action.should eql Iotas::ACT_ERROR
@@ -127,7 +127,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         room1 = Iotas::Room.new 'room1', room0
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', room0
+        p.init! Fake.new('fake', room0)
         p.set_dst! 'get', 'dom0/room0/nodoor'
         room1.send_p p
         p.action.should eql Iotas::ACT_ERROR
@@ -139,7 +139,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         room1 = Iotas::Room.new 'room1', room0
         p = @spin.require_p Iotas::Particle
-        p.src = Fake.new 'fake', @spin
+        p.init! Fake.new('fake', @spin)
         p.set_dst! 'get', 'dom0/noroom/fake'
         room1.send_p p
         p.action.should eql Iotas::ACT_ERROR
@@ -151,7 +151,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
-        p.src = door0
+        p.init! door0
         p.set_dst! 'get'
         room0.send_p p
         p.action.should eql 'get'

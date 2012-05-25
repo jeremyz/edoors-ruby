@@ -142,7 +142,7 @@ describe Iotas::Particle do
     it "routing: error!" do
         p = Iotas::Particle.new
         d = Iotas::Door.new 'door', nil
-        p.src = d
+        p.init! d
         p.add_dsts 'door?action,?action'
         p.next_dst.should eql 'door?action'
         p.error! 'err_msg'
@@ -193,7 +193,7 @@ describe Iotas::Particle do
         p0['k0'] = 'v0'
         p0['k1'] = 'v1'
         p0['k2'] = 'v2'
-        p0.src = s3
+        p0.init! s3
         p0.set_link_fields 'k0,k2'
         p0.add_dsts 'room0/room1/room2/doorX?myaction,door?action,?action'
         p0.split_dst!
@@ -201,7 +201,7 @@ describe Iotas::Particle do
         p1['k3'] = 'v6'
         p1['k4'] = 'v7'
         p1['k5'] = 'v8'
-        p1.src = s3
+        p1.init! s3
         p1.dst_routed! s4
         p1.set_link_fields 'k5,k4,k3'
         p1.add_dsts 'room0/room1/door?action,output?action'
