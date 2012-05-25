@@ -76,16 +76,19 @@ module Iotas
         end
         #
         def reset!
-            @ts = Time.now
-            @src = @dst = @room = @door = @action = @link_value = nil
+            @ts = @src = @dst = @room = @door = @action = @link_value = nil
             @dsts.clear
             @link_fields.clear
             @payload.clear
             @merged.clear
         end
         #
-        attr_accessor :src
-        attr_reader :ts, :dst, :room, :door, :action, :link_value, :payload
+        def init! src
+            @src = src
+            @ts = Time.now
+        end
+        #
+        attr_reader :ts, :src, :dst, :room, :door, :action, :link_value, :payload
         #
         # routing
         #
