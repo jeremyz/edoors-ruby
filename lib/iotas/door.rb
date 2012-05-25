@@ -44,7 +44,7 @@ module Iotas
         #
         def require_p p_kls
             p = @spin.require_p p_kls
-            p.src = self
+            p.init! self
             p
         end
         #
@@ -73,13 +73,13 @@ module Iotas
         end
         #
         def send_p p
-            p.src = self
+            p.init! self
             @saved=nil if @saved==p # particle is sent back the data, all is good
             @parent.send_p p        # daddy will know what to do
         end
         #
         def send_sys_p p
-            p.src = self
+            p.init! self
             @saved=nil if @saved==p # particle is sent back the data, all is good
             @parent.send_sys_p p    # daddy will know what to do
         end
