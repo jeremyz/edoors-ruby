@@ -58,13 +58,23 @@ describe Iotas::Room do
         r4.search_down('dom0/r0/r1/r2').should be nil
     end
     #
-    it "routing success (direct)" do
+    it "routing success (direct add_dst)" do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new( 'fake', @spin)
         p.add_dst 'get', 'door0'
         room0.send_p p
+        p.action.should eql 'get'
+        p.dst.should be door0
+    end
+    #
+    it "routing success (direct send)" do
+        room0 = Iotas::Room.new 'room0', @spin
+        door0 = Iotas::Door.new 'door0', room0
+        p = @spin.require_p Iotas::Particle
+        p.init! Fake.new( 'fake', @spin)
+        door0.send_p p, 'get'
         p.action.should eql 'get'
         p.dst.should be door0
     end
@@ -205,11 +215,11 @@ describe Iotas::Room do
         p0 = door1.ps[0]
         p0.action.should be_nil
         p0.src.should be door0
-        p0.dst.should be door1
+        p0.dst.should be_nil
         p1 = door1.ps[1]
         p1.action.should be_nil
         p1.src.should be door0
-        p1.dst.should be door1
+        p1.dst.should be_nil
         p1.should be p
     end
     #
@@ -230,12 +240,21 @@ describe Iotas::Room do
         p.dst.should be room0.spin
     end
     #
-    it "system routing success" do
+    it "system routing success (add_dst)" do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
         p.add_dst Iotas::SYS_ACT_ADD_LINK, 'dom0/room0/door0'
         room0.send_sys_p p
+        p.action.should eql Iotas::SYS_ACT_ADD_LINK
+        p.dst.should be door0
+    end
+    #
+    it "system routing success (send_sys_p)" do
+        room0 = Iotas::Room.new 'room0', @spin
+        door0 = Iotas::Door.new 'door0', room0
+        p = @spin.require_p Iotas::Particle
+        door0.send_sys_p p, Iotas::SYS_ACT_ADD_LINK
         p.action.should eql Iotas::SYS_ACT_ADD_LINK
         p.dst.should be door0
     end
