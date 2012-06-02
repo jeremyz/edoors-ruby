@@ -114,6 +114,12 @@ module Iotas
             add_dsts d+Iotas::ACT_SEP+a
         end
         #
+        def set_dst! a, d
+            @room = @door = nil
+            @action = a
+            @dst = d
+        end
+        #
         def split_dst!
             @dst = @room = @door = @action = nil
             return if (n = next_dst).nil?

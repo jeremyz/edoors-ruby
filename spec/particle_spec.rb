@@ -94,9 +94,18 @@ describe Iotas::Particle do
         lambda { p.add_dst 'action', nil }.should raise_error(NoMethodError)
     end
     #
+    it "routing: set_dst!" do
+        p = Iotas::Particle.new
+        d0 = Iotas::Door.new 'door0', nil
+        #
+        p.set_dst! 'action', d0
+        p.action.should eql 'action'
+        p.dst.should be d0
+    end
+    #
     it "routing: add_dst and split_dst!" do
         p = Iotas::Particle.new
-        d0 = Iotas::Door.new 'door0', nil 
+        d0 = Iotas::Door.new 'door0', nil
         #
         p.split_dst!
         p.room.should be_nil
