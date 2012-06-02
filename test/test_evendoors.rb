@@ -23,8 +23,8 @@ class InputDoor < Iotas::Door
         puts " -> start #{self.class.name} (#{@path})"
         # stimulate myself
         p = require_p Iotas::Particle
-        p.add_dst Iotas::ACT_GET, path
-        send_p p
+        # p.add_dst Iotas::ACT_GET, path
+        send_p p, Iotas::ACT_GET
     end
     #
     def stop!
