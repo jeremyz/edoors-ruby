@@ -197,30 +197,22 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         class Out < Iotas::Door
-            attr_reader :ps
+            attr_reader :count
             def receive_p p
-                @ps||=[]
-                @ps << p
+                @count||=0
+                @count += 1
             end
         end
         door1 = Out.new 'door1', room0
         room0.add_link Iotas::Link.new('door0', 'door1')
         room0.add_link Iotas::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
+        room0.add_link Iotas::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v2')
         p = @spin.require_p Iotas::Particle
         p['f0']='v0'
         p['f1']='v1'
         door0.send_p p
         @spin.spin!
-        door1.ps.length.should eql 2
-        p0 = door1.ps[0]
-        p0.action.should be_nil
-        p0.src.should be door0
-        p0.dst.should be_nil
-        p1 = door1.ps[1]
-        p1.action.should be_nil
-        p1.src.should be door0
-        p1.dst.should be_nil
-        p1.should be p
+        door1.count.should eql 2
     end
     #
     it "system route error: system no destination" do
