@@ -110,9 +110,7 @@ module Iotas
             end
         end
         #
-        def set_dst! a, d=''
-            @dst = @room = @door = @action = nil
-            clear_dsts!
+        def add_dst a, d=''
             add_dsts d+Iotas::ACT_SEP+a
         end
         #

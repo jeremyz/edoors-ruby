@@ -23,7 +23,7 @@ class InputDoor < Iotas::Door
         puts " -> start #{self.class.name} (#{@path})"
         # stimulate myself
         p = require_p Iotas::Particle
-        p.set_dst! Iotas::ACT_GET, path
+        p.add_dst Iotas::ACT_GET, path
         send_p p
     end
     #
@@ -51,12 +51,12 @@ class InputDoor < Iotas::Door
             p.set_data 'f0', 'v0'
             p.set_data 'f1', 'v1'
             p.set_data 'f2', 'v2'
-            send_p p
+            send_p p    # will follow the link
             @idx+=1
             if @idx<@lines.length
                 # there is more to read, restimulate myself
                 p = require_p Iotas::Particle
-                p.set_dst! Iotas::ACT_GET, name
+                p.add_dst Iotas::ACT_GET, name
                 send_p p
             end
         else
@@ -68,7 +68,7 @@ class InputDoor < Iotas::Door
         if self.class.count==3
             p = require_p Iotas::Particle
             p[Iotas::FIELD_HIBERNATE_PATH] = HBN_PATH
-            p.set_dst! Iotas::SYS_ACT_HIBERNATE
+            p.add_dst Iotas::SYS_ACT_HIBERNATE
             send_sys_p p
         end
     end
@@ -156,7 +156,7 @@ p0.set_data Iotas::LNK_DSTS, 'concat1?follow,output1'
 p0.set_data Iotas::LNK_FIELDS, 'f0,f2'
 p0.set_data Iotas::LNK_CONDF, 'f0,f1,f2'
 p0.set_data Iotas::LNK_CONDV, 'v0v1v2'
-p0.set_dst! Iotas::SYS_ACT_ADD_LINK, room1.path
+p0.add_dst Iotas::SYS_ACT_ADD_LINK, room1.path
 room1.send_sys_p p0 # send_sys_p -> room0 -> spin -> room1 -> input1
 #
 spin.spin!
