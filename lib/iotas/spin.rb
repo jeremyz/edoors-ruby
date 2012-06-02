@@ -92,6 +92,7 @@ module Iotas
             while p2=p.merged_shift
                 release_p p2
             end
+            p.reset!
             ( @pool[p.class] ||= [] ) << p
         end
         #
@@ -100,7 +101,6 @@ module Iotas
             return p_kls.new if l.nil?
             p = l.pop
             return p_kls.new if p.nil?
-            p.reset!
             p
         end
         #
