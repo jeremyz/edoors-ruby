@@ -134,6 +134,10 @@ module Iotas
         #
         def send_p p
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
+            if p.dst
+                puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
+                return @spin.post_p p
+            end
             if p.src.nil?
                 # do not route orphan particles !!
                 p.error! Iotas::ERROR_ROUTE_NS, @spin
@@ -156,6 +160,10 @@ module Iotas
         #
         def send_sys_p p
             puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
+            if p.dst
+                puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
+                return @spin.post_sys_p p
+            end
             if p.next_dst
                 p.split_dst!
                 if p.door
