@@ -134,6 +134,12 @@ module Iotas
             @dsts.shift
         end
         #
+        def dst_reached!
+            d = @dst
+            @dst = nil
+            d
+        end
+        #
         def error! e, dst=nil
             @action = Iotas::ACT_ERROR
             @dst = dst||@src
