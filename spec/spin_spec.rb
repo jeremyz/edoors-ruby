@@ -76,7 +76,7 @@ describe Iotas::Spin do
     it "process_sys" do
         spin = Iotas::Spin.new 'dom0'
         p0 = spin.require_p Iotas::Particle
-        p0.set_dst! 'unknown'
+        p0.add_dst 'unknown'
         spin.send_sys_p p0
         spin.spin!
         p1 = spin.require_p Iotas::Particle
@@ -116,7 +116,7 @@ describe Iotas::Spin do
     it "hibernate! resume!" do
         spin = Iotas::Spin.new 'dom0'
         p0 = spin.require_p Iotas::Particle
-        p0.set_dst! Iotas::SYS_ACT_HIBERNATE
+        p0.add_dst Iotas::SYS_ACT_HIBERNATE
         spin.send_sys_p p0
         spin.spin!
         dom0 = Iotas::Spin.resume! spin.hibernate_path

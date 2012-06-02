@@ -63,7 +63,7 @@ describe Iotas::Room do
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new( 'fake', @spin)
-        p.set_dst! 'get', 'door0'
+        p.add_dst 'get', 'door0'
         room0.send_p p
         p.action.should eql 'get'
         p.dst.should be door0
@@ -75,7 +75,7 @@ describe Iotas::Room do
         door0 = Iotas::Door.new 'door0', room1
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new('fake', @spin)
-        p.set_dst! 'get', 'dom0/room0/room1/door0'
+        p.add_dst 'get', 'dom0/room0/room1/door0'
         room0.send_p p
         p.action.should eql 'get'
         p.dst.should be door0
@@ -84,7 +84,7 @@ describe Iotas::Room do
     it "route error: no source" do
         room = Iotas::Room.new 'room', @spin
         p = @spin.require_p Iotas::Particle
-        p.set_dst! 'get', 'room/door'
+        p.add_dst 'get', 'room/door'
         room.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_NS
@@ -105,7 +105,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new('fake', @spin)
-        p.set_dst! 'get', 'nodoor'
+        p.add_dst 'get', 'nodoor'
         room0.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_RRWD
@@ -116,7 +116,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new('fake', @spin)
-        p.set_dst! 'get', 'dom0/room0/nodoor'
+        p.add_dst 'get', 'dom0/room0/nodoor'
         room0.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_RRWD
@@ -128,7 +128,7 @@ describe Iotas::Room do
         room1 = Iotas::Room.new 'room1', room0
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new('fake', room0)
-        p.set_dst! 'get', 'dom0/room0/nodoor'
+        p.add_dst 'get', 'dom0/room0/nodoor'
         room1.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_DNE
@@ -140,7 +140,7 @@ describe Iotas::Room do
         room1 = Iotas::Room.new 'room1', room0
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new('fake', @spin)
-        p.set_dst! 'get', 'dom0/noroom/fake'
+        p.add_dst 'get', 'dom0/noroom/fake'
         room1.send_p p
         p.action.should eql Iotas::ACT_ERROR
         p[Iotas::FIELD_ERROR_MSG].should eql Iotas::ERROR_ROUTE_DNE
@@ -152,7 +152,7 @@ describe Iotas::Room do
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
         p.init! door0
-        p.set_dst! 'get'
+        p.add_dst 'get'
         room0.send_p p
         p.action.should eql 'get'
         p.dst.should be door0
@@ -224,7 +224,7 @@ describe Iotas::Room do
     it "system routing success: action only" do
         room0 = Iotas::Room.new 'room0', @spin
         p = @spin.require_p Iotas::Particle
-        p.set_dst! Iotas::SYS_ACT_ADD_LINK
+        p.add_dst Iotas::SYS_ACT_ADD_LINK
         room0.send_sys_p p
         p.action.should eql Iotas::SYS_ACT_ADD_LINK
         p.dst.should be room0.spin
@@ -234,7 +234,7 @@ describe Iotas::Room do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
-        p.set_dst! Iotas::SYS_ACT_ADD_LINK, 'dom0/room0/door0'
+        p.add_dst Iotas::SYS_ACT_ADD_LINK, 'dom0/room0/door0'
         room0.send_sys_p p
         p.action.should eql Iotas::SYS_ACT_ADD_LINK
         p.dst.should be door0
@@ -250,7 +250,7 @@ describe Iotas::Room do
         p0.set_data Iotas::LNK_FIELDS, 'fields'
         p0.set_data Iotas::LNK_CONDF, 'f0,f1'
         p0.set_data Iotas::LNK_CONDV, 'v0v1'
-        p0.set_dst! Iotas::SYS_ACT_ADD_LINK, room0.path
+        p0.add_dst Iotas::SYS_ACT_ADD_LINK, room0.path
         room0.send_sys_p p0
         @spin.spin!
         p = @spin.require_p Iotas::Particle

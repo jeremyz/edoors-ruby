@@ -80,52 +80,60 @@ describe Iotas::Particle do
     #
     it "wrong path should raise exeption" do
         p = Iotas::Particle.new
-        lambda { p.set_dst! 'action', '/room' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! 'action', 'room/' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! '', 'room/' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! 'action', 'room//door' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! ' ' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! ' ', '' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! 'f f' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! '', ' d' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! '' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! '', '' }.should raise_error(Iotas::Exception)
-        lambda { p.set_dst! nil }.should raise_error(TypeError)
-        lambda { p.set_dst! 'action', nil }.should raise_error(NoMethodError)
+        lambda { p.add_dst 'action', '/room' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst 'action', 'room/' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst '', 'room/' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst 'action', 'room//door' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst ' ' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst ' ', '' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst 'f f' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst '', ' d' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst '' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst '', '' }.should raise_error(Iotas::Exception)
+        lambda { p.add_dst nil }.should raise_error(TypeError)
+        lambda { p.add_dst 'action', nil }.should raise_error(NoMethodError)
     end
     #
-    it "routing: set_dst! and split_dst!" do
+    it "routing: add_dst and split_dst!" do
         p = Iotas::Particle.new
         d0 = Iotas::Door.new 'door0', nil 
         #
-        p.set_dst! 'action', 'room0/room1/door'
+        p.split_dst!
+        p.room.should be_nil
+        p.door.should be_nil
+        p.action.should be_nil
+        #
+        p.add_dst 'action', 'room0/room1/door'
         p.split_dst!
         p.room.should eql 'room0/room1'
         p.door.should eql 'door'
         p.action.should eql 'action'
+        p.clear_dsts!
         #
-        p.set_dst! 'action', 'room/door'
+        p.add_dst 'action', 'room/door'
         p.split_dst!
         p.room.should eql 'room'
         p.door.should eql 'door'
         p.action.should eql 'action'
-        #
-        p.set_dst! 'action', ''
-        p.split_dst!
-        p.room.should eql nil
-        p.door.should eql nil
-        p.action.should eql 'action'
-        #
-        p.set_dst! 'action'
-        p.split_dst!
-        p.room.should eql nil
-        p.door.should eql nil
-        p.action.should eql 'action'
-        #
         p.clear_dsts!
+        #
+        p.add_dst 'action', ''
+        p.split_dst!
+        p.room.should be_nil
+        p.door.should be_nil
+        p.action.should eql 'action'
+        p.clear_dsts!
+        #
+        p.add_dst 'action'
+        p.split_dst!
+        p.room.should be_nil
+        p.door.should be_nil
+        p.action.should eql 'action'
+        p.clear_dsts!
+        #
         p.add_dsts 'door?action,?action'
         p.split_dst!
-        p.room.should eql nil
+        p.room.should be_nil
         p.door.should eql 'door'
         p.action.should eql 'action'
         #
@@ -133,8 +141,8 @@ describe Iotas::Particle do
         #
         p.dst.should be d0
         p.split_dst!
-        p.room.should eql nil
-        p.door.should eql nil
+        p.room.should be_nil
+        p.door.should be_nil
         p.action.should eql 'action'
         #
     end

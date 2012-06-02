@@ -68,9 +68,9 @@ describe Iotas::Board do
         b0.process_p p0
         p0.merged(0).should be_nil
         # need to set it to p0 too, so case in Board0 is ok
-        p0.set_dst! Iotas::ACT_FOLLOW
+        p0.add_dst Iotas::ACT_FOLLOW
         p0.split_dst!
-        p1.set_dst! Iotas::ACT_FOLLOW
+        p1.add_dst Iotas::ACT_FOLLOW
         p1.split_dst!
         b0.process_p p1
         b0.ok.should be_true

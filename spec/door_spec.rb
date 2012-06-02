@@ -55,27 +55,31 @@ describe Iotas::Door do
         d0 = Door0.new 'door0', f
         p0 = d0.require_p Iotas::Particle
         #
-        p0.set_dst! 'SEND'
+        p0.add_dst 'SEND'
         p0.split_dst!
         d0.process_p p0
         f.p.should eql p0
+        p0.clear_dsts!
         #
-        p0.set_dst! 'SEND_SYS'
+        p0.add_dst 'SEND_SYS'
         p0.split_dst!
         d0.process_p p0
         f.sp.should eql p0
+        p0.clear_dsts!
         #
-        p0.set_dst! 'RELEASE'
+        p0.add_dst 'RELEASE'
         p0.split_dst!
         d0.process_p p0
         p1 = d0.require_p Iotas::Particle
         p1.should be p0
+        p0.clear_dsts!
         #
-        p0.set_dst! 'LOST'
+        p0.add_dst 'LOST'
         p0.split_dst!
         d0.process_p p0
         p1 = d0.require_p Iotas::Particle
         p1.should be p0
+        p0.clear_dsts!
         #
         d0.process_sys_p p0
         p1 = @spin.require_p Iotas::Particle
