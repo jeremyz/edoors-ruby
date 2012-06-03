@@ -17,13 +17,10 @@ describe Iotas::Door do
     it "require_p release_p" do
         door = Iotas::Door.new 'hell', @spin
         p0 = door.require_p Iotas::Particle
-        p0.src.should be door
         p1 = door.require_p Iotas::Particle
-        p1.src.should be door
         (p0===p1).should be_false
         door.release_p p0
         p2 = door.require_p Iotas::Particle
-        p2.src.should be door
         (p0===p2).should be_true
     end
     #

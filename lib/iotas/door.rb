@@ -43,9 +43,7 @@ module Iotas
         end
         #
         def require_p p_kls
-            p = @spin.require_p p_kls
-            p.init! self
-            p
+            @spin.require_p p_kls
         end
         #
         def release_p p

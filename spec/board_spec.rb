@@ -17,13 +17,10 @@ describe Iotas::Board do
     it "require_p release_p" do
         board = Iotas::Board.new 'hell', @spin
         p0 = board.require_p Iotas::Particle
-        p0.src.should be board
         p1 = board.require_p Iotas::Particle
-        p1.src.should be board
         (p0===p1).should be_false
         board.release_p p0
         p2 = board.require_p Iotas::Particle
-        p2.src.should be board
         (p0===p2).should be_true
     end
     #
