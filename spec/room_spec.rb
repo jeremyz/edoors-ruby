@@ -69,12 +69,32 @@ describe Iotas::Room do
         p.dst.should be door0
     end
     #
-    it "routing success (direct send)" do
+    it "routing success (direct send to self)" do
         room0 = Iotas::Room.new 'room0', @spin
         door0 = Iotas::Door.new 'door0', room0
         p = @spin.require_p Iotas::Particle
         p.init! Fake.new( 'fake', @spin)
         door0.send_p p, 'get'
+        p.action.should eql 'get'
+        p.dst.should be door0
+    end
+    #
+    it "routing success (direct send to pointer)" do
+        room0 = Iotas::Room.new 'room0', @spin
+        door0 = Iotas::Door.new 'door0', room0
+        p = @spin.require_p Iotas::Particle
+        p.init! Fake.new( 'fake', @spin)
+        door0.send_p p, 'get', door0
+        p.action.should eql 'get'
+        p.dst.should be door0
+    end
+    #
+    it "routing success (direct send to path)" do
+        room0 = Iotas::Room.new 'room0', @spin
+        door0 = Iotas::Door.new 'door0', room0
+        p = @spin.require_p Iotas::Particle
+        p.init! Fake.new( 'fake', @spin)
+        door0.send_p p, 'get', door0.path
         p.action.should eql 'get'
         p.dst.should be door0
     end
