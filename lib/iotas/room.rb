@@ -91,7 +91,7 @@ module Iotas
             nil
         end
         #
-        def try_links p
+        def _try_links p
             puts "   -> try_links ..." if @spin.debug_routing
             links = @links[p.src.name]
             return false if links.nil?
@@ -113,12 +113,13 @@ module Iotas
             end
             if pending_link
                 p.apply_link! pending_link
-                send_p p
+                _send false, p
             end
-            (not pending_link.nil?)
+            pending_link
         end
+        private :_try_links
         #
-        def route_p p
+        def _route p
             if p.room.nil? or p.room==path
                 if door = @iotas[p.door]
                     p.dst_routed! door
@@ -131,45 +132,46 @@ module Iotas
                 p.error! Iotas::ERROR_ROUTE_DNE
             end
         end
+        private :_route
         #
-        def send_p p
-            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
-            if p.src.nil?
-                # do not route orphan particles !!
+        def _send sys, p
+            if not sys and p.src.nil?
+                # do not route non system orphan particles !!
                 p.error! Iotas::ERROR_ROUTE_NS, @spin
             elsif p.dst
-                # direct routing, nothing to do
+                # direct routing through pointer
+                return
+            elsif p.door
+                # direct routing through path
+                _route p
             elsif p.next_dst
                 p.split_dst!
                 if p.door
-                    route_p p
-                else
+                    _route p
+                elsif not sys
                     # boomerang
                     p.dst_routed! p.src
+                elsif p.action
+                    p.dst_routed! @spin
                 end
-            elsif try_links p
+            elsif not sys and _try_links p
                 return
             else
-                p.error! Iotas::ERROR_ROUTE_NDNL
+                p.error!( sys ? Iotas::ERROR_ROUTE_SND : Iotas::ERROR_ROUTE_NDNL)
             end
+        end
+        private :_send
+        #
+        def send_p p
+            puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
+            _send false, p
             puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_p p
         end
         #
         def send_sys_p p
             puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
-            if p.dst
-                # direct routing, nothing to do
-            elsif p.next_dst
-                p.split_dst!
-                if p.door
-                    route_p p
-                elsif p.action
-                    p.dst_routed! @spin
-                end
-            else
-                p.error! Iotas::ERROR_ROUTE_SND
-            end
+            _send true, p
             puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_sys_p p
         end

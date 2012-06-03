@@ -86,9 +86,9 @@ module Iotas
         #
         # called when sent
         def init! src
-            @dst = nil
             @src = src
             @ts = Time.now
+            @dst = @room = @door = @action = nil
         end
         #
         attr_reader :ts, :src, :dst, :room, :door, :action, :link_value, :payload
@@ -118,15 +118,22 @@ module Iotas
         end
         #
         def set_dst! a, d
-            @room = @door = nil
             @action = a
-            @dst = d
+            if d.is_a? Iotas::Iota
+                @dst = d
+            else
+                _split_path! d
+            end
         end
         #
         def split_dst!
             @dst = @room = @door = @action = nil
             return if (n = next_dst).nil?
             p, @action = n.split Iotas::ACT_SEP
+            _split_path! p
+        end
+        #
+        def _split_path! p
             i = p.rindex Iotas::PATH_SEP
             if i.nil?
                 @room = nil
@@ -137,6 +144,7 @@ module Iotas
             end
             @door = nil if @door.empty?
         end
+        private :_split_path!
         #
         def dst_routed! dst
             @dst = dst
@@ -150,7 +158,7 @@ module Iotas
         end
         #
         def apply_link! lnk
-            @src = lnk.door
+            init! lnk.door
             clear_dsts!
             add_dsts lnk.dsts
             set_link_fields lnk.fields
