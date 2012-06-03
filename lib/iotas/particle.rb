@@ -75,6 +75,7 @@ module Iotas
             self.new o
         end
         #
+        # called when released
         def reset!
             @ts = @src = @dst = @room = @door = @action = @link_value = nil
             @dsts.clear
@@ -83,7 +84,9 @@ module Iotas
             @merged.clear
         end
         #
+        # called when sent
         def init! src
+            @dst = nil
             @src = src
             @ts = Time.now
         end
@@ -138,12 +141,6 @@ module Iotas
         def dst_routed! dst
             @dst = dst
             @dsts.shift
-        end
-        #
-        def dst_reached!
-            d = @dst
-            @dst = nil
-            d
         end
         #
         def error! e, dst=nil

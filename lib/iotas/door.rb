@@ -70,18 +70,21 @@ module Iotas
             @spin.release_p p
         end
         #
-        def send_p p, a=nil
+        def _send sys, p, a=nil, d=nil
             p.init! self
-            p.set_dst! a, self if a
+            p.set_dst! a, d||self if a
             @saved=nil if @saved==p # particle is sent back the data, all is good
-            @parent.send_p p        # daddy will know what to do
+            # daddy will know what to do
+            sys ? @parent.send_sys_p(p) : @parent.send_p(p)
+        end
+        private :_send
+        #
+        def send_p p, a=nil, d=nil
+            _send false, p, a, d
         end
         #
-        def send_sys_p p, a=nil
-            p.init! self
-            p.set_dst! a, self if a
-            @saved=nil if @saved==p # particle is sent back the data, all is good
-            @parent.send_sys_p p    # daddy will know what to do
+        def send_sys_p p, a=nil, d=nil
+            _send true, p, a, d
         end
         #
     end
