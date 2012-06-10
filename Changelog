@@ -1,6 +1,9 @@
 2012-XX-YY Jérémy Zurcher <jeremy@asynk.ch>
+	* add bin
+	* add examples
 	* project rename, iotas -> edoors-ruby
 	* clean up Room routing algo
+	* Spin accepts top level object which are not Rooms
 	* enhance direct routing through Door#send_p destination parameter
 	* enhance Particle#init! and Particle#reset! action and usage
 
