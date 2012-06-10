@@ -1,3 +1,9 @@
+2012-XX-YY Jérémy Zurcher <jeremy@asynk.ch>
+	* project rename, iotas -> edoors-ruby
+	* clean up Room routing algo
+	* enhance direct routing through Door#send_p destination parameter
+	* enhance Particle#init! and Particle#reset! action and usage
+
 2012-06-02 Jérémy Zurcher <jeremy@asynk.ch>
 	* release : 0.0.4
 	* simplify routing algorithm
