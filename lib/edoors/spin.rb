@@ -81,6 +81,7 @@ module Edoors
         #
         def clear!
             @iotas.clear
+            @world.clear
             @pool.clear
             @sys_fifo.clear
             @app_fifo.clear
