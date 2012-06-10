@@ -33,7 +33,7 @@ module Edoors
             #
             @run = false
             @hibernation    = o['hibernation']||false
-            @hibernate_path = 'iotas-hibernate-'+n+'.json'
+            @hibernate_path = 'edoors-hibernate-'+n+'.json'
             @debug_errors   = o[:debug_errors]||o['debug_errors']||false
             @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
