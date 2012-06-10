@@ -117,6 +117,9 @@ describe Edoors::Spin do
         spin = Edoors::Spin.new 'dom0'
         p0 = spin.require_p Edoors::Particle
         p0.add_dst Edoors::SYS_ACT_HIBERNATE
+        Edoors::Room.new 'input', spin
+        Edoors::Room.new 'output', spin
+        spin.add_link Edoors::Link.new('input', 'output', nil, nil, nil)
         spin.send_sys_p p0
         spin.spin!
         dom0 = Edoors::Spin.resume! spin.hibernate_path

@@ -38,9 +38,17 @@ module Edoors
             @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
-                o['iotas'].each do |name,iota|
-                    Edoors::Room.json_create(iota.merge!('parent'=>self))
-                end if o['iotas']
+                room = o['inner_room']
+                if room
+                    room['iotas'].each do |name,iota|
+                        eval( iota['kls'] ).json_create(iota.merge!('parent'=>self))
+                    end
+                    room['links'].each do |src,links|
+                        links.each do |link|
+                            add_link Edoors::Link.json_create(link)
+                        end
+                    end
+                end
                 o['app_fifo'].each do |particle|
                     @app_fifo << Edoors::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['app_fifo']
@@ -58,7 +66,7 @@ module Edoors
                 'timestamp'     => Time.now,
                 'name'          => @name,
                 'hibernation'   => @hibernation,
-                'iotas'         => @iotas,
+                'inner_room'    => { :iotas=>@iotas, :links=>@links },
                 'sys_fifo'      => @sys_fifo,
                 'app_fifo'      => @app_fifo,
                 'debug_errors'  => @debug_errors,
