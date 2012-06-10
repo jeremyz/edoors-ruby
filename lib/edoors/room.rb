@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of iotas.
+# This file is part of edoors-ruby.
 #
-# iotas is free software: you can redistribute it and/or modify
+# edoors-ruby is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# iotas is distributed in the hope that it will be useful,
+# edoors-ruby is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
+# along with edoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module Iotas
+module Edoors
     #
     ERROR_ROUTE_NS      = 'routing error: no source'.freeze
     ERROR_ROUTE_RRWD    = 'routing error: right room, wrong door'.freeze
@@ -45,29 +45,29 @@ module Iotas
         end
         #
         def self.json_create o
-            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             room = self.new o['name'], o['parent']
             o['iotas'].each do |name,iota|
                 eval( iota['kls'] ).json_create(iota.merge!('parent'=>room))
             end
             o['links'].each do |src,links|
                 links.each do |link|
-                    room.add_link Iotas::Link.json_create(link)
+                    room.add_link Edoors::Link.json_create(link)
                 end
             end
             room
         end
         #
         def add_iota s
-            raise Iotas::Exception.new "Iota #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
-            raise Iotas::Exception.new "Iota #{s.name} already exists in #{path}" if @iotas.has_key? s.name
+            raise Edoors::Exception.new "Iota #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
+            raise Edoors::Exception.new "Iota #{s.name} already exists in #{path}" if @iotas.has_key? s.name
             s.parent = self if s.parent.nil?
             @iotas[s.name]=s
         end
         #
         def add_link l
             l.door = @iotas[l.src]
-            raise Iotas::Exception.new "Link source #{l.src} does not exist in #{path}" if l.door.nil?
+            raise Edoors::Exception.new "Link source #{l.src} does not exist in #{path}" if l.door.nil?
             (@links[l.src] ||= [])<< l
         end
         #
@@ -124,12 +124,12 @@ module Iotas
                 if door = @iotas[p.door]
                     p.dst_routed! door
                 else
-                    p.error! Iotas::ERROR_ROUTE_RRWD
+                    p.error! Edoors::ERROR_ROUTE_RRWD
                 end
-            elsif door = @spin.search_world(p.room+Iotas::PATH_SEP+p.door)
+            elsif door = @spin.search_world(p.room+Edoors::PATH_SEP+p.door)
                 p.dst_routed! door
             else
-                p.error! Iotas::ERROR_ROUTE_DNE
+                p.error! Edoors::ERROR_ROUTE_DNE
             end
         end
         private :_route
@@ -137,7 +137,7 @@ module Iotas
         def _send sys, p
             if not sys and p.src.nil?
                 # do not route non system orphan particles !!
-                p.error! Iotas::ERROR_ROUTE_NS, @spin
+                p.error! Edoors::ERROR_ROUTE_NS, @spin
             elsif p.dst
                 # direct routing through pointer
                 return
@@ -157,7 +157,7 @@ module Iotas
             elsif not sys and _try_links p
                 return
             else
-                p.error!( sys ? Iotas::ERROR_ROUTE_SND : Iotas::ERROR_ROUTE_NDNL)
+                p.error!( sys ? Edoors::ERROR_ROUTE_SND : Edoors::ERROR_ROUTE_NDNL)
             end
         end
         private :_send
@@ -165,20 +165,20 @@ module Iotas
         def send_p p
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
             _send false, p
-            puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
+            puts "   -> #{p.dst.path}#{Edoors::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_p p
         end
         #
         def send_sys_p p
             puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
             _send true, p
-            puts "   -> #{p.dst.path}#{Iotas::ACT_SEP}#{p.action}" if @spin.debug_routing
+            puts "   -> #{p.dst.path}#{Edoors::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_sys_p p
         end
         #
         def process_sys_p p
-            if p.action==Iotas::SYS_ACT_ADD_LINK
-                add_link Iotas::Link.from_particle_data p
+            if p.action==Edoors::SYS_ACT_ADD_LINK
+                add_link Edoors::Link.from_particle_data p
             end
             @spin.release_p p
         end

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    iotas (0.0.1)
+    edoors-ruby (0.0.1)
       json
 
 GEM
@@ -23,6 +23,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  iotas!
+  edoors-ruby!
   rake
   rspec (~> 2.6)

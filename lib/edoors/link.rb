@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of iotas.
+# This file is part of edoors-ruby.
 #
-# iotas is free software: you can redistribute it and/or modify
+# edoors-ruby is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# iotas is distributed in the hope that it will be useful,
+# edoors-ruby is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
+# along with edoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module Iotas
+module Edoors
     #
     LNK_SRC     = 'edoors_lnk_src'.freeze
     LNK_DSTS    = 'edoors_lnk_dsts'.freeze
@@ -50,14 +50,14 @@ module Iotas
         end
         #
         def self.json_create o
-            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o['src'], o['dsts'], o['fields'], o['cond_fields'], o['cond_value']
         end
         #
         def self.from_particle_data p
-            Iotas::Link.new(p.get_data(Iotas::LNK_SRC), p.get_data(Iotas::LNK_DSTS),
-                                p.get_data(Iotas::LNK_FIELDS), p.get_data(Iotas::LNK_CONDF),
-                                p.get_data(Iotas::LNK_CONDV))
+            Edoors::Link.new(p.get_data(Edoors::LNK_SRC), p.get_data(Edoors::LNK_DSTS),
+                                p.get_data(Edoors::LNK_FIELDS), p.get_data(Edoors::LNK_CONDF),
+                                p.get_data(Edoors::LNK_CONDV))
         end
         #
         attr_accessor :door

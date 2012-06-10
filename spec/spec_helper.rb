@@ -9,9 +9,9 @@ begin
 rescue LoadError
 end
 #
-require 'iotas'
+require 'edoors'
 #
-class Fake < Iotas::Iota
+class Fake < Edoors::Iota
     attr_reader :p, :sp, :start, :stop
     def process_p p
         @p = p

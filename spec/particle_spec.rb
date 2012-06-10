@@ -4,10 +4,10 @@
 
 require 'spec_helper'
 #
-describe Iotas::Particle do
+describe Edoors::Particle do
     #
     it "payload manipulation" do
-        p = Iotas::Particle.new
+        p = Edoors::Particle.new
         #
         p['key']=666
         p['key'].should eql 666
@@ -21,10 +21,10 @@ describe Iotas::Particle do
     end
     #
     it "payload clone" do
-        p = Iotas::Particle.new
+        p = Edoors::Particle.new
         p['k00'] = { 'k0'=>0,'k1'=>1}
         p['k11'] = [1,2,3]
-        o = Iotas::Particle.new
+        o = Edoors::Particle.new
         o.clone_data p
         p['k00']=nil
         p['k00'].should be_nil
@@ -38,9 +38,9 @@ describe Iotas::Particle do
     end
     #
     it "particle merge" do
-        p = Iotas::Particle.new
-        q = Iotas::Particle.new
-        o = Iotas::Particle.new
+        p = Edoors::Particle.new
+        q = Edoors::Particle.new
+        o = Edoors::Particle.new
         p.merge! q
         p.merge! o
         p.merged(0).should be q
@@ -60,9 +60,9 @@ describe Iotas::Particle do
     end
     #
     it "routing: add_dsts, next_dst and dst_routed!" do
-        p = Iotas::Particle.new
-        d0 = Iotas::Door.new 'door0', nil
-        d1 = Iotas::Door.new 'door1', nil
+        p = Edoors::Particle.new
+        d0 = Edoors::Door.new 'door0', nil
+        d1 = Edoors::Door.new 'door1', nil
         p.dst.should be_nil
         p.next_dst.should be_nil
         p.add_dsts 'some?where,room0/room1/door?action,room/door,door'
@@ -79,24 +79,24 @@ describe Iotas::Particle do
     end
     #
     it "wrong path should raise exeption" do
-        p = Iotas::Particle.new
-        lambda { p.add_dst 'action', '/room' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst 'action', 'room/' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst '', 'room/' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst 'action', 'room//door' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst ' ' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst ' ', '' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst 'f f' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst '', ' d' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst '' }.should raise_error(Iotas::Exception)
-        lambda { p.add_dst '', '' }.should raise_error(Iotas::Exception)
+        p = Edoors::Particle.new
+        lambda { p.add_dst 'action', '/room' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst 'action', 'room/' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst '', 'room/' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst 'action', 'room//door' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst ' ' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst ' ', '' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst 'f f' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst '', ' d' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst '' }.should raise_error(Edoors::Exception)
+        lambda { p.add_dst '', '' }.should raise_error(Edoors::Exception)
         lambda { p.add_dst nil }.should raise_error(TypeError)
         lambda { p.add_dst 'action', nil }.should raise_error(NoMethodError)
     end
     #
     it "routing: set_dst!" do
-        p = Iotas::Particle.new
-        d0 = Iotas::Door.new 'door0', nil
+        p = Edoors::Particle.new
+        d0 = Edoors::Door.new 'door0', nil
         #
         p.set_dst! 'action', d0
         p.action.should eql 'action'
@@ -104,8 +104,8 @@ describe Iotas::Particle do
     end
     #
     it "routing: add_dst and split_dst!" do
-        p = Iotas::Particle.new
-        d0 = Iotas::Door.new 'door0', nil
+        p = Edoors::Particle.new
+        d0 = Edoors::Door.new 'door0', nil
         #
         p.split_dst!
         p.room.should be_nil
@@ -157,19 +157,19 @@ describe Iotas::Particle do
     end
     #
     it "routing: error!" do
-        p = Iotas::Particle.new
-        d = Iotas::Door.new 'door', nil
+        p = Edoors::Particle.new
+        d = Edoors::Door.new 'door', nil
         p.init! d
         p.add_dsts 'door?action,?action'
         p.next_dst.should eql 'door?action'
         p.error! 'err_msg'
-        p[Iotas::FIELD_ERROR_MSG].should eql 'err_msg'
-        p.action.should eq Iotas::ACT_ERROR
+        p[Edoors::FIELD_ERROR_MSG].should eql 'err_msg'
+        p.action.should eq Edoors::ACT_ERROR
         p.dst.should be d
     end
     #
     it "link fields and link value" do
-        p = Iotas::Particle.new
+        p = Edoors::Particle.new
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
@@ -182,7 +182,7 @@ describe Iotas::Particle do
     end
     #
     it "apply_link!" do
-        p = Iotas::Particle.new
+        p = Edoors::Particle.new
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
@@ -191,7 +191,7 @@ describe Iotas::Particle do
         p.src.should be_nil
         p.link_value.should eql 'v0v2'
         p.next_dst.should eql 'door?action'
-        lnk = Iotas::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
+        lnk = Edoors::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
         f = Fake.new 'fake', nil
         lnk.door = f
         p.apply_link! lnk
@@ -201,12 +201,12 @@ describe Iotas::Particle do
     end
     #
     it "particle->json->particle" do
-        s0 = Iotas::Spin.new 'top'
-        s1 = Iotas::Room.new 'room0', s0
-        s2 = Iotas::Room.new 'room1', s1
-        s3 = Iotas::Door.new 'doora', s2
-        s4 = Iotas::Door.new 'doorb', s1
-        p0 = Iotas::Particle.new
+        s0 = Edoors::Spin.new 'top'
+        s1 = Edoors::Room.new 'room0', s0
+        s2 = Edoors::Room.new 'room1', s1
+        s3 = Edoors::Door.new 'doora', s2
+        s4 = Edoors::Door.new 'doorb', s1
+        p0 = Edoors::Particle.new
         p0['k0'] = 'v0'
         p0['k1'] = 'v1'
         p0['k2'] = 'v2'
@@ -214,7 +214,7 @@ describe Iotas::Particle do
         p0.set_link_fields 'k0,k2'
         p0.add_dsts 'room0/room1/room2/doorX?myaction,door?action,?action'
         p0.split_dst!
-        p1 = Iotas::Particle.new
+        p1 = Edoors::Particle.new
         p1['k3'] = 'v6'
         p1['k4'] = 'v7'
         p1['k5'] = 'v8'
@@ -225,7 +225,7 @@ describe Iotas::Particle do
         p0.merge! p1
         o = JSON.load( JSON.generate(p0) )
         o['spin'] = s0
-        px = Iotas::Particle.json_create( o )
+        px = Edoors::Particle.json_create( o )
         ((px.ts-p0.ts)<0.5).should be_true
         px.src.should be s3
         px.dst.should be_nil

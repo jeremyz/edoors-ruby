@@ -1,4 +1,4 @@
-# iotas
+# edoors-ruby
     by Jérémy Zurcher
     http://asynk.ch
 
@@ -7,7 +7,7 @@
 * a ruby rewrite of [evenja](http://www.revena.com/evenja) C++ application framework concept
 
 ## FEATURES/PROBLEMS:
-[![Build Status](https://secure.travis-ci.org/jeremyz/iotas.png)](http://travis-ci.org/jeremyz/iotas)
+[![Build Status](https://secure.travis-ci.org/jeremyz/edoors-ruby.png)](http://travis-ci.org/jeremyz/edoors-ruby)
 
 ## SYNOPSIS:
 

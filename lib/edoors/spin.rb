@@ -3,23 +3,23 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of iotas.
+# This file is part of edoors-ruby.
 #
-# iotas is free software: you can redistribute it and/or modify
+# edoors-ruby is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# iotas is distributed in the hope that it will be useful,
+# edoors-ruby is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
+# along with edoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 #
-module Iotas
+module Edoors
     #
     class Spin < Room
         #
@@ -39,13 +39,13 @@ module Iotas
             #
             if not o.empty?
                 o['iotas'].each do |name,iota|
-                    Iotas::Room.json_create(iota.merge!('parent'=>self))
+                    Edoors::Room.json_create(iota.merge!('parent'=>self))
                 end if o['iotas']
                 o['app_fifo'].each do |particle|
-                    @app_fifo << Iotas::Particle.json_create(particle.merge!('spin'=>self))
+                    @app_fifo << Edoors::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['app_fifo']
                 o['sys_fifo'].each do |particle|
-                    @sys_fifo <<  Iotas::Particle.json_create(particle.merge!('spin'=>self))
+                    @sys_fifo <<  Edoors::Particle.json_create(particle.merge!('spin'=>self))
                 end if o['sys_fifo']
             end
         end
@@ -67,7 +67,7 @@ module Iotas
         end
         #
         def self.json_create o
-            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o['name'], o
         end
         #
@@ -113,7 +113,7 @@ module Iotas
         end
         #
         def process_sys_p p
-            if p.action==Iotas::SYS_ACT_HIBERNATE
+            if p.action==Edoors::SYS_ACT_HIBERNATE
                 stop!
                 hibernate! p[FIELD_HIBERNATE_PATH]
             else

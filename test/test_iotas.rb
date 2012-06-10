@@ -1,11 +1,11 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 
-require 'iotas'
+require 'edoors'
 
 HBN_PATH='hibernate.json'
 #
-class InputDoor < Iotas::Door
+class InputDoor < Edoors::Door
     #
     @count = 0
     #
@@ -22,9 +22,9 @@ class InputDoor < Iotas::Door
     def start!
         puts " -> start #{self.class.name} (#{@path})"
         # stimulate myself
-        p = require_p Iotas::Particle
-        # p.add_dst Iotas::ACT_GET, path
-        send_p p, Iotas::ACT_GET
+        p = require_p Edoors::Particle
+        # p.add_dst Edoors::ACT_GET, path
+        send_p p, Edoors::ACT_GET
     end
     #
     def stop!
@@ -45,7 +45,7 @@ class InputDoor < Iotas::Door
     #
     def receive_p p
         puts " @ #{self.class.name} (#{@path}) receive_p : #{p.action}"
-        if p.action==Iotas::ACT_GET
+        if p.action==Edoors::ACT_GET
             p.reset!
             p.set_data 'line', @lines[@idx]
             p.set_data 'f0', 'v0'
@@ -55,8 +55,8 @@ class InputDoor < Iotas::Door
             @idx+=1
             if @idx<@lines.length
                 # there is more to read, restimulate myself
-                p = require_p Iotas::Particle
-                p.add_dst Iotas::ACT_GET, name
+                p = require_p Edoors::Particle
+                p.add_dst Edoors::ACT_GET, name
                 send_p p
             end
         else
@@ -66,16 +66,16 @@ class InputDoor < Iotas::Door
         # I want to hibernate now!
         self.class.count+=1
         if self.class.count==3
-            p = require_p Iotas::Particle
-            p[Iotas::FIELD_HIBERNATE_PATH] = HBN_PATH
-            p.add_dst Iotas::SYS_ACT_HIBERNATE
+            p = require_p Edoors::Particle
+            p[Edoors::FIELD_HIBERNATE_PATH] = HBN_PATH
+            p.add_dst Edoors::SYS_ACT_HIBERNATE
             send_sys_p p
         end
     end
     #
 end
 #
-class ConcatBoard < Iotas::Board
+class ConcatBoard < Edoors::Board
     #
     def initialize n, p, m=false
         super n, p
@@ -92,7 +92,7 @@ class ConcatBoard < Iotas::Board
     #
     def receive_p p
         puts " @ #{self.class.name} receive_p : #{p.action}"
-        if p.action==Iotas::ACT_ERROR
+        if p.action==Edoors::ACT_ERROR
             #
         else
             if @manual
@@ -110,7 +110,7 @@ class ConcatBoard < Iotas::Board
     #
 end
 #
-class OutputDoor < Iotas::Door
+class OutputDoor < Edoors::Door
     #
     def initialize n, p, c=false
         super n, p
@@ -130,16 +130,16 @@ class OutputDoor < Iotas::Door
         if @clean
             release_p p
         else
-            # we do nothing Iotas::Door#process_p will detect it and release it
+            # we do nothing Edoors::Door#process_p will detect it and release it
         end
     end
     #
 end
 #
-spin = Iotas::Spin.new 'dom0', :debug_routing=>false, :debug_errors=>true
+spin = Edoors::Spin.new 'dom0', :debug_routing=>false, :debug_errors=>true
 #
-room0 = Iotas::Room.new 'room0', spin
-room1 = Iotas::Room.new 'room1', spin
+room0 = Edoors::Room.new 'room0', spin
+room1 = Edoors::Room.new 'room1', spin
 #
 input0 = InputDoor.new 'input0', room0
 output0 = OutputDoor.new 'output0', room0
@@ -148,20 +148,20 @@ input1 = InputDoor.new 'input1', room1
 output1 = OutputDoor.new 'output1', room1, true
 concat1 = ConcatBoard.new 'concat1', room1
 #
-room0.add_link Iotas::Link.new('input0', 'output0', nil, nil, nil)
+room0.add_link Edoors::Link.new('input0', 'output0', nil, nil, nil)
 #
-p0 = spin.require_p Iotas::Particle
-p0.set_data Iotas::LNK_SRC, 'input1'
-p0.set_data Iotas::LNK_DSTS, 'concat1?follow,output1'
-p0.set_data Iotas::LNK_FIELDS, 'f0,f2'
-p0.set_data Iotas::LNK_CONDF, 'f0,f1,f2'
-p0.set_data Iotas::LNK_CONDV, 'v0v1v2'
-p0.add_dst Iotas::SYS_ACT_ADD_LINK, room1.path
+p0 = spin.require_p Edoors::Particle
+p0.set_data Edoors::LNK_SRC, 'input1'
+p0.set_data Edoors::LNK_DSTS, 'concat1?follow,output1'
+p0.set_data Edoors::LNK_FIELDS, 'f0,f2'
+p0.set_data Edoors::LNK_CONDF, 'f0,f1,f2'
+p0.set_data Edoors::LNK_CONDV, 'v0v1v2'
+p0.add_dst Edoors::SYS_ACT_ADD_LINK, room1.path
 room1.send_sys_p p0 # send_sys_p -> room0 -> spin -> room1 -> input1
 #
 spin.spin!
 #
-dom0 = Iotas::Spin.resume! HBN_PATH
+dom0 = Edoors::Spin.resume! HBN_PATH
 dom0.spin!
 File.unlink HBN_PATH if File.exists? HBN_PATH
 #

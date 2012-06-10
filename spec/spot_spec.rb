@@ -4,10 +4,10 @@
 
 require 'spec_helper'
 #
-describe Iotas::Iota do
+describe Edoors::Iota do
     #
     it "path construction" do
-        class S<Iotas::Iota
+        class S<Edoors::Iota
             def add_iota s
             end
         end
@@ -16,9 +16,9 @@ describe Iotas::Iota do
         s2 = S.new 'room1', s1
         s3 = S.new 'door', s2
         s3.path.should eql 'top/room0/room1/door'
-        lambda { Iotas::Iota.new('do/or0', nil) }.should raise_error(Iotas::Exception)
-        lambda { Iotas::Iota.new('/door0', nil) }.should raise_error(Iotas::Exception)
-        lambda { Iotas::Iota.new('door0/', nil) }.should raise_error(Iotas::Exception)
+        lambda { Edoors::Iota.new('do/or0', nil) }.should raise_error(Edoors::Exception)
+        lambda { Edoors::Iota.new('/door0', nil) }.should raise_error(Edoors::Exception)
+        lambda { Edoors::Iota.new('door0/', nil) }.should raise_error(Edoors::Exception)
     end
     #
 end

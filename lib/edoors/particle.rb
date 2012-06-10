@@ -3,24 +3,24 @@
 #
 # Copyright 2012 Jérémy Zurcher <jeremy@asynk.ch>
 #
-# This file is part of iotas.
+# This file is part of edoors-ruby.
 #
-# iotas is free software: you can redistribute it and/or modify
+# edoors-ruby is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# iotas is distributed in the hope that it will be useful,
+# edoors-ruby is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with iotas.  If not, see <http://www.gnu.org/licenses/>.
+# along with edoors-ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'time'
 #
-module Iotas
+module Edoors
     #
     class Particle
         #
@@ -71,7 +71,7 @@ module Iotas
         end
         #
         def self.json_create o
-            raise Iotas::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
+            raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o
         end
         #
@@ -104,22 +104,22 @@ module Iotas
         end
         #
         def add_dsts dsts
-            dsts.split(Iotas::LINK_SEP).each do |dst|
-                if dst.empty? or dst[0]==Iotas::PATH_SEP or dst[0]==Iotas::PATH_SEP  or dst=~/\/\?/\
-                    or dst=~/\/{2,}/ or dst=~/\s+/ or dst==Iotas::ACT_SEP
-                    raise Iotas::Exception.new "destination #{dst} is not acceptable"
+            dsts.split(Edoors::LINK_SEP).each do |dst|
+                if dst.empty? or dst[0]==Edoors::PATH_SEP or dst[0]==Edoors::PATH_SEP  or dst=~/\/\?/\
+                    or dst=~/\/{2,}/ or dst=~/\s+/ or dst==Edoors::ACT_SEP
+                    raise Edoors::Exception.new "destination #{dst} is not acceptable"
                 end
                 @dsts << dst
             end
         end
         #
         def add_dst a, d=''
-            add_dsts d+Iotas::ACT_SEP+a
+            add_dsts d+Edoors::ACT_SEP+a
         end
         #
         def set_dst! a, d
             @action = a
-            if d.is_a? Iotas::Iota
+            if d.is_a? Edoors::Iota
                 @dst = d
             else
                 _split_path! d
@@ -129,12 +129,12 @@ module Iotas
         def split_dst!
             @dst = @room = @door = @action = nil
             return if (n = next_dst).nil?
-            p, @action = n.split Iotas::ACT_SEP
+            p, @action = n.split Edoors::ACT_SEP
             _split_path! p
         end
         #
         def _split_path! p
-            i = p.rindex Iotas::PATH_SEP
+            i = p.rindex Edoors::PATH_SEP
             if i.nil?
                 @room = nil
                 @door = p
@@ -152,9 +152,9 @@ module Iotas
         end
         #
         def error! e, dst=nil
-            @action = Iotas::ACT_ERROR
+            @action = Edoors::ACT_ERROR
             @dst = dst||@src
-            @payload[Iotas::FIELD_ERROR_MSG]=e
+            @payload[Edoors::FIELD_ERROR_MSG]=e
         end
         #
         def apply_link! lnk
