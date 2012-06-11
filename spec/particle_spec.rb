@@ -38,6 +38,7 @@ describe Edoors::Particle do
     end
     #
     it "particle merge" do
+        spin = Edoors::Spin.new 'dom0'
         p = Edoors::Particle.new
         q = Edoors::Particle.new
         o = Edoors::Particle.new
@@ -57,6 +58,14 @@ describe Edoors::Particle do
         p.merged(1).should be o
         p.clear_merged!
         p.merged(0).should be_nil
+        p.merge! q
+        p.merge! o
+        p.merged(0).should be q
+        p.merged(1).should be o
+        p.clear_merged! spin
+        p.merged(0).should be_nil
+        spin.require_p(Edoors::Particle).should be o
+        spin.require_p(Edoors::Particle).should be q
     end
     #
     it "routing: add_dsts, next_dst and dst_routed!" do
