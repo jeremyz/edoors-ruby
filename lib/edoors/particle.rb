@@ -77,11 +77,11 @@ module Edoors
         #
         # called when released
         def reset!
+            clear_merged! ( @src ? @src : ( @dst ? @dst : nil ) )
             @ts = @src = @dst = @room = @door = @action = @link_value = nil
             @dsts.clear
             @link_fields.clear
             @payload.clear
-            @merged.clear
         end
         #
         # called when sent
@@ -220,7 +220,11 @@ module Edoors
             @merged.shift
         end
         #
-        def clear_merged!
+        def clear_merged! r=nil
+            @merged.each do |p|
+                p.clear_merged! r
+                r.release_p p if r
+            end
             @merged.clear
         end
         #
