@@ -1,25 +1,39 @@
 #! /usr/bin/env ruby
 # -*- coding: UTF-8 -*-
 #
-# run from project top directory with : ruby -Ilib examples/hello_world.rb
+# from the project top directory :
+#
+# run this script which builds the example system and spin it untill it's empty:
+#   $ ruby -Ilib examples/hello_world.rb
+#
+# or load the system from a JSON specification ( created with spin.hibernate! )
+#   $ ruby -Ilib bin/edoors.rb -r examples/hello_world.rb examples/hello_world.json
 #
 require 'edoors'
 #
 class InputDoor < Edoors::Door
     #
     def start!
-        # stimulate myself
+        # stimulate myself on system boot up
+        # if an action is set, but no destination is, it will be self.
+        # see Door#_send
         send_p require_p(Edoors::Particle), Edoors::ACT_GET
     end
     #
     def receive_p p
         if p.action==Edoors::ACT_GET
+            # if desired (not needed here), call reset! to clear particle's data,
+            # meaning merge particle, payload, destinations
+            # see Particle#reset!
             p.reset!
+            # manipulate the particle's payload
             p.set_data 'txt', "hello world"
-            send_p p    # will follow the default link
+            # will follow the non conditional link.
+            # see Room#_send and Room#_try_links
+            send_p p
         else
-            puts p.action
-            # we can release it or let the Door do it
+            # we can release it or let the Door do it.
+            # see Door#process_p
             release_p p
         end
     end
@@ -29,21 +43,28 @@ end
 class OutputDoor < Edoors::Door
     #
     def receive_p p
-        puts p.get_data('txt')
-        # let the door release it
+        if p.action!=Edoors::ACT_ERROR
+            puts p.get_data('txt')
+        end
+        # let the door release the particle
+        # see Door#process_p
     end
     #
 end
 #
 if $0 == __FILE__
     #
+    # This will schedule the particles and act as the top level Room
     dom0 = Edoors::Spin.new 'dom0'
+    # This will feed a receive particle with data and send it back
     input = InputDoor.new 'input', dom0
+    # This will output the receive data and let the system recycle the particle
     output = OutputDoor.new 'output', dom0
+    # This will be the unconditinal link leading from 'input' to 'output'
     dom0.add_link Edoors::Link.new('input', 'output', nil, nil, nil)
     #
+    # schedule the spinning particles untill the system cools down
     dom0.spin!
-    dom0.hibernate!
     #
 end
 #
