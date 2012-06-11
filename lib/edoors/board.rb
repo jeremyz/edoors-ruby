@@ -59,7 +59,7 @@ module Edoors
             end
             @saved = p
             receive_p p
-            garbage if not @saved.nil?
+            _garbage if not @saved.nil?
         end
         #
     end
