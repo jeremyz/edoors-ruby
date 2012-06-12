@@ -54,7 +54,7 @@ module Edoors
         def _garbage
             puts " ! #{path} didn't give back #{@saved}" if @spin.debug_errors
             puts "\t#{@saved.data Edoors::FIELD_ERROR_MSG}" if @saved.action==Edoors::ACT_ERROR
-            release_p @saved
+            @spin.release_p @saved
             @saved = nil
         end
         private :_garbage
