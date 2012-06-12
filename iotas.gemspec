@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
     s.version = Iotas::VERSION
     s.authors = ["Jérémy Zurcher"]
     s.email = ["jeremy@asynk.ch"]
-    s.homepage = "http://github.com/jeremyz/iotas"
+    s.homepage = "http://github.com/jeremyz/edoors-ruby"
     s.summary = %q{ruby rewrite of C++ application framework evenja (http://www.revena.com/evenja)}
     s.description = %q{Evenja propose a data centric paradigm. A traditional programm composed of many functions
     is decomposed into small autonomous modifications applied on the data implemented in different instances of Door base class.

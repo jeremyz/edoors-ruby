@@ -1,14 +1,4 @@
-2012-06-02 Jérémy Zurcher <jeremy@asynk.ch>
-	* release : 0.0.4
-	* simplify routing algorithm
-	* allow direct routing through Door#send_p action parameter
-
-2012-05-24 Jérémy Zurcher <jeremy@asynk.ch>
-	* release : 0.0.3
-	* change routing algo, use Spin@world hash when door is not found locally
-
-2012-05-18 Jérémy Zurcher <jeremy@asynk.ch>
-	* first release : v0.0.2
-
-2012-05-01 Jérémy Zurcher <jeremy@asynk.ch>
-	* Project creation
+2012-06-13 Jérémy Zurcher <jeremy@asynk.ch>
+	* this project has been renamed edoors-ruby
+	* https://github.com/jeremyz/edoors-ruby
+	* https://github.com/jeremyz/edoors C/efl WIP
