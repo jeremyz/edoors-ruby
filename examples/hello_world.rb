@@ -6,13 +6,14 @@
 # run this script which builds the example system and spin it untill it's empty:
 #   $ ruby -Ilib examples/hello_world.rb
 #
-# or load the system from a JSON specification ( created with spin.hibernate! )
+# or load the system from a JSON specification ( created with dom0.hibernate! )
 #   $ ruby -Ilib bin/edoors.rb -r examples/hello_world.rb examples/hello_world.json
 #
 require 'edoors'
 #
 class InputDoor < Edoors::Door
     #
+    # see Iota class for the different methods to override
     def start!
         # stimulate myself on system boot up
         # if an action is set, but no destination is, it will be self.
@@ -22,7 +23,7 @@ class InputDoor < Edoors::Door
     #
     def receive_p p
         if p.action==Edoors::ACT_GET
-            # if desired (not needed here), call reset! to clear particle's data,
+            # if desired (not necessary here), call reset! to clear particle's data,
             # meaning merge particle, payload, destinations
             # see Particle#reset!
             p.reset!
@@ -66,6 +67,10 @@ if $0 == __FILE__
     # schedule the spinning particles untill the system cools down
     dom0.spin!
     #
+    # you can save the system state after it's run,
+    # but to be able to use it to bootstrap, the hibernation attribute must be set to false
+    # otherwise start! method is not called
+    # dom0.hibernate! 'hello_world.json'
 end
 #
 # EOF
