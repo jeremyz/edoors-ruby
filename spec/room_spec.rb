@@ -293,6 +293,22 @@ describe Edoors::Room do
         p.dst.should be door1
     end
     #
+    it "SYS_ACT_ADD_ROOM" do
+        room0 = Edoors::Room.new 'room0', @spin
+        p0 = @spin.require_p Edoors::Particle
+        p0.set_data Edoors::IOTA_NAME, 'roomX'
+        p0.add_dst Edoors::SYS_ACT_ADD_ROOM, room0.path
+        room0.send_sys_p p0
+        p1 = @spin.require_p Edoors::Particle
+        p1.set_data Edoors::IOTA_NAME, 'roomY'
+        p1.set_dst! Edoors::SYS_ACT_ADD_ROOM, room0
+        @spin.send_sys_p p1
+        @spin.spin!
+        @spin.search_world('dom0/room0/roomX').should be_a Edoors::Room
+        @spin.search_world('dom0/room0/roomY').should be_a Edoors::Room
+        @spin.search_world('dom0/room0/roomZ').should be nil
+    end
+    #
     it "room->json->room" do
         r0 = Edoors::Room.new 'r0', @spin
         r1 = Edoors::Room.new 'r1', r0
