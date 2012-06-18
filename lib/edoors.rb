@@ -31,6 +31,7 @@ module Edoors
     #
     SYS_ACT_HIBERNATE   = 'hibernate'.freeze
     SYS_ACT_ADD_LINK    = 'sys_add_link'.freeze
+    SYS_ACT_ADD_ROOM    = 'sys_add_room'.freeze
     #
     FIELD_ERROR_MSG         = 'edoors_error'.freeze
     FIELD_HIBERNATE_PATH    = 'hibernate_path'.freeze

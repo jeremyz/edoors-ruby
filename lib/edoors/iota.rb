@@ -21,6 +21,8 @@
 #
 module Edoors
     #
+    IOTA_NAME   = 'edoors_iota_name'.freeze
+    #
     class Iota
         #
         def initialize n, p

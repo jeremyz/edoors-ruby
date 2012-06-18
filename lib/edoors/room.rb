@@ -58,6 +58,10 @@ module Edoors
             room
         end
         #
+        def self.from_particle_data p, s
+            Edoors::Room.new(p.get_data(Edoors::IOTA_NAME), s)
+        end
+        #
         def add_iota s
             raise Edoors::Exception.new "Iota #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
             raise Edoors::Exception.new "Iota #{s.name} already exists in #{path}" if @iotas.has_key? s.name
@@ -179,6 +183,8 @@ module Edoors
         def process_sys_p p
             if p.action==Edoors::SYS_ACT_ADD_LINK
                 add_link Edoors::Link.from_particle_data p
+            elsif p.action==Edoors::SYS_ACT_ADD_ROOM
+                Edoors::Room.from_particle_data p, self
             end
             @spin.release_p p
         end
