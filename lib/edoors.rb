@@ -22,18 +22,18 @@ require 'version'
 #
 module Edoors
     #
-    PATH_SEP = '/'.freeze
-    LINK_SEP = ','.freeze
-    ACT_SEP = '?'.freeze
+    PATH_SEP    = '/'.freeze
+    LINK_SEP    = ','.freeze
+    ACT_SEP     = '?'.freeze
     #
-    ACT_GET = 'get'.freeze
-    ACT_ERROR = 'error'.freeze
+    ACT_GET     = 'get'.freeze
+    ACT_ERROR   = 'error'.freeze
     #
-    SYS_ACT_HIBERNATE = 'hibernate'.freeze
-    SYS_ACT_ADD_LINK = 'sys_add_link'.freeze
+    SYS_ACT_HIBERNATE   = 'hibernate'.freeze
+    SYS_ACT_ADD_LINK    = 'sys_add_link'.freeze
     #
-    FIELD_ERROR_MSG     = 'edoors_error'.freeze
-    FIELD_HIBERNATE_PATH= 'hibernate_path'.freeze
+    FIELD_ERROR_MSG         = 'edoors_error'.freeze
+    FIELD_HIBERNATE_PATH    = 'hibernate_path'.freeze
     #
     class Exception < ::Exception; end
     #
