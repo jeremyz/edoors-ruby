@@ -122,6 +122,7 @@ module Edoors
             if d.is_a? Edoors::Iota
                 @dst = d
             else
+                @dst = nil
                 _split_path! d
             end
         end

@@ -110,6 +110,12 @@ describe Edoors::Particle do
         p.set_dst! 'action', d0
         p.action.should eql 'action'
         p.dst.should be d0
+        #
+        p.set_dst! 'action', '/world/room/door'
+        p.action.should eql 'action'
+        p.dst.should be nil
+        p.room.should eql '/world/room'
+        p.door.should eql 'door'
     end
     #
     it "routing: add_dst and split_dst!" do
