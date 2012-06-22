@@ -92,6 +92,16 @@ describe Edoors::Spin do
         spin.debug_errors.should be true
     end
     #
+    it "search world" do
+        spin = Edoors::Spin.new 'dom0', :debug_routing=>true
+        r0 = Edoors::Room.new 'r0', spin
+        r1 = Edoors::Room.new 'r1', r0
+        r2 = Edoors::Room.new 'r2', r1
+        spin.search_world(r0.path).should be r0
+        spin.search_world(r1.path).should be r1
+        spin.search_world(r2.path).should be r2
+    end
+    #
     it "spin->json->spin" do
         spin = Edoors::Spin.new 'dom0', :debug_routing=>true
         r0 = Edoors::Room.new 'r0', spin
