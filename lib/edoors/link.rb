@@ -23,45 +23,63 @@ module Edoors
     #
     LNK_SRC     = 'edoors_lnk_src'.freeze
     LNK_DSTS    = 'edoors_lnk_dsts'.freeze
-    LNK_FIELDS  = 'edoors_lnk_fields'.freeze
-    LNK_CONDF   = 'edoors_lnk_condf'.freeze
-    LNK_CONDV   = 'edoors_lnk_condv'.freeze
+    LNK_KEYS    = 'edoors_lnk_keys'.freeze
+    LNK_VALUE   = 'edoors_lnk_value'.freeze
     #
     class Link
         #
-        def initialize src, dsts, fields=nil, cond_fields=nil, cond_value=nil
-            @src = src                      # link source name
-            @dsts = dsts                    # , separated destinations to apply to the particle on linking success
-            @fields = fields                # , separated fields to apply to the particle on linking success
-            @cond_fields = cond_fields      # , separated fields used to generate the link value with particle payload
-            @cond_value = cond_value        # value which will be compared to the particle link value to link or not
-            @door = nil                     # pointer to the source
+        # creates a Link object from the arguments.
+        #
+        # @param [String] src link source name
+        # @param [Array] dsts destinations to apply to the particle on linking success
+        # @param [Array] keys keys to apply as link_keys to the particle on linking success
+        # @param [Hash] value will be used to check linking with particles
+        #
+        # @see Room#_try_links try to apply links on a Particle
+        # @see Particle#link_with? linking test
+        #
+        def initialize src, dsts, keys=nil, value=nil
+            @src = src
+            @dsts = dsts
+            @keys = keys
+            @value = value
+            @door = nil         # pointer to the source set from @src by Room#add_link
         end
+        #
+        # called by JSON#generate to serialize the Link object into JSON data
+        #
+        # @param [Array] a belongs to JSON generator
         #
         def to_json *a
             {
-                'kls'           => self.class.name,
-                'src'           => @src,
-                'dsts'          => @dsts,
-                'fields'        => @fields,
-                'cond_fields'   => @cond_fields,
-                'cond_value'    => @cond_value
+                'kls'       => self.class.name,
+                'src'       => @src,
+                'dsts'      => @dsts,
+                'keys'      => @keys,
+                'value'     => @value
             }.to_json *a
         end
         #
+        # creates a Link object from a JSON data
+        #
+        # @param [Hash] o belongs to JSON parser
+        #
         def self.json_create o
             raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
-            self.new o['src'], o['dsts'], o['fields'], o['cond_fields'], o['cond_value']
+            self.new o['src'], o['dsts'], o['keys'], o['value']
         end
         #
-        def self.from_particle_data p
-            Edoors::Link.new(p.get_data(Edoors::LNK_SRC), p.get_data(Edoors::LNK_DSTS),
-                                p.get_data(Edoors::LNK_FIELDS), p.get_data(Edoors::LNK_CONDF),
-                                p.get_data(Edoors::LNK_CONDV))
+        # creates a Link object from the data of a particle
+        #
+        # @param [Particle] p the Particle to get Link attributes from
+        #
+        def self.from_particle p
+            pl = p.payload
+            Edoors::Link.new pl[Edoors::LNK_SRC], pl[Edoors::LNK_DSTS], pl[Edoors::LNK_KEYS], pl[Edoors::LNK_VALUE]
         end
         #
         attr_accessor :door
-        attr_reader :src, :dsts, :fields, :cond_fields, :cond_value
+        attr_reader :src, :dsts, :keys, :value
         #
     end
     #
