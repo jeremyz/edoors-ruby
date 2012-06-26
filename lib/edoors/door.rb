@@ -84,8 +84,7 @@ module Edoors
         end
         private :_garbage
         #
-        # send the given Particle to the viewer if defined,
-        # save a reference, then forward it to user code
+        # process the given particle then forward it to user code
         #
         # @param [Particle] p the Particle to be forwarded to user code
         #
