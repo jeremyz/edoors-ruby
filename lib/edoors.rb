@@ -23,7 +23,6 @@ require 'version'
 module Edoors
     #
     PATH_SEP    = '/'.freeze
-    LINK_SEP    = ','.freeze
     ACT_SEP     = '?'.freeze
     #
     ACT_GET     = 'get'.freeze
