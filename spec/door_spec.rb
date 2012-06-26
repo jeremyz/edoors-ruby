@@ -17,10 +17,10 @@ describe Edoors::Door do
     it "require_p release_p" do
         door = Edoors::Door.new 'hell', @spin
         p0 = door.require_p Edoors::Particle
-        p1 = door.require_p Edoors::Particle
+        p1 = door.require_p
         (p0===p1).should be_false
         door.release_p p0
-        p2 = door.require_p Edoors::Particle
+        p2 = door.require_p
         (p0===p2).should be_true
     end
     #
@@ -67,7 +67,7 @@ describe Edoors::Door do
         p0.add_dst 'RELEASE'
         p0.split_dst!
         d0.process_p p0
-        p1 = d0.require_p Edoors::Particle
+        p1 = d0.require_p
         p1.should be p0
         p0.clear_dsts!
         #
