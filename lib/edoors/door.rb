@@ -44,7 +44,7 @@ module Edoors
             }.merge(hibernate!).to_json *a
         end
         #
-        # creates a Room object from a JSON data
+        # creates a Door object from a JSON data
         #
         # @param [Hash] o belongs to JSON parser
         #
