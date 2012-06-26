@@ -25,10 +25,19 @@ module Edoors
     #
     class Board < Door
         #
+        # creates a Board object from the arguments.
+        #
+        # @param [String] n the name of this Board
+        # @param [Iota] p the parent
+        #
         def initialize n, p
             super n, p
             @postponed = {}
         end
+        #
+        # called by JSON#generate to serialize the Board object into JSON data
+        #
+        # @param [Array] a belongs to JSON generator
         #
         def to_json *a
             {
@@ -37,6 +46,12 @@ module Edoors
                 'postponed' => @postponed
             }.merge(hibernate!).to_json *a
         end
+        #
+        # creates a Board object from a JSON data
+        #
+        # @param [Hash] o belongs to JSON parser
+        #
+        # @raise Edoors::Exception if the json kls attribute is wrong
         #
         def self.json_create o
             raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
@@ -47,6 +62,10 @@ module Edoors
             board.resume! o
             board
         end
+        #
+        # process the given particle then forward it to user code
+        #
+        # @param [Particle] p the Particle to be processed
         #
         def process_p p
             @viewer.receive_p p if @viewer
