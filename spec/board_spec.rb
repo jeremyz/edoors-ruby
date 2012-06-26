@@ -16,11 +16,11 @@ describe Edoors::Board do
     #
     it "require_p release_p" do
         board = Edoors::Board.new 'hell', @spin
-        p0 = board.require_p Edoors::Particle
+        p0 = board.require_p
         p1 = board.require_p Edoors::Particle
         (p0===p1).should be_false
         board.release_p p0
-        p2 = board.require_p Edoors::Particle
+        p2 = board.require_p
         (p0===p2).should be_true
     end
     #
@@ -29,14 +29,14 @@ describe Edoors::Board do
         p0['k0'] = 'v0'
         p0['k1'] = 'neither'
         p0['k2'] = 'v2'
-        p0.set_link_fields 'k0,k2'
-        p0.link_value.should eql 'v0v2'
+        p0.set_link_keys 'k0', 'k2'
+        p0.link_value.should == {'k0'=>'v0','k2'=>'v2'}
         p1 = Edoors::Particle.new
         p1['k0'] = 'v0'
         p1['k1'] = 'nore'
         p1['k2'] = 'v2'
-        p1.set_link_fields 'k0,k2'
-        p1.link_value.should eql 'v0v2'
+        p1.set_link_keys 'k0', 'k2'
+        p1.link_value.should == {'k0'=>'v0','k2'=>'v2'}
         P0 = p0
         P1 = p1
         class Board0 < Edoors::Board
@@ -79,7 +79,7 @@ describe Edoors::Board do
         p0 = Edoors::Particle.new
         p1 = Edoors::Particle.new
         p1['v0']=0
-        p1.set_link_fields 'v0'
+        p1.set_link_keys 'v0'
         board.process_p p0
         board.process_p p1
         hell = Edoors::Board.json_create( JSON.load( JSON.generate(board) ) )
