@@ -55,7 +55,7 @@ module Edoors
         #
         # creates a Room object from a JSON data
         #
-        # @param [Hash] o belongs to JSON parse
+        # @param [Hash] o belongs to JSON parser
         #
         # @raise Edoors::Exception if the json kls attribute is wrong
         #
