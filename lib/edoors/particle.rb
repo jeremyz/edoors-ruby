@@ -104,6 +104,8 @@ module Edoors
         #
         # @param [Hash] o belongs to JSON parser
         #
+        # @raise Edoors::Exception if the json kls attribute is wrong
+        #
         def self.json_create o
             raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             self.new o
@@ -150,6 +152,8 @@ module Edoors
         # adds destinations to the destination list
         #
         # @param [Array] dsts destinations to add
+        #
+        # @raise Edoors::Exception if a destination is not acceptable
         #
         # The parameters are checked before beeing added.
         # they must not be empty or be '?' or start with '/'
