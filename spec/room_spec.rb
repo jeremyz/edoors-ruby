@@ -203,7 +203,7 @@ describe Edoors::Room do
         room0 = Edoors::Room.new 'room0', @spin
         door0 = Edoors::Door.new 'door0', room0
         door1 = Edoors::Door.new 'door1', room0
-        room0.add_link Edoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
+        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f1'=>'v1'})
         p = @spin.require_p Edoors::Particle
         p['f0']='v0'
         p['f1']='v1'
@@ -225,14 +225,16 @@ describe Edoors::Room do
         end
         door1 = Out.new 'door1', room0
         room0.add_link Edoors::Link.new('door0', 'door1')
-        room0.add_link Edoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v1')
-        room0.add_link Edoors::Link.new('door0', 'door1', 'fields', 'f0,f1', 'v0v2')
+        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0'})
+        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f1'=>'v1'})
+        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f1'=>'v2'})
+        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f2'=>'v1'})
         p = @spin.require_p Edoors::Particle
         p['f0']='v0'
         p['f1']='v1'
         door0.send_p p
         @spin.spin!
-        door1.count.should eql 2
+        door1.count.should eql 3
     end
     #
     it "system route error: system no destination" do
@@ -278,9 +280,8 @@ describe Edoors::Room do
         p0 = @spin.require_p Edoors::Particle
         p0.set_data Edoors::LNK_SRC, 'door0'
         p0.set_data Edoors::LNK_DSTS, 'door1'
-        p0.set_data Edoors::LNK_FIELDS, 'fields'
-        p0.set_data Edoors::LNK_CONDF, 'f0,f1'
-        p0.set_data Edoors::LNK_CONDV, 'v0v1'
+        p0.set_data Edoors::LNK_KEYS, 'keys'
+        p0.set_data Edoors::LNK_VALUE, {'f0'=>'v0','f1'=>'v1'}
         p0.add_dst Edoors::SYS_ACT_ADD_LINK, room0.path
         room0.send_sys_p p0
         @spin.spin!
@@ -318,10 +319,10 @@ describe Edoors::Room do
         d0 = Edoors::Door.new 'd0', r1
         d1 = Edoors::Door.new 'd1', r1
         d2 = Edoors::Door.new 'd2', r2
-        r1.add_link Edoors::Link.new('d0', 'd1', 'fields', 'f0,f1', 'v0v1')
+        r1.add_link Edoors::Link.new('d0', 'd1', 'keys', {'f0'=>'v0','f1'=>'v1'})
         r1.add_link Edoors::Link.new('d0', 'd2')
         r1.add_link Edoors::Link.new('d1', 'd0')
-        r2.add_link Edoors::Link.new('d2', 'd1', 'fies', 'f5,f1', 'v9v1')
+        r2.add_link Edoors::Link.new('d2', 'd1', 'fies', {'f5'=>'v9','f1'=>'v1'})
         rx = Edoors::Room.json_create( JSON.load( JSON.generate(r0) ) )
         JSON.generate(r0).should eql JSON.generate(rx)
     end#
