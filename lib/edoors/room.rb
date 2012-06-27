@@ -156,7 +156,7 @@ module Edoors
                     if pending_link
                         p2 = @spin.require_p p.class
                         p2.clone_data p
-                        p2.apply_link! link
+                        p2.apply_link! pending_link
                         send_p p2
                     end
                     pending_link = link

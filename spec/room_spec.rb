@@ -220,15 +220,16 @@ describe Edoors::Room do
             attr_reader :count
             def receive_p p
                 @count||=0
+                ['0','1','2'][@count].should == p.next_dst
                 @count += 1
             end
         end
         door1 = Out.new 'door1', room0
-        room0.add_link Edoors::Link.new('door0', 'door1')
-        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0'})
-        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f1'=>'v1'})
-        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f1'=>'v2'})
-        room0.add_link Edoors::Link.new('door0', 'door1', 'keys', {'f0'=>'v0','f2'=>'v1'})
+        room0.add_link Edoors::Link.new('door0', ['door1','0'])
+        room0.add_link Edoors::Link.new('door0', ['door1','1'], 'keys', {'f0'=>'v0'})
+        room0.add_link Edoors::Link.new('door0', ['door1','2'], 'keys', {'f0'=>'v0','f1'=>'v1'})
+        room0.add_link Edoors::Link.new('door0', ['door1','3'], 'keys', {'f0'=>'v0','f1'=>'v2'})
+        room0.add_link Edoors::Link.new('door0', ['door1','4'], 'keys', {'f0'=>'v0','f2'=>'v1'})
         p = @spin.require_p Edoors::Particle
         p['f0']='v0'
         p['f1']='v1'
