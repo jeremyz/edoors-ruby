@@ -34,7 +34,7 @@ module Edoors
             @run = false
             @hibernation    = o['hibernation']||false
             @hibernate_path = 'edoors-hibernate-'+n+'.json'
-            @debug_errors   = o[:debug_errors]||o['debug_errors']||false
+            @debug_garbage  = o[:debug_garbage]||o['debug_garbage']||false
             @debug_routing  = o[:debug_routing]||o['debug_routing']||false
             #
             if not o.empty?
@@ -58,7 +58,7 @@ module Edoors
             end
         end
         #
-        attr_accessor :run, :hibernate_path, :debug_errors, :debug_routing
+        attr_accessor :run, :hibernate_path, :debug_garbage, :debug_routing
         #
         def to_json *a
             {
@@ -69,7 +69,7 @@ module Edoors
                 'inner_room'    => { :iotas=>@iotas, :links=>@links },
                 'sys_fifo'      => @sys_fifo,
                 'app_fifo'      => @app_fifo,
-                'debug_errors'  => @debug_errors,
+                'debug_garbage' => @debug_garbage,
                 'debug_routing' => @debug_routing
             }.to_json(*a)
         end
@@ -88,6 +88,7 @@ module Edoors
         end
         #
         def clear!
+            @links.clear
             @iotas.clear
             @world.clear
             @pool.clear

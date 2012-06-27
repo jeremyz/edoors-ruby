@@ -77,7 +77,7 @@ module Edoors
         # release the Particle that have not been released or sent by user code
         #
         def _garbage
-            puts " ! #{path} didn't give back #{@saved}" if @spin.debug_errors
+            puts " ! #{path} didn't give back #{@saved}" if @spin.debug_garbage
             puts "\t#{@saved.data Edoors::FIELD_ERROR_MSG}" if @saved.action==Edoors::ACT_ERROR
             @spin.release_p @saved
             @saved = nil
