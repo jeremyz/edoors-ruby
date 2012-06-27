@@ -74,7 +74,7 @@ describe Edoors::Particle do
         d1 = Edoors::Door.new 'door1', nil
         p.dst.should be_nil
         p.next_dst.should be_nil
-        p.add_dsts 'some?where,room0/room1/door?action,room/door,door'
+        p.add_dsts 'some?where', 'room0/room1/door?action', 'room/door', 'door'
         p.next_dst.should eql 'some?where'
         p.dst_routed! d0
         p.dst.should be d0
@@ -155,7 +155,7 @@ describe Edoors::Particle do
         p.action.should eql 'action'
         p.clear_dsts!
         #
-        p.add_dsts 'door?action,?action'
+        p.add_dsts 'door?action', '?action'
         p.split_dst!
         p.room.should be_nil
         p.door.should eql 'door'
@@ -175,7 +175,7 @@ describe Edoors::Particle do
         p = Edoors::Particle.new
         d = Edoors::Door.new 'door', nil
         p.init! d
-        p.add_dsts 'door?action,?action'
+        p.add_dsts 'door?action', '?action'
         p.next_dst.should eql 'door?action'
         p.error! 'err_msg'
         p[Edoors::FIELD_ERROR_MSG].should eql 'err_msg'
@@ -183,17 +183,30 @@ describe Edoors::Particle do
         p.dst.should be d
     end
     #
-    it "link fields and link value" do
+    it "link keys and link values" do
+        p = Edoors::Particle.new
+        p['k0'] = 'v0'
+        p.set_data 'k1', 'v1'
+        p['k2'] = 'v2'
+        p['k3'] = 'v3'
+        p.set_link_keys 'k0', 'k2', 'k1'
+        p.link_value.should == {'k0'=>'v0','k1'=>'v1','k2'=>'v2'}
+        p.del_data 'k0'
+        p.link_value.should == {'k1'=>'v1','k2'=>'v2'}
+        p.set_link_keys 'k1', 'k0'
+        p.link_value.should == {'k1'=>'v1'}
+        p['k1']='vX'
+        p.link_value.should == {'k1'=>'vX'}
+    end
+    #
+    it 'link_with?' do
         p = Edoors::Particle.new
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
-        p.set_link_fields 'k0,k2'
-        p.link_value.should eql 'v0v2'
-        p.set_link_fields 'k1,k0'
-        p.link_value.should eql 'v1v0'
-        p['k0']='vx'
-        p.link_value.should eql 'v1vx'
+        p.link_with?(Edoors::Link.new('', '', '')).should be_true
+        p.link_with?(Edoors::Link.new('', '', '', {'k0'=>'v0','k1'=>'v1'})).should be_true
+        p.link_with?(Edoors::Link.new('', '', '', {'k0'=>'v2','k1'=>'v1'})).should be_false
     end
     #
     it "apply_link!" do
@@ -201,18 +214,18 @@ describe Edoors::Particle do
         p['k0'] = 'v0'
         p['k1'] = 'v1'
         p['k2'] = 'v2'
-        p.set_link_fields 'k0,k2'
-        p.add_dsts 'door?action,?action'
+        p.set_link_keys 'k0', 'k2'
+        p.add_dsts 'door?action', '?action'
         p.src.should be_nil
-        p.link_value.should eql 'v0v2'
+        p.link_value.should == {'k0'=>'v0','k2'=>'v2'}
         p.next_dst.should eql 'door?action'
-        lnk = Edoors::Link.new('door0', 'door1?get,door2', 'k1', 'f0,f1', 'v0v1')
+        lnk = Edoors::Link.new('door0', ['door1?get','door2'], 'k1', {'f0'=>'v0','f1'=>'v1'})
         f = Fake.new 'fake', nil
         lnk.door = f
         p.apply_link! lnk
         p.src.should be f
         p.next_dst.should eql 'door1?get'
-        p.link_value.should eql 'v1'
+        p.link_value.should == {'k1'=>'v1'}
     end
     #
     it "particle->json->particle" do
@@ -226,8 +239,8 @@ describe Edoors::Particle do
         p0['k1'] = 'v1'
         p0['k2'] = 'v2'
         p0.init! s3
-        p0.set_link_fields 'k0,k2'
-        p0.add_dsts 'room0/room1/room2/doorX?myaction,door?action,?action'
+        p0.set_link_keys 'k0', 'k2'
+        p0.add_dsts 'room0/room1/room2/doorX?myaction', 'door?action', '?action'
         p0.split_dst!
         p1 = Edoors::Particle.new
         p1['k3'] = 'v6'
@@ -235,8 +248,8 @@ describe Edoors::Particle do
         p1['k5'] = 'v8'
         p1.init! s3
         p1.dst_routed! s4
-        p1.set_link_fields 'k5,k4,k3'
-        p1.add_dsts 'room0/room1/door?action,output?action'
+        p1.set_link_keys 'k5', 'k4', 'k3'
+        p1.add_dsts 'room0/room1/door?action', 'output?action'
         p0.merge! p1
         o = JSON.load( JSON.generate(p0) )
         o['spin'] = s0
@@ -248,7 +261,7 @@ describe Edoors::Particle do
         px.door.should eql 'doorX'
         px.action.should eql 'myaction'
         px.next_dst.should eql 'room0/room1/room2/doorX?myaction'
-        px.link_value.should eql 'v0v2'
+        px.link_value.should == {'k0'=>'v0','k2'=>'v2'}
         px['k0'].should eql 'v0'
         px['k1'].should eql 'v1'
         px['k2'].should eql 'v2'
@@ -260,7 +273,7 @@ describe Edoors::Particle do
         py.door.should be_nil
         py.action.should be_nil
         py.next_dst.should eql 'room0/room1/door?action'
-        py.link_value.should eql 'v8v7v6'
+        py.link_value.should == {'k3'=>'v6','k4'=>'v7','k5'=>'v8'}
         py['k3'].should eql 'v6'
         py['k4'].should eql 'v7'
         py['k5'].should eql 'v8'

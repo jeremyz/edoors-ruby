@@ -86,10 +86,10 @@ describe Edoors::Spin do
     it "option debug" do
         spin = Edoors::Spin.new 'dom0'
         spin.debug_routing.should be false
-        spin.debug_errors.should be false
-        spin = Edoors::Spin.new 'dom0', :debug_routing=>true, :debug_errors=>true
+        spin.debug_garbage.should be false
+        spin = Edoors::Spin.new 'dom0', :debug_routing=>true, :debug_garbage=>true
         spin.debug_routing.should be true
-        spin.debug_errors.should be true
+        spin.debug_garbage.should be true
     end
     #
     it "search world" do
@@ -129,7 +129,7 @@ describe Edoors::Spin do
         p0.add_dst Edoors::SYS_ACT_HIBERNATE
         Edoors::Room.new 'input', spin
         Edoors::Room.new 'output', spin
-        spin.add_link Edoors::Link.new('input', 'output', nil, nil, nil)
+        spin.add_link Edoors::Link.new('input', 'output', nil, nil)
         spin.send_sys_p p0
         spin.spin!
         dom0 = Edoors::Spin.resume! spin.hibernate_path

@@ -29,11 +29,20 @@ module Edoors
     #
     class Room < Iota
         #
+        # creates a Room object from the arguments.
+        #
+        # @param [String] n the name of this Room
+        # @param [Iota] p the parent
+        #
         def initialize n, p
             super n, p
             @iotas = {}
             @links = {}
         end
+        #
+        # called by JSON#generate to serialize the Room object into JSON data
+        #
+        # @param [Array] a belongs to JSON generator
         #
         def to_json *a
             {
@@ -43,6 +52,12 @@ module Edoors
                 'links' => @links
             }.to_json *a
         end
+        #
+        # creates a Room object from a JSON data
+        #
+        # @param [Hash] o belongs to JSON parser
+        #
+        # @raise Edoors::Exception if the json kls attribute is wrong
         #
         def self.json_create o
             raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
@@ -58,16 +73,32 @@ module Edoors
             room
         end
         #
-        def self.from_particle_data p, s
+        # creates a Room object from the data of a particle
+        #
+        # @param [Particle] p the Particle to get Room attributes from
+        #
+        def self.from_particle p, s
             Edoors::Room.new(p.get_data(Edoors::IOTA_NAME), s)
         end
         #
-        def add_iota s
-            raise Edoors::Exception.new "Iota #{s.name} already has #{s.parent.name} as parent" if not s.parent.nil? and s.parent!=self
-            raise Edoors::Exception.new "Iota #{s.name} already exists in #{path}" if @iotas.has_key? s.name
-            s.parent = self if s.parent.nil?
-            @iotas[s.name]=s
+        # adds the given Iota to this Room
+        #
+        # @param [Iota] i the Iota to add
+        #
+        # @raise Edoors::Exception if i already has a parent or if a Iota with the same name already exists
+        #
+        def add_iota i
+            raise Edoors::Exception.new "Iota #{i.name} already has #{i.parent.name} as parent" if not i.parent.nil? and i.parent!=self
+            raise Edoors::Exception.new "Iota #{i.name} already exists in #{path}" if @iotas.has_key? i.name
+            i.parent = self if i.parent.nil?
+            @iotas[i.name]=i
         end
+        #
+        # adds the given Link to this Room
+        #
+        # @param [Link] l the Link to add
+        #
+        # @raise Edoors::Exception if the link source can't be found in this Room
         #
         def add_link l
             l.door = @iotas[l.src]
@@ -75,15 +106,31 @@ module Edoors
             (@links[l.src] ||= [])<< l
         end
         #
+        # forward the call to each children
+        #
+        # @see Spin#spin! called on system bootup
+        #
         def start!
             puts " * start #{path}" if @spin.debug_routing
             @iotas.values.each do |iota| iota.start! end
         end
         #
+        # forward the call to each children
+        #
+        # @see Spin#spin! called on system shutdown
+        #
         def stop!
             puts " * stop #{path}" if @spin.debug_routing
             @iotas.values.each do |iota| iota.stop! end
         end
+        #
+        # search through all children for a matching Iota
+        #
+        # @param [String] spath the full path of the earch Iota
+        #
+        # @return [Iota] if found
+        #
+        # @see Particle#initialize used to transform @src and @dst JSON data into refrences
         #
         def search_down spath
             return self if spath==path
@@ -95,17 +142,17 @@ module Edoors
             nil
         end
         #
+        # search for a matching link
+        #
+        # @param [Particle] p the Particle searching for a matching link
+        #
         def _try_links p
             puts "   -> try_links ..." if @spin.debug_routing
             links = @links[p.src.name]
             return false if links.nil?
             pending_link = nil
-            apply_link = false
             links.each do |link|
-                apply_link = link.cond_fields.nil?  # unconditional link
-                p.set_link_fields link.cond_fields if not apply_link
-                if apply_link or (p.link_value==link.cond_value)
-                    # link matches !
+                if p.link_with? link
                     if pending_link
                         p2 = @spin.require_p p.class
                         p2.clone_data p
@@ -117,11 +164,15 @@ module Edoors
             end
             if pending_link
                 p.apply_link! pending_link
-                _send false, p
+                _send p
             end
             pending_link
         end
         private :_try_links
+        #
+        # route the given Particle
+        #
+        # @param [Particle] p the Particle to be routed
         #
         def _route p
             if p.room.nil? or p.room==path
@@ -138,7 +189,12 @@ module Edoors
         end
         private :_route
         #
-        def _send sys, p
+        # send the given Particle
+        #
+        # @param [Particle] p the Particle to send
+        # @param [Boolean] sys if true send to system Particle fifo
+        #
+        def _send p, sys=false
             if not sys and p.src.nil?
                 # do not route non system orphan particles !!
                 p.error! Edoors::ERROR_ROUTE_NS, @spin
@@ -166,25 +222,39 @@ module Edoors
         end
         private :_send
         #
+        # send the given Particle to application Particle fifo
+        #
+        # @param [Particle] p the Particle to send
+        #
         def send_p p
             puts " * send_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
-            _send false, p
+            _send p
             puts "   -> #{p.dst.path}#{Edoors::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_p p
         end
         #
+        # send the given Particle to system Particle fifo
+        #
+        # @param [Particle] p the Particle to send
+        #
         def send_sys_p p
             puts " * send_sys_p #{(p.next_dst.nil? ? 'no dst' : p.next_dst)} ..." if @spin.debug_routing
-            _send true, p
+            _send p, true
             puts "   -> #{p.dst.path}#{Edoors::ACT_SEP}#{p.action}" if @spin.debug_routing
             @spin.post_sys_p p
         end
         #
+        # process the given system Particle
+        #
+        # @param [Particle] p the Particle to be processed
+        #
+        # @note the Particle is automatically released
+        #
         def process_sys_p p
             if p.action==Edoors::SYS_ACT_ADD_LINK
-                add_link Edoors::Link.from_particle_data p
+                add_link Edoors::Link.from_particle p
             elsif p.action==Edoors::SYS_ACT_ADD_ROOM
-                Edoors::Room.from_particle_data p, self
+                Edoors::Room.from_particle p, self
             end
             @spin.release_p p
         end

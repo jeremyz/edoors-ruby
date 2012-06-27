@@ -25,6 +25,14 @@ module Edoors
     #
     class Iota
         #
+        # creates a Iota object from the arguments.
+        #
+        # @param [String] n the name of this Iota
+        # @param [Iota] p the parent
+        #
+        # @see Room#add_iota adds itself to it's parent children list
+        # @see Spin#add_to_world adds itself to @spin's world
+        #
         def initialize n, p
             raise Edoors::Exception.new "Iota name #{n} is not valid" if n.include? Edoors::PATH_SEP
             @name   = n     # unique in it's room
@@ -41,22 +49,30 @@ module Edoors
         attr_reader :name, :path, :spin
         attr_accessor :viewer, :parent
         #
+        # override this to initialize your object on system start
+        #
         def start!
-            # override this to initialize your object on system start
         end
+        #
+        # override this to initialize your object on system stop
         #
         def stop!
-            # override this to initialize your object on system stop
         end
         #
+        # override this to save your object state on hibernate
+        # #
         def hibernate!
-            # override this to save your object state on hibernate
             {}
         end
         #
+        # override this to restore your object state on resume
+        #
         def resume! o
-            # override this to restore your object state on resume
         end
+        #
+        # has to be override, used by user side code
+        #
+        # @raise NoMethodError
         #
         def receive_p p
             raise NoMethodError.new "receive_p(p) must be overridden"

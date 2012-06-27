@@ -62,7 +62,7 @@ if $0 == __FILE__
     # This will output the receive data and let the system recycle the particle
     output = OutputDoor.new 'output', dom0
     # This will be the unconditinal link leading from 'input' to 'output'
-    dom0.add_link Edoors::Link.new('input', 'output', nil, nil, nil)
+    dom0.add_link Edoors::Link.new('input', 'output', nil, nil)
     #
     # schedule the spinning particles untill the system cools down
     dom0.spin!

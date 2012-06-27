@@ -23,10 +23,19 @@ module Edoors
     #
     class Door < Iota
         #
+        # creates a Door object from the arguments.
+        #
+        # @param [String] n the name of this Door
+        # @param [Iota] p the parent
+        #
         def initialize n, p
             super n, p
             @saved = nil
         end
+        #
+        # called by JSON#generate to serialize the Door object into JSON data
+        #
+        # @param [Array] a belongs to JSON generator
         #
         def to_json *a
             {
@@ -35,6 +44,12 @@ module Edoors
             }.merge(hibernate!).to_json *a
         end
         #
+        # creates a Door object from a JSON data
+        #
+        # @param [Hash] o belongs to JSON parser
+        #
+        # @raise Edoors::Exception if the json kls attribute is wrong
+        #
         def self.json_create o
             raise Edoors::Exception.new "JSON #{o['kls']} != #{self.name}" if o['kls'] != self.name
             door = self.new o['name'], o['parent']
@@ -42,22 +57,36 @@ module Edoors
             door
         end
         #
-        def require_p p_kls
+        # require a Particle of the given class
+        #
+        # @param [Class] p_kls the class of the desired Particle
+        #
+        def require_p p_kls=Edoors::Particle
             @spin.require_p p_kls
         end
+        #
+        # release the given Particle
+        #
+        # @param [Particle] p the Particle to be released
         #
         def release_p p
             @saved=nil if @saved==p     # particle is released, all is good
             @spin.release_p p
         end
         #
+        # release the Particle that have not been released or sent by user code
+        #
         def _garbage
-            puts " ! #{path} didn't give back #{@saved}" if @spin.debug_errors
+            puts " ! #{path} didn't give back #{@saved}" if @spin.debug_garbage
             puts "\t#{@saved.data Edoors::FIELD_ERROR_MSG}" if @saved.action==Edoors::ACT_ERROR
             @spin.release_p @saved
             @saved = nil
         end
         private :_garbage
+        #
+        # process the given particle then forward it to user code
+        #
+        # @param [Particle] p the Particle to be processed
         #
         def process_p p
             @viewer.receive_p p if @viewer
@@ -66,12 +95,24 @@ module Edoors
             _garbage if not @saved.nil?
         end
         #
+        # dead end, for now user defined Door do not have to deal with system Particle
+        # the Particle is released
+        #
+        # @param [Particle] p the Particle to deal with
+        #
         def process_sys_p p
             # nothing todo with it now
             @spin.release_p p
         end
         #
-        def _send sys, p, a=nil, d=nil
+        # send the given Particle through the direct @parent
+        #
+        # @param [Particle] p the Particle to be sent
+        # @param [Boolean] sys if true send to system Particle fifo
+        # @param [String] a the post action
+        # @param [Iota] d the post destination
+        #
+        def _send p, sys, a, d
             p.init! self
             p.set_dst! a, d||self if a
             @saved=nil if @saved==p # particle is sent back the data, all is good
@@ -80,12 +121,28 @@ module Edoors
         end
         private :_send
         #
+        # send the given Particle to the application Particle fifo
+        #
+        # @param [Particle] p the Particle to be sent
+        # @param [String] a the post action
+        # @param [Iota] d the post destination
+        #
+        # @see Door#_send real implementation
+        #
         def send_p p, a=nil, d=nil
-            _send false, p, a, d
+            _send p, false, a, d
         end
         #
+        # send the given Particle to the system Particle fifo
+        #
+        # @param [Particle] p the Particle to be sent
+        # @param [String] a the post action
+        # @param [Iota] d the post destination
+        #
+        # @see Door#_send real implementation
+        #
         def send_sys_p p, a=nil, d=nil
-            _send true, p, a, d
+            _send p, true, a, d
         end
         #
     end

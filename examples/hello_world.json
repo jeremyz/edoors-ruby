@@ -1,6 +1,6 @@
 {
   "kls": "Edoors::Spin",
-  "timestamp": "2012-06-10 23:17:15 +0200",
+  "timestamp": "2012-06-24 22:50:00 +0200",
   "name": "dom0",
   "hibernation": false,
   "inner_room": {
@@ -20,9 +20,8 @@
           "kls": "Edoors::Link",
           "src": "input",
           "dsts": "output",
-          "fields": null,
-          "cond_fields": null,
-          "cond_value": null
+          "keys": null,
+          "value": null
         }
       ]
     }
@@ -33,6 +32,6 @@
   "app_fifo": [
 
   ],
-  "debug_errors": false,
+  "debug_garbage": false,
   "debug_routing": false
 }

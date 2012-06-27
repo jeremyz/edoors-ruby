@@ -136,7 +136,7 @@ class OutputDoor < Edoors::Door
     #
 end
 #
-spin = Edoors::Spin.new 'dom0', :debug_routing=>false, :debug_errors=>true
+spin = Edoors::Spin.new 'dom0', :debug_routing=>false, :debug_garbage=>true
 #
 room0 = Edoors::Room.new 'room0', spin
 room1 = Edoors::Room.new 'room1', spin
@@ -148,14 +148,13 @@ input1 = InputDoor.new 'input1', room1
 output1 = OutputDoor.new 'output1', room1, true
 concat1 = ConcatBoard.new 'concat1', room1
 #
-room0.add_link Edoors::Link.new('input0', 'output0', nil, nil, nil)
+room0.add_link Edoors::Link.new('input0', 'output0', nil, nil)
 #
 p0 = spin.require_p Edoors::Particle
 p0.set_data Edoors::LNK_SRC, 'input1'
-p0.set_data Edoors::LNK_DSTS, 'concat1?follow,output1'
-p0.set_data Edoors::LNK_FIELDS, 'f0,f2'
-p0.set_data Edoors::LNK_CONDF, 'f0,f1,f2'
-p0.set_data Edoors::LNK_CONDV, 'v0v1v2'
+p0.set_data Edoors::LNK_DSTS, ['concat1?follow','output1']
+p0.set_data Edoors::LNK_KEYS, ['f0','f2']
+p0.set_data Edoors::LNK_VALUE, {'f0'=>'v0','f1'=>'v1','f2'=>'v2'}
 p0.add_dst Edoors::SYS_ACT_ADD_LINK, room1.path
 room1.send_sys_p p0 # send_sys_p -> room0 -> spin -> room1 -> input1
 #
