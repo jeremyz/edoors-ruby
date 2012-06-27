@@ -75,7 +75,7 @@ module Edoors
         # @raise NoMethodError
         #
         def receive_p p
-            raise NoMethodError.new "receive_p(p) must be overridden"
+            raise NoMethodError.new "#{self.path} receive_p(p) must be overridden"
         end
         #
     end
