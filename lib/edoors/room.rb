@@ -222,7 +222,7 @@ module Edoors
         end
         private :_send
         #
-        # send the given Particle to user Particle fifo
+        # send the given Particle to application Particle fifo
         #
         # @param [Particle] p the Particle to send
         #

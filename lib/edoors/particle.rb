@@ -29,7 +29,7 @@ module Edoors
         # @param [Hash] o a customizable set of options
         #
         # @option o 'ts' [String]
-        #   Creation time
+        #   creation time
         # @option o 'src' [String]
         #   Iota where it's originated from
         # @option o 'dst' [String]

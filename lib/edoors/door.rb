@@ -86,7 +86,7 @@ module Edoors
         #
         # process the given particle then forward it to user code
         #
-        # @param [Particle] p the Particle to be forwarded to user code
+        # @param [Particle] p the Particle to be processed
         #
         def process_p p
             @viewer.receive_p p if @viewer
@@ -121,7 +121,7 @@ module Edoors
         end
         private :_send
         #
-        # send the given Particle to the user fifo
+        # send the given Particle to the application Particle fifo
         #
         # @param [Particle] p the Particle to be sent
         # @param [String] a the post action
@@ -133,7 +133,7 @@ module Edoors
             _send p, false, a, d
         end
         #
-        # send the given Particle to the system fifo
+        # send the given Particle to the system Particle fifo
         #
         # @param [Particle] p the Particle to be sent
         # @param [String] a the post action
