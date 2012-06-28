@@ -37,15 +37,11 @@ end
 #
 class Filter < Edoors::Door
     #
-    def initialize n, p, &block
-        super n, p
-        @filter = block
-    end
-    #
     def receive_p p
         if p.action!=Edoors::ACT_ERROR
             # apply the filter
-            @filter.call p
+            p['old'] = (p['person']['age']>=18)
+            p['sex'] = p['person']['sex']
             # will follow the conditional link.
             # see Room#_send and Room#_try_links
             send_p p
@@ -75,7 +71,9 @@ if $0 == __FILE__
     dom0 = Edoors::Spin.new 'dom0'
     #
     FileReader.new 'input', dom0, './examples/data.json'
-    Filter.new('age_filter', dom0) { |p| p['old'] = (p['person']['age']>=30); p['sex']=p['person']['sex'] }
+    # the filter to be applied to each particle
+    Filter.new 'age_filter', dom0
+    # different output doors
     OutputDoor.new 'output_f', dom0, 'woman'
     OutputDoor.new 'output_m', dom0, 'man'
     OutputDoor.new 'output_child', dom0, 'child'
