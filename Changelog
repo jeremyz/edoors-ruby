@@ -1,5 +1,13 @@
-2012-XX-YY Jérémy Zurcher <jeremy@asynk.ch>
+2012-06-28 Jérémy Zurcher <jeremy@asynk.ch>
 	* release : 0.0.7
+	* yard documentation completed
+	* add link and board JSON ready examples
+	* link_value is an Hash -> fix possible bugs
+	* use ruby Array instead of comma separated Strings (destinations,keys)
+	* implement SYS_ACT_ADD_ROOM system action
+	* implement ACT_PASS_THROUGH application action
+	* add Particle #merged_length, #each_merged
+	* add Board #keep!, flush!
 
 2012-06-13 Jérémy Zurcher <jeremy@asynk.ch>
 	* release : 0.0.6 (edoors)
