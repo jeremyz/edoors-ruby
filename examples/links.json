@@ -1,0 +1,96 @@
+{
+  "kls": "Edoors::Spin",
+  "timestamp": "2012-06-28 14:43:36 +0200",
+  "name": "dom0",
+  "hibernation": false,
+  "inner_room": {
+    "iotas": {
+      "input": {
+        "kls": "FileReader",
+        "name": "input",
+        "filepath": "./examples/data.json"
+      },
+      "age_filter": {
+        "kls": "Filter",
+        "name": "age_filter"
+      },
+      "output_f": {
+        "kls": "OutputDoor",
+        "name": "output_f",
+        "title": "woman"
+      },
+      "output_m": {
+        "kls": "OutputDoor",
+        "name": "output_m",
+        "title": "man"
+      },
+      "output_child": {
+        "kls": "OutputDoor",
+        "name": "output_child",
+        "title": "child"
+      },
+      "output_parent": {
+        "kls": "OutputDoor",
+        "name": "output_parent",
+        "title": "parent"
+      }
+    },
+    "links": {
+      "input": [
+        {
+          "kls": "Edoors::Link",
+          "src": "input",
+          "dsts": "age_filter",
+          "keys": null,
+          "value": null
+        }
+      ],
+      "age_filter": [
+        {
+          "kls": "Edoors::Link",
+          "src": "age_filter",
+          "dsts": "output_f",
+          "keys": null,
+          "value": {
+            "sex": "f"
+          }
+        },
+        {
+          "kls": "Edoors::Link",
+          "src": "age_filter",
+          "dsts": "output_m",
+          "keys": null,
+          "value": {
+            "sex": "m"
+          }
+        },
+        {
+          "kls": "Edoors::Link",
+          "src": "age_filter",
+          "dsts": "output_child",
+          "keys": null,
+          "value": {
+            "old": false
+          }
+        },
+        {
+          "kls": "Edoors::Link",
+          "src": "age_filter",
+          "dsts": "output_parent",
+          "keys": null,
+          "value": {
+            "old": true
+          }
+        }
+      ]
+    }
+  },
+  "sys_fifo": [
+
+  ],
+  "app_fifo": [
+
+  ],
+  "debug_garbage": false,
+  "debug_routing": false
+}

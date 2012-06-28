@@ -6,16 +6,29 @@
 # run this script which builds the example system and spin it untill it's empty:
 #   $ ruby -Ilib examples/links.rb
 #
+# or load the system from a JSON specification ( created with dom0.hibernate! )
+#   $ ruby -Ilib -r ./examples/links.rb bin/edoors.rb examples/links.json
+#
+#
 require 'edoors'
 #
 class FileReader < Edoors::Door
     #
-    def initialize n, p, path
+    def initialize n, p, path=nil
         super n, p
-        @file = File.open(path,'r')
+        @filepath = path
+    end
+    #
+    def hibernate!
+        {'filepath'=>@filepath}
+    end
+    #
+    def resume! o
+        @filepath = o['filepath']
     end
     #
     def start!
+        @file = File.open(@filepath,'r')
         # stimulate myself on system boot up
         send_p require_p(Edoors::Particle), Edoors::ACT_GET
     end
@@ -29,7 +42,7 @@ class FileReader < Edoors::Door
             # see Room#_send and Room#_try_links
             send_p p
             # stimulate myself
-            start!
+            send_p require_p(Edoors::Particle), Edoors::ACT_GET
         end
     end
     #
@@ -52,9 +65,17 @@ end
 #
 class OutputDoor < Edoors::Door
     #
-    def initialize n, p, t
+    def initialize n, p, t=nil
         super n, p
         @title = t
+    end
+    #
+    def hibernate!
+        {'title'=>@title}
+    end
+    #
+    def resume! o
+        @title = o['title']
     end
     #
     def receive_p p
@@ -89,6 +110,11 @@ if $0 == __FILE__
     #
     # schedule the spinning particles untill the system cools down
     dom0.spin!
+    #
+    # you can save the system state after it's run,
+    # but to be able to use it to bootstrap, the hibernation attribute must be set to false
+    # otherwise start! method is not called
+    dom0.hibernate! 'links.json'
     #
 end
 #
