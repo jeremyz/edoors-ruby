@@ -370,6 +370,13 @@ module Edoors
             @merged.clear
         end
         #
+        # Yields each element in @merged
+        #
+        def each_merged
+            return if not block_given?
+            @merged.each do |p| yield p end
+        end
+        #
     end
     #
 end
