@@ -22,6 +22,7 @@
 module Edoors
     #
     ACT_FOLLOW = 'follow'.freeze
+    ACT_PASS_THROUGH = 'pass_through'.freeze
     #
     class Board < Door
         #
@@ -69,7 +70,7 @@ module Edoors
         #
         def process_p p
             @viewer.receive_p p if @viewer
-            if p.action!=Edoors::ACT_ERROR
+            if p.action!=Edoors::ACT_ERROR and p.action!=Edoors::ACT_PASS_THROUGH
                 p2 = @postponed[p.link_value] ||= p
                 return if p2==p
                 @postponed.delete p.link_value
