@@ -40,10 +40,13 @@ describe Edoors::Board do
         P0 = p0
         P1 = p1
         class Board0 < Edoors::Board
-            attr_reader :ok, :follow
+            attr_reader :ok, :follow, :pass_through
             def receive_p p
                 @ok = false
+                @pass_through = false
                 case p.action
+                when Edoors::ACT_PASS_THROUGH
+                    @pass_through = true
                 when Edoors::ACT_FOLLOW
                     @follow = true
                     @ok = (p===P0 and p.merged(0)===P1)
@@ -72,6 +75,10 @@ describe Edoors::Board do
         b0.process_p p1
         b0.ok.should be_true
         b0.follow.should be_true
+        p2 = b0.require_p
+        p2.set_dst! Edoors::ACT_PASS_THROUGH, b0
+        b0.process_p p2
+        b0.pass_through.should be true
     end
     #
     it "board->json->board" do
