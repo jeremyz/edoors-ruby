@@ -81,6 +81,30 @@ describe Edoors::Board do
         b0.pass_through.should be true
     end
     #
+    it "keep! and flush!" do
+        b0 = Edoors::Board.new 'hell', @spin
+        def b0.receive_p p
+            keep! p
+        end
+        def b0.get k
+            @postponed[k]
+        end
+        p0 = Edoors::Particle.new
+        b0.process_p p0
+        p1 = Edoors::Particle.new
+        p1.set_dst! Edoors::ACT_FOLLOW, b0
+        b0.process_p p1
+        p2 = Edoors::Particle.new
+        p2.set_dst! Edoors::ACT_FOLLOW, b0
+        b0.process_p p2
+        p3 = Edoors::Particle.new
+        p3.set_dst! Edoors::ACT_FOLLOW, b0
+        b0.process_p p3
+        (b0.get({}).merged_length+1).should == 4
+        b0.flush!
+        b0.get({}).should be_nil
+    end
+    #
     it "board->json->board" do
         board = Edoors::Board.new 'hell', @spin
         p0 = Edoors::Particle.new
