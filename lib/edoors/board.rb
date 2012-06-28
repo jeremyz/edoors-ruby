@@ -82,6 +82,25 @@ module Edoors
             _garbage if not @saved.nil?
         end
         #
+        # stores back the given Particle
+        #
+        # @param [Particle] p the particle to be stored
+        #
+        # this can be used to prevent the overhead of sending the particle back to self
+        #
+        def keep! p
+            @postponed[p.link_value] = p
+            @saved = nil
+        end
+        #
+        # sends away all stored Particle
+        #
+        def flush!
+            while p=@postponed.shift
+                send_p p[1]
+            end
+        end
+        #
     end
     #
 end
