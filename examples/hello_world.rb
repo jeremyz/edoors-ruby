@@ -7,7 +7,7 @@
 #   $ ruby -Ilib examples/hello_world.rb
 #
 # or load the system from a JSON specification ( created with dom0.hibernate! )
-#   $ ruby -Ilib bin/edoors.rb -r examples/hello_world.rb examples/hello_world.json
+#   $ ruby -Ilib -r ./examples/hello_world.rb bin/edoors.rb examples/hello_world.json
 #
 require 'edoors'
 #
