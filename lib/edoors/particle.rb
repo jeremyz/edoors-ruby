@@ -370,11 +370,17 @@ module Edoors
             @merged.clear
         end
         #
-        # Yields each element in @merged
+        # Yields each element in merged Particle list
         #
         def each_merged
             return if not block_given?
             @merged.each do |p| yield p end
+        end
+        #
+        # returns length of merged Pasrticle list
+        #
+        def merged_length
+            @merged.length
         end
         #
     end
