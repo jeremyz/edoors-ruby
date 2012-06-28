@@ -206,7 +206,7 @@ module Edoors
         # after all Iota#stop! is called on each children, unless the system is going into hibernation
         #
         def spin!
-            @iotas.values.each do |iota| iota.start! end unless @hibernation
+            start!
             @run = true
             @hibernation = false
             while @run and (@sys_fifo.length>0 or @app_fifo.length>0)
@@ -220,7 +220,7 @@ module Edoors
                     break
                 end
             end
-            @iotas.values.each do |iota| iota.stop! end unless @hibernation
+            stop!
         end
         #
         # stops the spinning
