@@ -53,6 +53,7 @@ describe Edoors::Particle do
             c+=1
         end
         c.should be 2
+        p.merged_length.should be 2
         p.merged_shift.should be q
         p.merged(0).should be o
         p.merged(1).should be_nil
@@ -62,6 +63,7 @@ describe Edoors::Particle do
             c+=1
         end
         c.should be 1
+        p.merged_length.should be 1
         p.merged_shift.should be o
         p.merged(0).should be_nil
         c = 0
@@ -70,6 +72,7 @@ describe Edoors::Particle do
             c+=1
         end
         c.should be 0
+        p.merged_length.should be 0
         p.merge! q
         p.merge! o
         p.merged(0).should be q
