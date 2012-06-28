@@ -225,7 +225,7 @@ module Edoors
         #
         # stops the spinning
         #
-        def stop!
+        def stop_spinning!
             @run=false
         end
         #

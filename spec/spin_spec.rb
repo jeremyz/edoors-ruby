@@ -70,7 +70,7 @@ describe Edoors::Spin do
         spin.spin!
         f.p.should be p0
         f.sp.should be p1
-        spin.stop!
+        spin.stop_spinning!
     end
     #
     it "process_sys" do
