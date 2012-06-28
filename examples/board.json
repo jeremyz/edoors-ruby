@@ -1,0 +1,52 @@
+{
+  "kls": "Edoors::Spin",
+  "timestamp": "2012-06-28 14:37:21 +0200",
+  "name": "dom0",
+  "hibernation": false,
+  "inner_room": {
+    "iotas": {
+      "input": {
+        "kls": "FileReader",
+        "name": "input",
+        "filepath": "./examples/data.json"
+      },
+      "filter": {
+        "kls": "Filter",
+        "name": "filter"
+      },
+      "stats": {
+        "kls": "Stats",
+        "name": "stats",
+        "postponed": {
+        }
+      },
+      "output": {
+        "kls": "OutputDoor",
+        "name": "output"
+      }
+    },
+    "links": {
+      "input": [
+        {
+          "kls": "Edoors::Link",
+          "src": "input",
+          "dsts": [
+            "filter",
+            "stats?follow",
+            "output"
+          ],
+          "keys": "filter_value",
+          "value": null
+        }
+      ]
+    }
+  },
+  "sys_fifo": [
+
+  ],
+  "app_fifo": [
+
+  ],
+  "debug_garbage": false,
+  "debug_routing": false
+}
