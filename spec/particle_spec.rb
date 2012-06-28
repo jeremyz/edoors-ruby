@@ -47,11 +47,29 @@ describe Edoors::Particle do
         p.merged(0).should be q
         p.merged(1).should be o
         p.merged(2).should be_nil
+        c = 0
+        p.each_merged do |o|
+            o.should be p.merged(c)
+            c+=1
+        end
+        c.should be 2
         p.merged_shift.should be q
         p.merged(0).should be o
         p.merged(1).should be_nil
+        c = 0
+        p.each_merged do |o|
+            o.should be p.merged(c)
+            c+=1
+        end
+        c.should be 1
         p.merged_shift.should be o
         p.merged(0).should be_nil
+        c = 0
+        p.each_merged do |o|
+            o.should be p.merged(c)
+            c+=1
+        end
+        c.should be 0
         p.merge! q
         p.merge! o
         p.merged(0).should be q
