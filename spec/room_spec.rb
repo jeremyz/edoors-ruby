@@ -17,23 +17,23 @@ describe Edoors::Room do
     it "add_iota and add_link correctly" do
         r0 = Edoors::Room.new 'room0', @spin
         d0 = Edoors::Door.new 'door0', r0
-        lambda { Edoors::Door.new('door0', r0) }.should raise_error(Edoors::Exception)
-        lambda { r0.add_iota Edoors::Door.new('door1', r0) }.should raise_error(Edoors::Exception)
+        expect(lambda { Edoors::Door.new('door0', r0) }).to raise_error(Edoors::Exception)
+        expect(lambda { r0.add_iota Edoors::Door.new('door1', r0) }).to raise_error(Edoors::Exception)
         r0.add_link Edoors::Link.new 'door0', 'somewhere'
-        lambda { r0.add_link(Edoors::Link.new('nowhere', 'somewhere')) }.should raise_error(Edoors::Exception)
+        expect(lambda { r0.add_link(Edoors::Link.new('nowhere', 'somewhere')) }).to raise_error(Edoors::Exception)
     end
     #
     it "start! and stop! should work" do
         r0 = Edoors::Room.new 'room0', @spin
         d0 = Fake.new 'fake', r0
-        d0.start.should be_nil
-        d0.stop.should be_nil
+        expect(d0.start).to be_nil
+        expect(d0.stop).to be_nil
         r0.start!
-        d0.start.should be_true
-        d0.stop.should be_nil
+        expect(d0.start).to be_truthy
+        expect(d0.stop).to be_nil
         r0.stop!
-        d0.start.should be_true
-        d0.stop.should be_true
+        expect(d0.start).to be_truthy
+        expect(d0.stop).to be_truthy
     end
     #
     it "parent, spin and search_down should be ok" do
@@ -42,20 +42,20 @@ describe Edoors::Room do
         r2 = Edoors::Room.new 'r2', r1
         r3 = Edoors::Room.new 'r3', @spin
         r4 = Edoors::Room.new 'r4', r3
-        r2.parent.should be r1
-        r1.parent.should be r0
-        r0.parent.should be @spin
-        r0.spin.should be @spin
-        r1.spin.should be @spin
-        r2.spin.should be @spin
-        r3.spin.should be @spin
-        @spin.search_down('dom0/r0/r1/r2').should be r2
-        r0.search_down('dom0/r0/r1/r2').should be r2
-        r1.search_down('dom0/r0/r1/r2').should be r2
-        r2.search_down('dom0/r0/r1/r2').should be r2
-        r1.search_down('dom0/r0/r1/r9').should be nil
-        r3.search_down('dom0/r0/r1/r2').should be nil
-        r4.search_down('dom0/r0/r1/r2').should be nil
+        expect(r2.parent).to be r1
+        expect(r1.parent).to be r0
+        expect(r0.parent).to be @spin
+        expect(r0.spin).to be @spin
+        expect(r1.spin).to be @spin
+        expect(r2.spin).to be @spin
+        expect(r3.spin).to be @spin
+        expect(@spin.search_down('dom0/r0/r1/r2')).to be r2
+        expect(r0.search_down('dom0/r0/r1/r2')).to be r2
+        expect(r1.search_down('dom0/r0/r1/r2')).to be r2
+        expect(r2.search_down('dom0/r0/r1/r2')).to be r2
+        expect(r1.search_down('dom0/r0/r1/r9')).to be nil
+        expect(r3.search_down('dom0/r0/r1/r2')).to be nil
+        expect(r4.search_down('dom0/r0/r1/r2')).to be nil
     end
     #
     it "routing success (direct add_dst)" do
@@ -65,8 +65,8 @@ describe Edoors::Room do
         p.init! Fake.new( 'fake', @spin)
         p.add_dst 'get', 'door0'
         room0.send_p p
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "routing success (direct send to self)" do
@@ -75,8 +75,8 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.init! Fake.new( 'fake', @spin)
         door0.send_p p, 'get'
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "routing success (direct send to pointer)" do
@@ -85,8 +85,8 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.init! Fake.new( 'fake', @spin)
         door0.send_p p, 'get', door0
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "routing success (direct send to path)" do
@@ -95,8 +95,8 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.init! Fake.new( 'fake', @spin)
         door0.send_p p, 'get', door0.path
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "routing success through Spin@world" do
@@ -107,8 +107,8 @@ describe Edoors::Room do
         p.init! Fake.new('fake', @spin)
         p.add_dst 'get', 'dom0/room0/room1/door0'
         room0.send_p p
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "route error: no source" do
@@ -116,9 +116,9 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.add_dst 'get', 'room/door'
         room.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_NS
-        p.dst.should be room.spin
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_NS
+        expect(p.dst).to be room.spin
     end
     #
     it "route error: no destination no links" do
@@ -126,9 +126,9 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.init! Fake.new('fake', @spin)
         room.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_NDNL
-        p.dst.should be p.src
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_NDNL
+        expect(p.dst).to be p.src
     end
     #
     it "route error: no rooom, wrong door -> right room wrong door" do
@@ -137,9 +137,9 @@ describe Edoors::Room do
         p.init! Fake.new('fake', @spin)
         p.add_dst 'get', 'nodoor'
         room0.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_RRWD
-        p.dst.should be p.src
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_RRWD
+        expect(p.dst).to be p.src
     end
     #
     it "route error: right rooom, wrong door -> right room wrong door" do
@@ -148,9 +148,9 @@ describe Edoors::Room do
         p.init! Fake.new('fake', @spin)
         p.add_dst 'get', 'dom0/room0/nodoor'
         room0.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_RRWD
-        p.dst.should be p.src
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_RRWD
+        expect(p.dst).to be p.src
     end
     #
     it "route error: right room, wrong door through Spin@world -> does not exists" do
@@ -160,9 +160,9 @@ describe Edoors::Room do
         p.init! Fake.new('fake', room0)
         p.add_dst 'get', 'dom0/room0/nodoor'
         room1.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_DNE
-        p.dst.should be p.src
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_DNE
+        expect(p.dst).to be p.src
     end
     #
     it "route error: wrong room, right door through Spin@world -> does not exists" do
@@ -172,9 +172,9 @@ describe Edoors::Room do
         p.init! Fake.new('fake', @spin)
         p.add_dst 'get', 'dom0/noroom/fake'
         room1.send_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_DNE
-        p.dst.should be p.src
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_DNE
+        expect(p.dst).to be p.src
     end
     #
     it "routing ~failure: no door name -> src" do
@@ -184,8 +184,8 @@ describe Edoors::Room do
         p.init! door0
         p.add_dst 'get'
         room0.send_p p
-        p.action.should eql 'get'
-        p.dst.should be door0
+        expect(p.action).to eql 'get'
+        expect(p.dst).to be door0
     end
     #
     it "routing success: unconditional link" do
@@ -195,8 +195,8 @@ describe Edoors::Room do
         room0.add_link Edoors::Link.new('door0', 'door1')
         p = @spin.require_p Edoors::Particle
         door0.send_p p
-        p.action.should be_nil
-        p.dst.should be door1
+        expect(p.action).to be_nil
+        expect(p.dst).to be door1
     end
     #
     it "routing success: conditional link" do
@@ -208,9 +208,9 @@ describe Edoors::Room do
         p['f0']='v0'
         p['f1']='v1'
         door0.send_p p
-        p.action.should be_nil
-        p.src.should be door0
-        p.dst.should be door1
+        expect(p.action).to be_nil
+        expect(p.src).to be door0
+        expect(p.dst).to be door1
     end
     #
     it "routing success: more then one matching link" do
@@ -219,8 +219,8 @@ describe Edoors::Room do
         class Out < Edoors::Door
             attr_reader :count
             def receive_p p
-                @count||=0
-                ['0','1','2'][@count].should == p.next_dst
+                @count ||= 0
+                expect(['0','1','2'][@count]).to be == p.next_dst
                 @count += 1
             end
         end
@@ -235,15 +235,15 @@ describe Edoors::Room do
         p['f1']='v1'
         door0.send_p p
         @spin.spin!
-        door1.count.should eql 3
+        expect(door1.count).to eql 3
     end
     #
     it "system route error: system no destination" do
         room0 = Edoors::Room.new 'room0', @spin
         p = @spin.require_p Edoors::Particle
         room0.send_sys_p p
-        p.action.should eql Edoors::ACT_ERROR
-        p[Edoors::FIELD_ERROR_MSG].should eql Edoors::ERROR_ROUTE_SND
+        expect(p.action).to eql Edoors::ACT_ERROR
+        expect(p[Edoors::FIELD_ERROR_MSG]).to eql Edoors::ERROR_ROUTE_SND
     end
     #
     it "system routing success: action only" do
@@ -251,8 +251,8 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.add_dst Edoors::SYS_ACT_ADD_LINK
         room0.send_sys_p p
-        p.action.should eql Edoors::SYS_ACT_ADD_LINK
-        p.dst.should be room0.spin
+        expect(p.action).to eql Edoors::SYS_ACT_ADD_LINK
+        expect(p.dst).to be room0.spin
     end
     #
     it "system routing success (add_dst)" do
@@ -261,8 +261,8 @@ describe Edoors::Room do
         p = @spin.require_p Edoors::Particle
         p.add_dst Edoors::SYS_ACT_ADD_LINK, 'dom0/room0/door0'
         room0.send_sys_p p
-        p.action.should eql Edoors::SYS_ACT_ADD_LINK
-        p.dst.should be door0
+        expect(p.action).to eql Edoors::SYS_ACT_ADD_LINK
+        expect(p.dst).to be door0
     end
     #
     it "system routing success (send_sys_p)" do
@@ -270,8 +270,8 @@ describe Edoors::Room do
         door0 = Edoors::Door.new 'door0', room0
         p = @spin.require_p Edoors::Particle
         door0.send_sys_p p, Edoors::SYS_ACT_ADD_LINK
-        p.action.should eql Edoors::SYS_ACT_ADD_LINK
-        p.dst.should be door0
+        expect(p.action).to eql Edoors::SYS_ACT_ADD_LINK
+        expect(p.dst).to be door0
     end
     #
     it "SYS_ACT_ADD_LINK" do
@@ -290,9 +290,9 @@ describe Edoors::Room do
         p['f0']='v0'
         p['f1']='v1'
         door0.send_p p
-        p.action.should be_nil
-        p.src.should be door0
-        p.dst.should be door1
+        expect(p.action).to be_nil
+        expect(p.src).to be door0
+        expect(p.dst).to be door1
     end
     #
     it "SYS_ACT_ADD_ROOM" do
@@ -306,9 +306,9 @@ describe Edoors::Room do
         p1.set_dst! Edoors::SYS_ACT_ADD_ROOM, room0
         @spin.send_sys_p p1
         @spin.spin!
-        @spin.search_world('dom0/room0/roomX').should be_a Edoors::Room
-        @spin.search_world('dom0/room0/roomY').should be_a Edoors::Room
-        @spin.search_world('dom0/room0/roomZ').should be nil
+        expect(@spin.search_world('dom0/room0/roomX')).to be_a Edoors::Room
+        expect(@spin.search_world('dom0/room0/roomY')).to be_a Edoors::Room
+        expect(@spin.search_world('dom0/room0/roomZ')).to be nil
     end
     #
     it "room->json->room" do
@@ -325,7 +325,7 @@ describe Edoors::Room do
         r1.add_link Edoors::Link.new('d1', 'd0')
         r2.add_link Edoors::Link.new('d2', 'd1', 'fies', {'f5'=>'v9','f1'=>'v1'})
         rx = Edoors::Room.json_create( JSON.load( JSON.generate(r0) ) )
-        JSON.generate(r0).should eql JSON.generate(rx)
+        expect(JSON.generate(r0)).to eql JSON.generate(rx)
     end#
     #
 end

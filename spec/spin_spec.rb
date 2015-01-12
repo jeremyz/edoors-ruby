@@ -12,37 +12,37 @@ describe Edoors::Spin do
         spin = Edoors::Spin.new 'dom0'
         p0 = spin.require_p Edoors::Particle
         p1 = spin.require_p Edoors::Particle
-        (p0===p1).should be_false
+        expect(p0===p1).to be_falsey
         spin.release_p p0
         p2 = spin.require_p Edoors::Particle
-        (p0===p2).should be_true
+        expect(p0===p2).to be_truthy
     end
     #
     it "different Particles classes in pool" do
         spin = Edoors::Spin.new 'dom0'
         p0 = spin.require_p Edoors::Particle
         p1 = spin.require_p Edoors::Particle
-        (p0===p1).should be_false
+        expect(p0===p1).to be_falsey
         spin.release_p p0
         p2 = spin.require_p MyP
         p3 = spin.require_p MyP
-        (p2===p3).should be_false
+        expect(p2===p3).to be_falsey
         spin.release_p p2
         p4 = spin.require_p MyP
-        (p2===p4).should be_true
+        expect(p2===p4).to be_truthy
     end
     #
     it "release of merged particles" do
         spin = Edoors::Spin.new 'dom0'
         p0 = spin.require_p Edoors::Particle
         p1 = spin.require_p Edoors::Particle
-        (p0===p1).should be_false
+        expect(p0===p1).to be_falsey
         p0.merge! p1
         spin.release_p p0
         p2 = spin.require_p Edoors::Particle
-        (p2===p0).should be_true
+        expect(p2===p0).to be_truthy
         p3 = spin.require_p Edoors::Particle
-        (p3===p1).should be_true
+        expect(p3===p1).to be_truthy
     end
     #
     it "clear!" do
@@ -53,8 +53,8 @@ describe Edoors::Spin do
         spin.release_p p1
         spin.clear!
         p2 = spin.require_p Edoors::Particle
-        (p2==p0).should be_false
-        (p2==p1).should be_false
+        expect(p2==p0).to be_falsey
+        expect(p2==p1).to be_falsey
     end
     #
     it "post_p post_sys_p spin!" do
@@ -68,8 +68,8 @@ describe Edoors::Spin do
         spin.post_sys_p p1
         spin.run = true
         spin.spin!
-        f.p.should be p0
-        f.sp.should be p1
+        expect(f.p).to be p0
+        expect(f.sp).to be p1
         spin.stop_spinning!
     end
     #
@@ -80,16 +80,16 @@ describe Edoors::Spin do
         spin.send_sys_p p0
         spin.spin!
         p1 = spin.require_p Edoors::Particle
-        p0.should be p0
+        expect(p0).to be p0
     end
     #
     it "option debug" do
         spin = Edoors::Spin.new 'dom0'
-        spin.debug_routing.should be false
-        spin.debug_garbage.should be false
+        expect(spin.debug_routing).to be false
+        expect(spin.debug_garbage).to be false
         spin = Edoors::Spin.new 'dom0', :debug_routing=>true, :debug_garbage=>true
-        spin.debug_routing.should be true
-        spin.debug_garbage.should be true
+        expect(spin.debug_routing).to be true
+        expect(spin.debug_garbage).to be true
     end
     #
     it "search world" do
@@ -97,9 +97,9 @@ describe Edoors::Spin do
         r0 = Edoors::Room.new 'r0', spin
         r1 = Edoors::Room.new 'r1', r0
         r2 = Edoors::Room.new 'r2', r1
-        spin.search_world(r0.path).should be r0
-        spin.search_world(r1.path).should be r1
-        spin.search_world(r2.path).should be r2
+        expect(spin.search_world(r0.path)).to be r0
+        expect(spin.search_world(r1.path)).to be r1
+        expect(spin.search_world(r2.path)).to be r2
     end
     #
     it "spin->json->spin" do
@@ -120,7 +120,7 @@ describe Edoors::Spin do
         spin.post_sys_p p2
         json = JSON.generate spin
         dom0 = Edoors::Spin.json_create( JSON.load( json ) )
-        json.should eql JSON.generate(dom0)
+        expect(json).to eql JSON.generate(dom0)
     end
     #
     it "hibernate! resume!" do
@@ -133,7 +133,7 @@ describe Edoors::Spin do
         spin.send_sys_p p0
         spin.spin!
         dom0 = Edoors::Spin.resume! spin.hibernate_path
-        dom0.name.should eql spin.name
+        expect(dom0.name).to eql spin.name
         File.unlink dom0.hibernate_path
     end
     #
